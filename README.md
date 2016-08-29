@@ -1,2 +1,2 @@
-# collect-io
-The Collect.io full app front SPA &amp; back API
+# Collect.io
+The Collect.io full app front SPA & back API

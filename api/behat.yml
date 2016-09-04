@@ -1,0 +1,4 @@
+default:
+    extensions:
+        Behat\WebApiExtension:
+            base_url: http://collect.dev/app_dev.php/

@@ -7,9 +7,6 @@
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
-    "autoload-dev": {
-        "psr-4": { "Tests\\": "tests/" }
-    },
     "require": {
         "php": ">=5.5.9",
         "symfony/symfony": "3.1.*",
@@ -22,12 +19,13 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
-        "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "nelmio/alice": "^2.1"
+        "lexik/jwt-authentication-bundle": "^1.7"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "nelmio/alice": "^2.1",
+        "behat/web-api-extension": "~1.0@dev"
     },
     "scripts": {
         "post-install-cmd": [
@@ -45,7 +43,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ]
+        ],
+        "test": "behat"
     },
     "config": {
         "platform": {

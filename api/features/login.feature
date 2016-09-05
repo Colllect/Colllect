@@ -24,3 +24,10 @@ Feature: Login
       _email=demodealex%2B1@gmail.com&_password=invalidpassword
       """
     Then the response code should be 401
+
+  Scenario: Login with valid credentials but with GET method
+    When I send a GET request to "/api/token" with form data:
+      """
+      _email=demodealex%2B1@gmail.com&_password=lol
+      """
+    Then the response code should be 405

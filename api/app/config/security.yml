@@ -2,9 +2,12 @@
 # http://symfony.com/doc/current/book/security.html
 security:
 
+    encoders:
+        AppBundle\Entity\User: bcrypt
+
     providers:
-        database_users:
-            entity: { class: AppBundle:User }
+        users:
+            entity: { class: AppBundle\Entity\User, property: email }
 
     firewalls:
         dev:
@@ -17,7 +20,7 @@ security:
             stateless: true
             guard:
                 authenticator:
-                    - jwt_token_authenticator
+                    - app.security.jwt_authenticator
 
     access_control:
         - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }

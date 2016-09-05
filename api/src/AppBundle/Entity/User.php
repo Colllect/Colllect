@@ -54,12 +54,7 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="salt", type="string", length=255)
-     */
-    private $salt;
+    private $plainPassword;
 
     /**
      * @var \DateTime
@@ -77,7 +72,6 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->roles = array();
     }
 
@@ -114,6 +108,17 @@ class User implements UserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+
+
+    /**
+     * Get username is an alias for getEmail needed by the UserInterface
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->getEmail();
     }
 
     /**
@@ -204,17 +209,25 @@ class User implements UserInterface
     }
 
     /**
-     * Set salt
-     *
-     * @param string $salt
-     *
-     * @return User
+     * @return string
      */
-    public function setSalt($salt)
+    public function getPlainPassword()
     {
-        $this->salt = $salt;
+        return $this->plainPassword;
+    }
 
-        return $this;
+    /**
+     * @param string $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+        $this->password = null; // change entity to 'dirty' for Doctrine
+    }
+
+    public function eraseCredentials()
+    {
+        $this->plainPassword = null;
     }
 
     /**
@@ -224,7 +237,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
+        return;
     }
 
     /**
@@ -273,15 +286,6 @@ class User implements UserInterface
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    public function getUsername()
-    {
-        return $this->email;
-    }
-
-    public function eraseCredentials()
-    {
     }
 }
 

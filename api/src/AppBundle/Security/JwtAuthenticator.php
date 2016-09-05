@@ -9,13 +9,14 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderToken
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
-class JwtTokenAuthenticator extends AbstractGuardAuthenticator
+class JwtAuthenticator extends AbstractGuardAuthenticator
 {
     /**
      * @var JWTEncoderInterface
@@ -27,10 +28,16 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $em;
 
-    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em)
+    /**
+     * @var UserPasswordEncoder
+     */
+    private $userPasswordEncoder;
+
+    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em, UserPasswordEncoder $userPasswordEncoder)
     {
         $this->jwtEncoder = $jwtEncoder;
         $this->em = $em;
+        $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
     public function getCredentials(Request $request)

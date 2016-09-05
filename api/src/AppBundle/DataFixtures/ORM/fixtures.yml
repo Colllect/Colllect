@@ -2,6 +2,6 @@ AppBundle\Entity\User:
     user_{1..10}:
         email: demodealex+<current()>@gmail.com
         nickname: '<userName()>'
-        password: lol
+        plainPassword: lol
         createdAt: '<dateTimeThisYear()>'
         roles: ['ROLE_ADMIN']

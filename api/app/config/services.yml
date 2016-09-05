@@ -4,6 +4,12 @@ parameters:
 #    parameter_name: value
 
 services:
-    jwt_token_authenticator:
-        class: AppBundle\Security\JwtTokenAuthenticator
+    app.security.jwt_authenticator:
+        class: AppBundle\Security\JwtAuthenticator
         autowire: true
+
+    app.doctrine.hash_password_listener:
+        class: AppBundle\Doctrine\HashPasswordListener
+        autowire: true
+        tags:
+            - { name: doctrine.event_subscriber }

@@ -19,6 +19,8 @@ class AppKernel extends Kernel
 
             // Additional bundles
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
 
             // App bundles
             new AppBundle\AppBundle(),

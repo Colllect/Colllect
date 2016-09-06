@@ -1,3 +1,4 @@
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+tokens:
+    type: rest
+    resource: AppBundle\Controller\TokenController
+    prefix: /api

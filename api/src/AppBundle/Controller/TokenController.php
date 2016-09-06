@@ -13,17 +13,17 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 class TokenController extends Controller
 {
     /**
-     * @Route("/api/token")
-     * @Method("POST")
      * @param Request $request
      * @return JsonResponse
      */
     public function postTokenAction(Request $request)
     {
+        $requestContent = json_decode($request->getContent(), true);
+
         /** @var User $user */
         $user = $this->getDoctrine()
             ->getRepository('AppBundle:User')
-            ->findOneBy(['email' => $request->get('_email')]);
+            ->findOneBy(['email' => $requestContent['_email']]);
 
         if (!$user) {
             throw $this->createNotFoundException('No user');
@@ -33,7 +33,7 @@ class TokenController extends Controller
         $isValid = $this->get('security.password_encoder')
             ->isPasswordValid($user, $request->get('_password'));
         */
-        $isValid = $request->get('_password') === 'lol';
+        $isValid = $requestContent['_password'] === 'lol';
 
         if (!$isValid) {
             throw new BadCredentialsException();

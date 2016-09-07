@@ -1,6 +1,6 @@
 /app/config/parameters.yml
 /build/
-/phpunit.xml
+/app/behat.db.cache
 /var/*
 !/var/cache
 /var/cache/*

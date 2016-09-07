@@ -14,3 +14,10 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        driver:  pdo_sqlite
+        user:    tests
+        path:    %kernel.root_dir%/behat.db.cache
+        charset: utf8

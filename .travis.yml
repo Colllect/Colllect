@@ -32,5 +32,13 @@ before_install:
 install:
     - cd api && composer install
 
+before_script:
+    - SYMFONY_ENV=test bin/console doctrine:schema:drop
+    - SYMFONY_ENV=test bin/console doctrine:schema:create
+    - SYMFONY_ENV=test bin/console doctrine:fixtures:load --append
+
 script:
     - composer test
+
+notifications:
+    email: false

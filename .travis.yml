@@ -3,42 +3,44 @@ language: php
 sudo: required
 
 php:
-  - '5.5'
-#  - '5.6'
-#  - '7.0'
-#  - hhvm
+  - '5.6'
+  - '7.0'
 
 git:
     depth: 1
 
-before_install:
+before_script:
     - stty cols 120
-    # Install Apache
-    #- sudo apt-get update > /dev/null
-    - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 tree
-    - sudo sed -i -e "/DocumentRoot/i\ServerName collect.dev" /etc/apache2/sites-available/default
-    - sudo sed -i -e "s#DocumentRoot /var/www#DocumentRoot /home/travis/build/Collect-io/Collect.io/api/web#g" /etc/apache2/sites-available/default
+    # Install Apache + FastCGI
+    - sudo apt-get update
+    - sudo apt-get install -y --force-yes apache2 libapache2-mod-fastcgi
+    # Configure Apache + PHP FPM + vhost
+    - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+    - sudo a2enmod rewrite actions fastcgi alias
+    - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "memory_limit = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "session.gc_probability = 0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "opcache.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+    - sudo cp -f conf/travis-ci-apache.conf /etc/apache2/sites-available/default
+    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+    - sudo cat /etc/apache2/sites-available/default
     - echo "127.0.0.1 collect.dev" | sudo tee -a /etc/hosts
     - sudo /etc/init.d/apache2 restart
-    # Configure PHP
-    - PHP=$TRAVIS_PHP_VERSION
-    - if [[ ! $PHP = hhvm* ]]; then INI_FILE=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; else INI_FILE=/etc/hhvm/php.ini; fi
-    - echo memory_limit = -1 >> $INI_FILE
-    - echo session.gc_probability = 0 >> $INI_FILE
-    - echo opcache.enable_cli = 1 >> $INI_FILE
-    - if [[ $PHP = 5.* ]]; then (echo yes | pecl install -f apcu-4.0.11 && echo apc.enable_cli = 1 >> $INI_FILE); fi
-    - if [[ $PHP = 7.0 ]]; then (echo yes | pecl install -f apcu-5.1.5 && echo apc.enable_cli = 1 >> $INI_FILE); fi
-
-install:
+    # Composer install
+    - composer global require "hirak/prestissimo:^0.3"
     - cd api && composer install
-
-before_script:
+    # Project test init
+    - openssl genrsa -out var/jwt/private.test.pem -passout pass:test -aes256 4096
+    - openssl rsa -pubout -in var/jwt/private.test.pem -out var/jwt/public.test.pem -passin pass:test
     - SYMFONY_ENV=test bin/console doctrine:schema:drop
     - SYMFONY_ENV=test bin/console doctrine:schema:create
     - SYMFONY_ENV=test bin/console doctrine:fixtures:load --append
 
 script:
     - composer test
+    - sudo cat /var/log/apache2/error.log
 
 notifications:
     email: false

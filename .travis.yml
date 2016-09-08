@@ -9,25 +9,10 @@ php:
 git:
     depth: 1
 
-before_script:
+before_install:
     - stty cols 120
-    # Install Apache + FastCGI
-    - sudo apt-get update
-    - sudo apt-get install -y --force-yes apache2 libapache2-mod-fastcgi
-    # Configure Apache + PHP FPM + vhost
-    - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-    - sudo a2enmod rewrite actions fastcgi alias
-    - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo "memory_limit = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo "session.gc_probability = 0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo "opcache.enable_cli = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-    - sudo cp -f conf/travis-ci-apache.conf /etc/apache2/sites-available/default
-    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-    - sudo cat /etc/apache2/sites-available/default
-    - echo "127.0.0.1 collect.dev" | sudo tee -a /etc/hosts
-    - sudo /etc/init.d/apache2 restart
+
+install:
     # Composer install
     - composer global require "hirak/prestissimo:^0.3"
     - cd api && composer install
@@ -37,10 +22,13 @@ before_script:
     - SYMFONY_ENV=test bin/console doctrine:schema:drop
     - SYMFONY_ENV=test bin/console doctrine:schema:create
     - SYMFONY_ENV=test bin/console doctrine:fixtures:load --append
+    - bin/console ser:run >/dev/null &
 
 script:
     - composer test
-    - sudo cat /var/log/apache2/error.log
+
+after_script:
+    - kill %1 >/dev/null
 
 notifications:
     email: false

@@ -22,9 +22,8 @@ Feature: Login
       | _password | invalidpassword        |
     Then the response code should be 401
 
-# This test bug due to FastCGI configuration return 411
-#  Scenario: Login with valid credentials but with GET method
-#    When I send a GET request to "/api/tokens" with values:
-#      | _email    | demodealex+1@gmail.com |
-#      | _password | lol                    |
-#    Then the response code should be 405
+  Scenario: Login with valid credentials but with GET method
+    When I send a GET request to "/api/tokens" with values:
+      | _email    | demodealex+1@gmail.com |
+      | _password | lol                    |
+    Then the response code should be 405

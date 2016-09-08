@@ -29,11 +29,8 @@ class TokenController extends Controller
             throw $this->createNotFoundException('No user');
         }
 
-        /*
         $isValid = $this->get('security.password_encoder')
             ->isPasswordValid($user, $request->get('_password'));
-        */
-        $isValid = $requestContent['_password'] === 'lol';
 
         if (!$isValid) {
             throw new BadCredentialsException();

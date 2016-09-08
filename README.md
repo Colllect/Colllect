@@ -1,2 +1,20 @@
-# Collect.io
-The Collect.io full app front SPA & back API
+Collect.io
+==========
+
+[![Build Status](https://travis-ci.org/Collect-io/Collect.io.svg?branch=develop)](https://travis-ci.org/Collect-io/Collect.io)
+
+[Go to Collect.io website](http://getcollect.io/) and subscribe to get notified of the launch.
+
+
+Introduction
+------------
+
+Collect.io is your new bookmark manager!
+
+With it, you can manage your inspiration and resources into collections.
+
+
+Project status
+--------------
+
+The project is in progress. It has just started, so nothing works for the moment.

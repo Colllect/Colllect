@@ -4,12 +4,18 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * User
  *
  * @ORM\Table(name="collectio_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @UniqueEntity("email", message="already_used")
+ * @ExclusionPolicy("all")
  */
 class User implements UserInterface
 {
@@ -23,6 +29,7 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     private $id;
 
@@ -30,6 +37,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="cannot_be_blank")
+     * @Expose
      */
     private $email;
 
@@ -37,6 +46,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="nickname", type="string", length=255)
+     * @Assert\NotBlank(message="cannot_be_blank")
+     * @Expose
      */
     private $nickname;
 
@@ -44,6 +55,7 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(name="roles", type="json_array")
+     * @Expose
      */
     private $roles;
 
@@ -67,14 +79,15 @@ class User implements UserInterface
      * @var \DateTime
      *
      * @ORM\Column(name="createdAt", type="datetime")
+     * @Expose
      */
     private $createdAt;
 
     public function __construct()
     {
-        $this->roles = array();
+        $this->roles = [];
+        $this->createdAt = new \DateTime();
     }
-
 
     /**
      * Get id
@@ -109,8 +122,7 @@ class User implements UserInterface
     {
         return $this->email;
     }
-
-
+    
     /**
      * Get username is an alias for getEmail needed by the UserInterface
      *

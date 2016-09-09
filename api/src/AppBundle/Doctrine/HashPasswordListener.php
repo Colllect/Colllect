@@ -56,9 +56,37 @@ class HashPasswordListener implements EventSubscriber
         }
     }
 
+    /**
+     * Post update listener based on doctrine common
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function postPersist(LifecycleEventArgs $args) {
+        $user = $args->getObject();
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $user->eraseCredentials();
+    }
+
+    /**
+     * Post update listener based on doctrine common
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args) {
+        $user = $args->getObject();
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $user->eraseCredentials();
+    }
+
     public function getSubscribedEvents()
     {
-        return ['prePersist', 'preUpdate'];
+        return ['prePersist', 'preUpdate', 'postPersist', 'postUpdate'];
     }
 
     /**

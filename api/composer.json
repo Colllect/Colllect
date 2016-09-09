@@ -46,7 +46,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
-        "test": "behat --lang=en",
+        "test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && behat --lang=en",
         "behat-list": "behat -dl --lang=en",
         "behat-search": "behat -d --lang=en",
         "behat-syntax": "behat --story-syntax --lang=en"

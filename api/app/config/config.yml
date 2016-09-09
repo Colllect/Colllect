@@ -16,7 +16,7 @@ framework:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
-    csrf_protection: ~
+    csrf_protection: false
     validation:      { enable_annotations: true }
     #serializer:      { enable_annotations: true }
     templating:
@@ -74,5 +74,6 @@ lexik_jwt_authentication:
     token_ttl:        3600
 
 fos_rest:
+    body_listener: true
     routing_loader:
         default_format: json

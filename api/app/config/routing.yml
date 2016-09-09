@@ -2,3 +2,8 @@ tokens:
     type: rest
     resource: AppBundle\Controller\TokenController
     prefix: /api
+
+users:
+    type: rest
+    resource: AppBundle\Controller\UserController
+    prefix: /api

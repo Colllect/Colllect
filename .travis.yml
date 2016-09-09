@@ -20,10 +20,7 @@ install:
     # Project test init
     - openssl genrsa -out var/jwt/private.test.pem -passout pass:test -aes256 4096
     - openssl rsa -pubout -in var/jwt/private.test.pem -out var/jwt/public.test.pem -passin pass:test
-    - SYMFONY_ENV=test bin/console doctrine:schema:drop
-    - SYMFONY_ENV=test bin/console doctrine:schema:create
-    - SYMFONY_ENV=test bin/console doctrine:fixtures:load --append
-    - bin/console ser:run >/dev/null &
+    - bin/console server:run >/dev/null &
 
 script:
     - composer test

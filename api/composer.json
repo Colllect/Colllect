@@ -1,8 +1,8 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "collect-io/collect-io",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "Collect.io - Your new bookmark manager",
     "autoload": {
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
@@ -46,10 +46,18 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
-        "test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && behat --lang=en",
-        "behat-list": "behat -dl --lang=en",
-        "behat-search": "behat -d --lang=en",
-        "behat-syntax": "behat --story-syntax --lang=en"
+        "pre-test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && :",
+        "test": [
+            "@pre-test",
+            "behat --lang=en"
+        ],
+        "test-cli": [
+            "@pre-test",
+            "behat --colors --lang=en"
+        ],
+        "behat-list": "behat -dl --colors --lang=en",
+        "behat-search": "behat --colors --lang=en -d",
+        "behat-syntax": "behat --story-syntax --colors --lang=en"
     },
     "config": {
         "platform": {

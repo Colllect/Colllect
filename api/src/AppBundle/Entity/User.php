@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 
@@ -55,6 +56,7 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(name="roles", type="json_array")
+     * @Accessor(getter="getRoles",setter="setRoles")
      * @Expose
      */
     private $roles;
@@ -66,6 +68,11 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(message="cannot_be_blank")
+     */
     private $plainPassword;
 
     /**

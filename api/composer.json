@@ -21,7 +21,8 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "lexik/jwt-authentication-bundle": "^1.7",
         "friendsofsymfony/rest-bundle": "^2.0",
-        "jms/serializer-bundle": "^1.1"
+        "jms/serializer-bundle": "^1.1",
+        "nelmio/api-doc-bundle": "2.12.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -46,7 +47,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
-        "pre-test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && :",
+        "pre-test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && echo",
         "test": [
             "@pre-test",
             "behat --lang=en"

@@ -3,12 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 
 /**
  * User
@@ -16,7 +14,7 @@ use JMS\Serializer\Annotation\Expose;
  * @ORM\Table(name="collectio_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @UniqueEntity("email", message="already_used")
- * @ExclusionPolicy("all")
+ * @Serializer\ExclusionPolicy("all")
  */
 class User implements UserInterface
 {
@@ -30,7 +28,7 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Expose
+     * @Serializer\Expose
      */
     private $id;
 
@@ -38,8 +36,10 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\Email(message="not_a_valid_email")
      * @Assert\NotBlank(message="cannot_be_blank")
-     * @Expose
+     * @Assert\Length(max="255", maxMessage="too_long")
+     * @Serializer\Expose
      */
     private $email;
 
@@ -48,7 +48,8 @@ class User implements UserInterface
      *
      * @ORM\Column(name="nickname", type="string", length=255)
      * @Assert\NotBlank(message="cannot_be_blank")
-     * @Expose
+     * @Assert\Length(max="255", maxMessage="too_long")
+     * @Serializer\Expose
      */
     private $nickname;
 
@@ -56,8 +57,8 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(name="roles", type="json_array")
-     * @Accessor(getter="getRoles",setter="setRoles")
-     * @Expose
+     * @Serializer\Accessor(getter="getRoles",setter="setRoles")
+     * @Serializer\Expose
      */
     private $roles;
 
@@ -71,7 +72,9 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @Assert\Type("string")
      * @Assert\NotBlank(message="cannot_be_blank")
+     * @Assert\Length(min="8", minMessage="too_short")
      */
     private $plainPassword;
 
@@ -86,7 +89,7 @@ class User implements UserInterface
      * @var \DateTime
      *
      * @ORM\Column(name="createdAt", type="datetime")
-     * @Expose
+     * @Serializer\Expose
      */
     private $createdAt;
 
@@ -228,6 +231,8 @@ class User implements UserInterface
     }
 
     /**
+     * Get plain password
+     *
      * @return string
      */
     public function getPlainPassword()
@@ -236,6 +241,8 @@ class User implements UserInterface
     }
 
     /**
+     * Set plain password
+     *
      * @param string $plainPassword
      */
     public function setPlainPassword($plainPassword)
@@ -244,6 +251,9 @@ class User implements UserInterface
         $this->password = null; // change entity to 'dirty' for Doctrine
     }
 
+    /**
+     * Clean plain password
+     */
     public function eraseCredentials()
     {
         $this->plainPassword = null;

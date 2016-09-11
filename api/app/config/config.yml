@@ -74,6 +74,19 @@ lexik_jwt_authentication:
     token_ttl:        3600
 
 fos_rest:
-    body_listener: true
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.json
+    param_fetcher_listener: true
     routing_loader:
         default_format: json
+        include_format: false
+
+nelmio_api_doc:
+    name: Collect.io API
+    sandbox:
+        request_format:
+            formats:
+                json: application/json
+            method: accept_header
+        body_format: json

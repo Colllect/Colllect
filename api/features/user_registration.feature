@@ -5,9 +5,9 @@ Feature: User registration
 
   Scenario: Create an account with valid form
     When I send a POST request to "/api/users" with values:
-      | email    | demodealex+register@gmail.com |
-      | password | lol                           |
-      | nickname | My super nickname             |
+      | email         | demodealex+register@gmail.com |
+      | plainPassword | 12345678                      |
+      | nickname      | My super nickname             |
     Then the response code should be 201
     And the response should not contain "password"
     And the response should contain "created_at"
@@ -23,9 +23,9 @@ Feature: User registration
 
   Scenario: Create an account with already used email
     When I send a POST request to "/api/users" with values:
-      | email    | demodealex+1@gmail.com        |
-      | password | lol                           |
-      | nickname | My super nickname             |
+      | email         | demodealex+1@gmail.com |
+      | plainPassword | 12345678               |
+      | nickname      | My super nickname      |
     Then the response code should be 400
     And the response should contain json:
       """
@@ -45,9 +45,9 @@ Feature: User registration
 
   Scenario: Create an account with blank values
     When I send a POST request to "/api/users" with values:
-      | email    |    |
-      | password |    |
-      | nickname |    |
+      | email         |  |
+      | plainPassword |  |
+      | nickname      |  |
     Then the response code should be 400
     And the response should contain json:
       """

@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
-use AppBundle\Repository\UserRepository;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +33,7 @@ class UserController extends FOSRestController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postUserAction(Request $request)
+    public function postUsersAction(Request $request)
     {
         $requestContent = json_decode($request->getContent(), true);
 
@@ -57,6 +56,65 @@ class UserController extends FOSRestController
         );
 
         $view = $this->view($user, 201)
+            ->setHeader('Location', $userUrl);
+        return $this->handleView($view);
+    }
+
+
+    /**
+     * Update an user account data
+     *
+     * @ApiDoc(
+     *     section="Users",
+     *     requirements={
+     *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
+     *     },
+     *     input={"class"=UserType::Class, "name"=""},
+     *     statusCodes={
+     *         200="Returned when user was updated",
+     *         400="Returned when parameters are invalids",
+     *         404="Returned when user was not found"
+     *     },
+     *     responseMap={
+     *         200=User::Class
+     *     }
+     * )
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putUsersAction(Request $request, $userId)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->findOneBy([
+            'id' => $userId
+        ]);
+
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+
+        $requestContent = json_decode($request->getContent(), true);
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->submit($requestContent, false);
+
+        if (!$form->isValid()) {
+            return $this->handleView($this->view($form, 400));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        $userUrl = $this->generateUrl(
+            'get_user',
+            ['userId' => $user->getId()],
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        );
+
+        $view = $this->view($user, 200)
             ->setHeader('Location', $userUrl);
         return $this->handleView($view);
     }

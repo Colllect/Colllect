@@ -10,6 +10,7 @@ Feature: User registration
       | nickname      | My super nickname             |
     Then the response code should be 201
     And the response should not contain "password"
+    And the response should not contain "plainPassword"
     And the response should contain "created_at"
     And the response should contain json:
       """

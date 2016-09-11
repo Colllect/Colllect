@@ -7,6 +7,7 @@ Feature: Get an user
     When I send a GET request to "/api/users/1"
     Then the response code should be 200
     And the response should not contain "password"
+    And the response should not contain "plainPassword"
     And the response should contain "nickname"
     And the response should contain "created_at"
     And the response should contain json:

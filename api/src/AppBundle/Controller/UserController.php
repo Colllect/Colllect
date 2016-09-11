@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Repository\UserRepository;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * UserController
@@ -16,21 +18,21 @@ class UserController extends FOSRestController
     /**
      * Create a new user account
      *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
      * @ApiDoc(
      *     section="Users",
-     *     description="Create an user",
-     *     input={"class"="AppBundle\Form\UserType", "name"=""},
+     *     input={"class"=UserType::Class, "name"=""},
      *     statusCodes={
      *         201="Returned when user was created",
      *         400="Returned when parameters are invalids"
      *     },
      *     responseMap={
-     *         201="AppBundle\Entity\User"
+     *         201=User::Class
      *     }
      * )
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postUserAction(Request $request)
     {
@@ -51,7 +53,7 @@ class UserController extends FOSRestController
         $userUrl = $this->generateUrl(
             'get_user',
             ['userId' => $user->getId()],
-            true
+            UrlGeneratorInterface::ABSOLUTE_PATH
         );
 
         $view = $this->view($user, 201)
@@ -63,22 +65,22 @@ class UserController extends FOSRestController
     /**
      * Get an user
      *
-     * @param $userId
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
      * @ApiDoc(
      *     section="Users",
-     *     description="Get an user",
      *     requirements={
      *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
      *     },
-     *     output="\AppBundle\Entity\User",
+     *     output=User::Class,
      *     statusCodes={
      *         200="Returned when user was found",
      *         403="Returned when user is not authorized to get an user",
      *         404="Returned when user was not found"
      *     }
      * )
+     *
+     * @param $userId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getUserAction($userId)
     {
@@ -87,7 +89,50 @@ class UserController extends FOSRestController
             'id' => $userId
         ]);
 
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+
         $view = $this->view($user, 200);
+        return $this->handleView($view);
+    }
+
+
+    /**
+     * Delete an user account
+     *
+     * @ApiDoc(
+     *     section="Users",
+     *     requirements={
+     *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
+     *     },
+     *     statusCodes={
+     *         204="Returned when user was found and deleted",
+     *         403="Returned when user is not authorized to delete this user",
+     *         404="Returned when user was not found"
+     *     }
+     * )
+     *
+     * @param $userId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteUserAction($userId)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->findOneBy([
+            'id' => $userId
+        ]);
+
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        $view = $this->view("", 204);
         return $this->handleView($view);
     }
 }

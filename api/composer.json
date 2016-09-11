@@ -47,7 +47,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
-        "pre-test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test && echo",
+        "pre-test": "rm -rf var/cache/test && rm -f app/behat.db.cache && php bin/console doctrine:database:create --env=test && php bin/console doctrine:schema:create --env=test && php bin/console doctrine:fixtures:load --append --env=test & true",
         "test": [
             "@pre-test",
             "behat --lang=en"

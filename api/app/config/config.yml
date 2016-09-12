@@ -79,8 +79,14 @@ fos_rest:
             json: fos_rest.decoder.json
     param_fetcher_listener: true
     routing_loader:
-        default_format: json
         include_format: false
+    view:
+        view_response_listener: true
+    format_listener:
+        rules:
+            - { path: '^/', priorities: ['json'], fallback_format: 'json', prefer_extension: false }
+    exception:
+        enabled: true
 
 nelmio_api_doc:
     name: Collect.io API

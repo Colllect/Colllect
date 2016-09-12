@@ -1,4 +1,4 @@
-Feature: Token
+Feature: Get a JWT
   In order to login
   As an anonymous user
   I need to be able to get a JWT

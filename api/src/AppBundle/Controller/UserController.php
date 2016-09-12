@@ -28,7 +28,8 @@ class UserController extends FOSRestController
      *         400="Returned when parameters are invalids"
      *     },
      *     responseMap={
-     *         201=User::Class
+     *         201=User::Class,
+     *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
      *     }
      * )
      *
@@ -70,7 +71,8 @@ class UserController extends FOSRestController
      *         404="Returned when user was not found"
      *     },
      *     responseMap={
-     *         200=User::Class
+     *         200=User::Class,
+     *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
      *     }
      * )
      *

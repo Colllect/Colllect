@@ -19,3 +19,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     jwt_key_pass_phrase: ~
+
+    # Create an app on https://www.dropbox.com/developers/apps get the app secret on the app page
+    dropbox_secret:    DropboxSecret

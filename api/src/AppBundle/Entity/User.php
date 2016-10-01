@@ -81,23 +81,32 @@ class User implements UserInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="lastLogin", type="datetime", nullable=true)
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="createdAt", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @Serializer\Expose
      */
     private $createdAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dropbox_token", type="string", length=255, nullable=true)
+     */
+    private $dropboxToken;
+
 
     public function __construct()
     {
         $this->roles = [];
         $this->createdAt = new \DateTime();
     }
+
 
     /**
      * Get id
@@ -316,5 +325,28 @@ class User implements UserInterface
     {
         return $this->createdAt;
     }
-}
 
+    /**
+     * Set dropboxToken
+     *
+     * @param string $dropboxToken
+     *
+     * @return User
+     */
+    public function setDropboxToken($dropboxToken)
+    {
+        $this->dropboxToken = $dropboxToken;
+
+        return $this;
+    }
+
+    /**
+     * Get dropboxToken
+     *
+     * @return string
+     */
+    public function getDropboxToken()
+    {
+        return $this->dropboxToken;
+    }
+}

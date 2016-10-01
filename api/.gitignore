@@ -1,6 +1,7 @@
 /app/config/parameters.yml
 /build/
 /app/behat.db.cache
+/app/behat.db.cache.bak
 /var/*
 !/var/cache
 /var/cache/*
@@ -20,4 +21,4 @@
 /web/uploads/
 /web/css/
 /web/js/
-*/Entity/*~
+/src/*/Entity/*~

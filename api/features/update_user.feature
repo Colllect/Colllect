@@ -22,13 +22,6 @@ Feature: User update
       }
       """
 
-  Scenario: I get a token after updating account data
-    When I send a POST request to "/api/tokens" with values:
-      | email    | demodealex+updated@gmail.com |
-      | password | 87654321                     |
-    Then the response code should be 201
-    And the response should contain "token"
-
   Scenario: Update an account with already used email
     When I send a PUT request to "/api/users/1" with values:
       | email         | demodealex+3@gmail.com |
@@ -58,7 +51,7 @@ Feature: User update
       {
         "id": 1,
         "email": "demodealex+emailonly@gmail.com",
-        "nickname": "My new nickname",
+        "nickname": "monty93",
         "roles": ["ROLE_USER"]
       }
       """

@@ -12,5 +12,6 @@ Feature: Get an user
     Then the response code should be 404
 
   Scenario: Get a deleted user data
+    Given I send a DELETE request to "/api/users/2"
     When I send a GET request to "/api/users/2"
     Then the response code should be 404

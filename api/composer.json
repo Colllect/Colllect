@@ -22,7 +22,9 @@
         "lexik/jwt-authentication-bundle": "^1.7",
         "friendsofsymfony/rest-bundle": "^2.0",
         "jms/serializer-bundle": "^1.1",
-        "nelmio/api-doc-bundle": "2.12.*"
+        "nelmio/api-doc-bundle": "2.12.*",
+        "league/flysystem": "^1.0",
+        "league/flysystem-dropbox": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

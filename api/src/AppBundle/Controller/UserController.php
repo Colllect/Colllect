@@ -22,13 +22,13 @@ class UserController extends FOSRestController
      *
      * @ApiDoc(
      *     section="Users",
-     *     input={"class"=UserType::Class, "name"=""},
+     *     input={"class"=UserType::class, "name"=""},
      *     statusCodes={
      *         201="Returned when user was created",
      *         400="Returned when parameters are invalids"
      *     },
      *     responseMap={
-     *         201=User::Class,
+     *         201=User::class,
      *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
      *     }
      * )
@@ -64,14 +64,14 @@ class UserController extends FOSRestController
      *     requirements={
      *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
      *     },
-     *     input={"class"=UserType::Class, "name"=""},
+     *     input={"class"=UserType::class, "name"=""},
      *     statusCodes={
      *         200="Returned when user was updated",
      *         400="Returned when parameters are invalids",
      *         404="Returned when user was not found"
      *     },
      *     responseMap={
-     *         200=User::Class,
+     *         200=User::class,
      *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
      *     }
      * )
@@ -116,7 +116,7 @@ class UserController extends FOSRestController
      *     requirements={
      *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
      *     },
-     *     output=User::Class,
+     *     output=User::class,
      *     statusCodes={
      *         200="Returned when user was found",
      *         403="Returned when user is not authorized to get an user",

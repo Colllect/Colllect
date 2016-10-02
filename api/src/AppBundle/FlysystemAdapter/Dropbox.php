@@ -42,7 +42,7 @@ class Dropbox implements FlysystemAdapterInterface
             $token = $user->getDropboxToken();
 
             if (!$token) {
-                throw new DropboxAccessTokenMissingException();
+                throw new DropboxAccessTokenMissingException("error.dropbox_not_linked");
             }
 
             $client = new DropboxClient($token, $this->secret);

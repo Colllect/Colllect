@@ -11,3 +11,8 @@ users:
     type: rest
     resource: AppBundle\Controller\UserController
     prefix: /api
+
+inbox_elements:
+    type: rest
+    resource: AppBundle\Controller\InboxElementController
+    prefix: /api

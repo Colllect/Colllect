@@ -1,7 +1,7 @@
 Collect.io
 ==========
 
-[![Build Status](https://travis-ci.org/Collect-io/Collect.io.svg?branch=develop)](https://travis-ci.org/Collect-io/Collect.io) [![MIT Licence](https://img.shields.io/github/license/Collect-io/Collect.io.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/Collect-io/Collect.io.svg?branch=develop)](https://travis-ci.org/Collect-io/Collect.io) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Collect-io/Collect.io.svg)](LICENSE)
 
 [Go to Collect.io website](http://getcollect.io/) and subscribe to get notified of the launch.
 

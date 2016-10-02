@@ -88,7 +88,7 @@ abstract class Element
 
     public static function isValidElement($path)
     {
-        return self::getElementType($path) != null;
+        return self::getElementType($path) !== null;
     }
 
     /**

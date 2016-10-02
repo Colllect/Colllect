@@ -3,12 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use AppBundle\Form\UserType;
+use AppBundle\Form\Type\UserType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * UserController
@@ -18,7 +17,7 @@ class UserController extends FOSRestController
     /**
      * Create a new user account
      *
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\View(statusCode=201)
      *
      * @ApiDoc(
      *     section="Users",
@@ -146,7 +145,7 @@ class UserController extends FOSRestController
     /**
      * Delete an user account
      *
-     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\View(statusCode=204)
      *
      * @ApiDoc(
      *     section="Users",

@@ -8,7 +8,6 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * TokenController
@@ -20,7 +19,7 @@ class TokenController extends FOSRestController
      *
      * @Rest\RequestParam(name="email", description="User email")
      * @Rest\RequestParam(name="password", description="User password")
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\View(statusCode=201)
      * @ApiDoc(
      *     section="Token",
      *     statusCodes={

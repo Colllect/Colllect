@@ -2,14 +2,12 @@
 
 namespace AppBundle\Security;
 
-
 use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,16 +26,10 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
      */
     private $em;
 
-    /**
-     * @var UserPasswordEncoder
-     */
-    private $userPasswordEncoder;
-
-    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em, UserPasswordEncoder $userPasswordEncoder)
+    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em)
     {
         $this->jwtEncoder = $jwtEncoder;
         $this->em = $em;
-        $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
     public function getCredentials(Request $request)

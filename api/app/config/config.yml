@@ -95,4 +95,3 @@ nelmio_api_doc:
             formats:
                 json: application/json
             method: accept_header
-        body_format: json

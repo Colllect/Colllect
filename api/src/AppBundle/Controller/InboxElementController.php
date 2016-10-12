@@ -5,14 +5,14 @@ namespace AppBundle\Controller;
 use AppBundle\FlysystemAdapter\FlysystemAdapterInterface;
 use AppBundle\Form\Type\ElementType;
 use AppBundle\Model\AbstractElement;
-use AppBundle\Model\Element;
+use AppBundle\Model\File;
 use AppBundle\Model\Image;
+use AppBundle\Util\Base64;
 use League\Flysystem\FilesystemInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -84,16 +84,16 @@ class InboxElementController extends FOSRestController
      * )
      *
      * @param Request $request
-     * @return Element|\Symfony\Component\Form\Form
+     * @return array|\Symfony\Component\Form\Form
      */
     public function postInboxElementsAction(Request $request)
     {
-        $element = new Element();
-        $form = $this->createForm(ElementType::class, $element);
+        $file = new File();
+        $form = $this->createForm(ElementType::class, $file);
 
         $requestContent = $request->request->all();
-        foreach ($request->files as $k => $file) {
-            $requestContent[$k] = $file;
+        foreach ($request->files as $k => $requestFile) {
+            $requestContent[$k] = $requestFile;
         }
 
         $form->submit($requestContent);
@@ -102,12 +102,16 @@ class InboxElementController extends FOSRestController
             return $form;
         }
 
-        $element->fetchContent();
-
+        $file->fetchContent();
         $filesystem = $this->getFilesystem();
-        $filesystem->write($element->getBasename(), $element->getContent());
 
-        return $element;
+        $fullPath = self::INBOX_FOLDER . '/' . $file->getBasename();
+        $filesystem->write($fullPath, $file->getContent());
+
+        return [
+            'basename' => $file->getBasename(),
+            'type' => $file->getType(),
+        ];
     }
 
 
@@ -136,7 +140,7 @@ class InboxElementController extends FOSRestController
      */
     public function getInboxElementAction($elementName)
     {
-        if (!$this->isValidBase64($elementName)) {
+        if (!Base64::isValidBase64($elementName)) {
             throw new BadRequestHttpException("request.invalid_element_name");
         }
 
@@ -165,25 +169,5 @@ class InboxElementController extends FOSRestController
         $filesystem = $flysystem->getFilesystem($this->getUser());
 
         return $filesystem;
-    }
-
-
-    private function isValidBase64($string)
-    {
-        if (!preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string)) {
-            return false;
-        }
-
-        $decoded = base64_decode($string, true);
-
-        if (!$decoded) {
-            return false;
-        }
-
-        if (base64_encode($decoded) != $string) {
-            return false;
-        }
-
-        return true;
     }
 }

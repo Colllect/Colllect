@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as Serializer;
  */
 abstract class AbstractElement
 {
-    use UpdatableElementTrait;
+    use FileTrait;
 
     const IMAGE_TYPE = 'image';
     const NOTE_TYPE = 'note';
@@ -95,22 +95,32 @@ abstract class AbstractElement
      */
     public static function isValidElement($path)
     {
-        return self::getElementType($path) !== null;
+        try {
+            self::getElementType($path);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
      * @param string $path
-     * @return string|null
+     * @return string
+     * @throws \Exception
      */
     public static function getElementType($path)
     {
-        $extension = pathinfo($path)['extension'];
+        $pathInfos = pathinfo($path);
+        if (!isset($pathInfos['extension'])) {
+            throw new \Exception('error.unable_to_guess_element_type');
+        }
+        $extension = $pathInfos['extension'];
         foreach (self::EXTENSIONS_BY_TYPE as $type => $extensions) {
             if (in_array($extension, $extensions)) {
                 return $type;
             }
         }
 
-        return null;
+        throw new \Exception('error.unsupported_element_type');
     }
 }

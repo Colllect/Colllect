@@ -4,10 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\FlysystemAdapter\FlysystemAdapterInterface;
 use AppBundle\Form\Type\ElementType;
-use AppBundle\Model\AbstractElement;
-use AppBundle\Model\File;
+use AppBundle\Model\Element;
+use AppBundle\Model\ElementFile;
 use AppBundle\Model\Image;
 use AppBundle\Util\Base64;
+use AppBundle\Util\ElementUtil;
 use League\Flysystem\FilesystemInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -55,7 +56,7 @@ class InboxElementController extends FOSRestController
 
         $files = [];
         foreach ($metadata as $meta) {
-            if (AbstractElement::isValidElement($meta['path'])) {
+            if (Element::isValidElement($meta['path'])) {
                 $element = new Image($meta);
                 $files[] = $element;
             }
@@ -88,8 +89,8 @@ class InboxElementController extends FOSRestController
      */
     public function postInboxElementsAction(Request $request)
     {
-        $file = new File();
-        $form = $this->createForm(ElementType::class, $file);
+        $elementFile = new ElementFile();
+        $form = $this->createForm(ElementType::class, $elementFile);
 
         $requestContent = $request->request->all();
         foreach ($request->files as $k => $requestFile) {
@@ -102,15 +103,16 @@ class InboxElementController extends FOSRestController
             return $form;
         }
 
-        $file->fetchContent();
+        $elementHandler = $this->get('app.service.element_handler');
+        $elementHandler->handleFileElement($elementFile);
         $filesystem = $this->getFilesystem();
 
-        $fullPath = self::INBOX_FOLDER . '/' . $file->getBasename();
-        $filesystem->write($fullPath, $file->getContent());
+        $fullPath = self::INBOX_FOLDER . '/' . $elementFile->getBasename();
+        $filesystem->write($fullPath, $elementFile->getContent());
 
         return [
-            'basename' => $file->getBasename(),
-            'type' => $file->getType(),
+            'basename' => $elementFile->getBasename(),
+            'type' => $elementFile->getType(),
         ];
     }
 
@@ -146,7 +148,7 @@ class InboxElementController extends FOSRestController
 
         $basename = base64_decode($elementName);
 
-        if (!AbstractElement::isValidElement($basename)) {
+        if (!ElementUtil::isValidElement($basename)) {
             throw new BadRequestHttpException("request.unsupported_element_type");
         }
 

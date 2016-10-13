@@ -22,3 +22,6 @@ services:
     app.flysystem.dropbox:
         class: AppBundle\FlysystemAdapter\Dropbox
         arguments: ["%dropbox_secret%"]
+
+    app.service.element_handler:
+        class: AppBundle\Service\ElementFileHandler

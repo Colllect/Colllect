@@ -2,6 +2,6 @@
 
 namespace AppBundle\Model;
 
-class Image extends AbstractElement
+class Image extends Element
 {
 }

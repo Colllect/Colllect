@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Type;
 
-use AppBundle\Model\File;
+use AppBundle\Model\ElementFile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,7 +33,7 @@ class ElementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => File::class
+            'data_class' => ElementFile::class
         ));
     }
 }

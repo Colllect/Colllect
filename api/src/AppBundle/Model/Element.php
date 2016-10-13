@@ -3,16 +3,15 @@
 namespace AppBundle\Model;
 
 use AppBundle\Exception\NotSupportedElementTypeException;
+use AppBundle\Util\ElementUtil;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @Serializer\ExclusionPolicy("all")
  */
-abstract class AbstractElement
+abstract class Element
 {
-    use FileTrait;
-
     const IMAGE_TYPE = 'image';
     const NOTE_TYPE = 'note';
     const LINK_TYPE = 'link';
@@ -59,7 +58,7 @@ abstract class AbstractElement
 
     public function __construct(array $meta)
     {
-        if (!self::isValidElement($meta['path'])) {
+        if (!ElementUtil::isValidElement($meta['path'])) {
             throw new NotSupportedElementTypeException();
         }
 
@@ -86,41 +85,5 @@ abstract class AbstractElement
         $this->updated = $updated;
         $this->size = $meta['size'];
         $this->extension = $pathParts['extension'];
-    }
-
-
-    /**
-     * @param string $path
-     * @return bool
-     */
-    public static function isValidElement($path)
-    {
-        try {
-            self::getElementType($path);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param string $path
-     * @return string
-     * @throws \Exception
-     */
-    public static function getElementType($path)
-    {
-        $pathInfos = pathinfo($path);
-        if (!isset($pathInfos['extension'])) {
-            throw new \Exception('error.unable_to_guess_element_type');
-        }
-        $extension = $pathInfos['extension'];
-        foreach (self::EXTENSIONS_BY_TYPE as $type => $extensions) {
-            if (in_array($extension, $extensions)) {
-                return $type;
-            }
-        }
-
-        throw new \Exception('error.unsupported_element_type');
     }
 }

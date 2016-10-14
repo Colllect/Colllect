@@ -2,12 +2,13 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Exception\NotSupportedElementTypeException;
 use AppBundle\Model\Element;
 use AppBundle\Model\ElementFile;
-use AppBundle\Util\ElementUtil;
 
 class ElementFileHandler
 {
+    const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
     const NOT_ALLOWED_CHARS_IN_FILENAME = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
 
     public function handleFileElement(ElementFile $elementFile)
@@ -46,10 +47,9 @@ class ElementFileHandler
             $elementFile->setBasename($elementFile->getFile()->getClientOriginalName());
         }
 
-        $elementFile->setType(ElementUtil::guessElementFileType($elementFile));
+        $this->guessElementFileType($elementFile);
         $elementFile->setContent(file_get_contents($elementFile->getFile()->getRealPath()));
     }
-
 
     /**
      * Use file targeted by URL as source of ElementFile
@@ -66,7 +66,7 @@ class ElementFileHandler
         }
 
         // Guess element type by header or file extension
-        $elementFile->setType(ElementUtil::guessElementFileType($elementFile));
+        $this->guessElementFileType($elementFile);
 
         // Get URL media content needed by all types
         $mediaContent = file_get_contents($elementFile->getUrl());
@@ -101,5 +101,48 @@ class ElementFileHandler
         if (!isset($pathInfos['filename']) || strlen($pathInfos['filename']) === 0) {
             $elementFile->setBasename(uniqid() . $elementFile->getBasename());
         }
+    }
+
+    /**
+     * @param ElementFile $elementFile
+     * @return string
+     * @throws \Exception
+     * @internal param string $path
+     */
+    protected function guessElementFileType(ElementFile $elementFile)
+    {
+        if ($elementFile->getUrl()) {
+            // Check if URL is valid and respond a 200
+            $headers = get_headers($elementFile->getUrl(), true);
+            if (strstr($headers[0], '200 OK') === false) {
+                throw new \Exception('error.invalid_link');
+            }
+
+            // Check if content type is in image allowed content types
+            foreach (self::ALLOWED_IMAGE_CONTENT_TYPE as $allowedContentType) {
+                if (strstr($headers['Content-Type'], $allowedContentType) !== false) {
+                    $allowedContentTypeParts = explode('/', $allowedContentType);
+                    $extension = end($allowedContentTypeParts);
+                    $pathInfos = pathinfo($elementFile->getBasename());
+                    if (!isset($pathInfos['extension']) || (isset($pathInfos['extension']) && $pathInfos['extension'] !== $extension)) {
+                        $elementFile->setBasename($elementFile->getBasename() . '.' . $extension);
+                    }
+                    $elementFile->setType(Element::IMAGE_TYPE);
+                    return $elementFile;
+                }
+            }
+        }
+
+        try {
+            $elementFile->setType(Element::getTypeByPath($elementFile->getBasename()));
+        } catch (\Exception $e) {
+        }
+
+        // URL works but that is not an image and extension does not allow us to guess another type
+        if ($elementFile->getUrl()) {
+            return Element::LINK_TYPE;
+        }
+
+        throw new NotSupportedElementTypeException();
     }
 }

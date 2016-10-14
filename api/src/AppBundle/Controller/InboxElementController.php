@@ -2,13 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Exception\NotSupportedElementTypeException;
 use AppBundle\FlysystemAdapter\FlysystemAdapterInterface;
 use AppBundle\Form\Type\ElementType;
 use AppBundle\Model\Element;
 use AppBundle\Model\ElementFile;
 use AppBundle\Model\Image;
 use AppBundle\Util\Base64;
-use AppBundle\Util\ElementUtil;
 use League\Flysystem\FilesystemInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -56,9 +56,9 @@ class InboxElementController extends FOSRestController
 
         $files = [];
         foreach ($metadata as $meta) {
-            if (Element::isValidElement($meta['path'])) {
-                $element = new Image($meta);
-                $files[] = $element;
+            try {
+                $files[] = Element::get($meta);
+            } catch (NotSupportedElementTypeException $e) {
             }
         }
 

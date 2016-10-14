@@ -3,7 +3,6 @@
 namespace AppBundle\Model;
 
 use AppBundle\Exception\NotSupportedElementTypeException;
-use AppBundle\Util\ElementUtil;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -24,6 +23,12 @@ abstract class Element
         self::COLORS_TYPE => ['colors'],
     ];
 
+
+    /**
+     * @var string
+     * @Serializer\Expose()
+     */
+    private $type;
 
     /**
      * @var string
@@ -58,9 +63,8 @@ abstract class Element
 
     public function __construct(array $meta)
     {
-        if (!ElementUtil::isValidElement($meta['path'])) {
-            throw new NotSupportedElementTypeException();
-        }
+        // Can throw an NotSupportedElementTypeException
+        $this->type = self::getTypeByPath($meta['path']);
 
         $pathParts = pathinfo($meta['path']);
         $filename = $pathParts['filename'];
@@ -85,5 +89,50 @@ abstract class Element
         $this->updated = $updated;
         $this->size = $meta['size'];
         $this->extension = $pathParts['extension'];
+    }
+
+    /**
+     * @param $elementFilePath
+     * @return string
+     * @throws \Exception
+     */
+    public static function getTypeByPath($elementFilePath)
+    {
+        $pathInfos = pathinfo($elementFilePath);
+        if (isset($pathInfos['extension'])) {
+            foreach (self::EXTENSIONS_BY_TYPE as $type => $extensions) {
+                if (in_array($pathInfos['extension'], $extensions)) {
+                    return $type;
+                }
+            }
+        }
+
+        throw new NotSupportedElementTypeException();
+    }
+
+    /**
+     * @param array $elementMetadata
+     * @return Color|Image|Link|Note
+     * @throws NotSupportedElementTypeException
+     */
+    public static function get($elementMetadata)
+    {
+        $type = self::getTypeByPath($elementMetadata['path']);
+        switch($type) {
+            case self::COLORS_TYPE:
+                return new Color($elementMetadata);
+                break;
+            case self::IMAGE_TYPE:
+                return new Image($elementMetadata);
+                break;
+            case self::LINK_TYPE:
+                return new Link($elementMetadata);
+                break;
+            case self::NOTE_TYPE:
+                return new Note($elementMetadata);
+                break;
+        }
+
+        throw new NotSupportedElementTypeException();
     }
 }

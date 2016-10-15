@@ -23,5 +23,9 @@ services:
         class: AppBundle\FlysystemAdapter\Dropbox
         arguments: ["%dropbox_secret%"]
 
-    app.service.element_handler:
+    app.service.collection:
+        class: AppBundle\Service\CollectionService
+        autowire: true
+
+    app.service.element_file_handler:
         class: AppBundle\Service\ElementFileHandler

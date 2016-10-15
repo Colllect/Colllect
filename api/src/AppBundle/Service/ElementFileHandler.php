@@ -11,6 +11,14 @@ class ElementFileHandler
     const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
     const NOT_ALLOWED_CHARS_IN_FILENAME = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
 
+
+    /**
+     * Automatic fill some elementFile fields depending on the source
+     *
+     * @param ElementFile $elementFile
+     * @return bool
+     * @throws \Exception
+     */
     public function handleFileElement(ElementFile $elementFile)
     {
         // If there is an UploadedFile, consider it first
@@ -34,7 +42,6 @@ class ElementFileHandler
 
         throw new \Exception('error.empty_file');
     }
-
 
     /**
      * Use UploadedFile as source of ElementFile
@@ -91,6 +98,8 @@ class ElementFileHandler
             case Element::COLORS_TYPE:
                 $elementFile->setContent($mediaContent);
                 break;
+            default:
+                throw new NotSupportedElementTypeException();
         }
 
         // Add default extension to typed file
@@ -104,10 +113,11 @@ class ElementFileHandler
     }
 
     /**
+     * Set elementFile type by trying multiple methods
+     *
      * @param ElementFile $elementFile
-     * @return string
+     * @return ElementFile
      * @throws \Exception
-     * @internal param string $path
      */
     protected function guessElementFileType(ElementFile $elementFile)
     {
@@ -135,12 +145,14 @@ class ElementFileHandler
 
         try {
             $elementFile->setType(Element::getTypeByPath($elementFile->getBasename()));
+            return $elementFile;
         } catch (\Exception $e) {
         }
 
         // URL works but that is not an image and extension does not allow us to guess another type
         if ($elementFile->getUrl()) {
-            return Element::LINK_TYPE;
+            $elementFile->setType(Element::LINK_TYPE);
+            return $elementFile;
         }
 
         throw new NotSupportedElementTypeException();

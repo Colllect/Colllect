@@ -3,8 +3,10 @@
 namespace AppBundle\Model;
 
 use AppBundle\Exception\NotSupportedElementTypeException;
+use AppBundle\Util\Base64;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Serializer\ExclusionPolicy("all")
@@ -111,6 +113,8 @@ abstract class Element
     }
 
     /**
+     * Return typed element based on flysystem metadata
+     *
      * @param array $elementMetadata
      * @return Color|Image|Link|Note
      * @throws NotSupportedElementTypeException

@@ -2,28 +2,19 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Exception\NotSupportedElementTypeException;
-use AppBundle\FlysystemAdapter\FlysystemAdapterInterface;
 use AppBundle\Form\Type\ElementType;
-use AppBundle\Model\Element;
-use AppBundle\Model\ElementFile;
-use AppBundle\Model\Image;
-use AppBundle\Util\Base64;
-use League\Flysystem\FilesystemInterface;
+use AppBundle\Service\CollectionService;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Security("has_role('ROLE_USER')")
  */
 class InboxElementController extends FOSRestController
 {
-    const INBOX_FOLDER = 'Inbox';
-
     /**
      * List all Inbox elements
      *
@@ -42,27 +33,10 @@ class InboxElementController extends FOSRestController
      */
     public function getInboxElementsAction()
     {
-        $filesystem = $this->getFilesystem();
+        $collectionService = $this->get('app.service.collection');
+        $elements = $collectionService->listElements(CollectionService::INBOX_FOLDER);
 
-        $metadata = $filesystem->listContents(self::INBOX_FOLDER);
-
-        uasort($metadata, function ($a, $b) {
-            if ($a['timestamp'] == $b['timestamp']) {
-                return 0;
-            }
-
-            return $a['timestamp'] < $b['timestamp'] ? -1 : 1;
-        });
-
-        $files = [];
-        foreach ($metadata as $meta) {
-            try {
-                $files[] = Element::get($meta);
-            } catch (NotSupportedElementTypeException $e) {
-            }
-        }
-
-        return $files;
+        return $elements;
     }
 
 
@@ -89,31 +63,10 @@ class InboxElementController extends FOSRestController
      */
     public function postInboxElementsAction(Request $request)
     {
-        $elementFile = new ElementFile();
-        $form = $this->createForm(ElementType::class, $elementFile);
+        $collectionService = $this->get('app.service.collection');
+        $response = $collectionService->addElement($request, CollectionService::INBOX_FOLDER);
 
-        $requestContent = $request->request->all();
-        foreach ($request->files as $k => $requestFile) {
-            $requestContent[$k] = $requestFile;
-        }
-
-        $form->submit($requestContent);
-
-        if (!$form->isValid()) {
-            return $form;
-        }
-
-        $elementHandler = $this->get('app.service.element_handler');
-        $elementHandler->handleFileElement($elementFile);
-        $filesystem = $this->getFilesystem();
-
-        $fullPath = self::INBOX_FOLDER . '/' . $elementFile->getBasename();
-        $filesystem->write($fullPath, $elementFile->getContent());
-
-        return [
-            'basename' => $elementFile->getBasename(),
-            'type' => $elementFile->getType(),
-        ];
+        return $response;
     }
 
 
@@ -142,34 +95,9 @@ class InboxElementController extends FOSRestController
      */
     public function getInboxElementAction($elementName)
     {
-        if (!Base64::isValidBase64($elementName)) {
-            throw new BadRequestHttpException("request.invalid_element_name");
-        }
-
-        $basename = base64_decode($elementName);
-
-        if (!ElementUtil::isValidElement($basename)) {
-            throw new BadRequestHttpException("request.unsupported_element_type");
-        }
-
-        $filesystem = $this->getFilesystem();
-
-        $path = self::INBOX_FOLDER . '/' . $basename;
-
-        $meta = $filesystem->getMetadata($path);
-        $element = new Image($meta);
+        $collectionService = $this->get('app.service.collection');
+        $element = $collectionService->getElementByEncodedElementName($elementName, CollectionService::INBOX_FOLDER);
 
         return $element;
-    }
-
-
-    private function getFilesystem()
-    {
-        /** @var FlysystemAdapterInterface $flysystem */
-        $flysystem = $this->get('app.flysystem.dropbox');
-        /** @var FilesystemInterface $filesystem */
-        $filesystem = $flysystem->getFilesystem($this->getUser());
-
-        return $filesystem;
     }
 }

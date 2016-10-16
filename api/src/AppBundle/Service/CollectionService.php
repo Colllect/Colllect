@@ -91,6 +91,9 @@ class CollectionService
         $meta = $this->filesystem->getMetadata($path);
         $element = Element::get($meta);
 
+        $content = $this->filesystem->read($path);
+        $element->setContent($content);
+
         return $element;
     }
 

@@ -3,10 +3,8 @@
 namespace AppBundle\Model;
 
 use AppBundle\Exception\NotSupportedElementTypeException;
-use AppBundle\Util\Base64;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @Serializer\ExclusionPolicy("all")
@@ -92,6 +90,15 @@ abstract class Element
         $this->size = $meta['size'];
         $this->extension = $pathParts['extension'];
     }
+
+    /**
+     * Set content of the file in the element object
+     * It can be handled differently by each element typed class
+     *
+     * @param $content
+     * @return $this
+     */
+    abstract public function setContent($content);
 
     /**
      * @param $elementFilePath

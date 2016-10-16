@@ -20,7 +20,7 @@ Feature: Get a JWT
     When I send a POST request to "/api/tokens" with values:
       | email    | demodealex+1@gmail.com |
       | password | invalidpassword        |
-    Then the response code should be 401
+    Then the response code should be 403
 
   Scenario: Get JWT with valid credentials but with GET method
     When I send a GET request to "/api/tokens" with values:

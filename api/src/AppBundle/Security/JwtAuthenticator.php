@@ -69,9 +69,9 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        // TODO: Improve format
         return new JsonResponse([
-            'error' => 'Credientials issue'
+            'code' => 401,
+            'message' => 'error.credentials_issue',
         ], 401);
     }
 
@@ -87,9 +87,9 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        // TODO: Improve format
         return new JsonResponse([
-            'error' => 'No credientials'
-        ], 401);
+            'code' => 403,
+            'message' => 'error.no_credential',
+        ], 403);
     }
 }

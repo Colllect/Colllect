@@ -15,12 +15,12 @@ class Dropbox implements FlysystemAdapterInterface
     /**
      * @var string
      */
-    protected $secret;
+    private $secret;
 
     /**
      * @var FilesystemInterface
      */
-    protected $filesystem;
+    private $filesystem;
 
 
     /**

@@ -34,31 +34,31 @@ abstract class Element
      * @var string
      * @Serializer\Expose()
      */
-    protected $name;
+    private $name;
 
     /**
      * @var array
      * @Serializer\Expose()
      */
-    protected $tags;
+    private $tags;
 
     /**
      * @var DateTime
      * @Serializer\Expose()
      */
-    protected $updated;
+    private $updated;
 
     /**
      * @var int
      * @Serializer\Expose()
      */
-    protected $size;
+    private $size;
 
     /**
      * @var string
      * @Serializer\Expose()
      */
-    protected $extension;
+    private $extension;
 
 
     public function __construct(array $meta)
@@ -99,6 +99,66 @@ abstract class Element
      * @return $this
      */
     abstract public function setContent($content);
+
+    /**
+     * Get element type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get element name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get element tags
+     *
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Get element last updated date
+     *
+     * @return DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Get element size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * Get element extension
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
 
     /**
      * @param $elementFilePath

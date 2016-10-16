@@ -44,7 +44,7 @@ class InboxElementController extends FOSRestController
      * Add an element to Inbox
      *
      * @Rest\Route("/inbox/elements")
-     * @Rest\View()
+     * @Rest\View(statusCode=201)
      *
      * @ApiDoc(
      *     section="Inbox Elements",
@@ -84,9 +84,6 @@ class InboxElementController extends FOSRestController
      *     statusCodes={
      *         200="Returned when Inbox file is found",
      *         404="Returned when Inbox file is not found"
-     *     },
-     *     responseMap={
-     *         400={"class"=ElementType::class, "fos_rest_form_errors"=true, "name"=""}
      *     }
      * )
      *
@@ -99,5 +96,31 @@ class InboxElementController extends FOSRestController
         $element = $collectionService->getElementByEncodedElementName($elementName, CollectionService::INBOX_FOLDER);
 
         return $element;
+    }
+
+
+    /**
+     * Delete an Inbox element
+     *
+     * @Rest\Route("/inbox/elements/{elementName}")
+     * @Rest\View(statusCode=204)
+     *
+     * @ApiDoc(
+     *     section="Inbox Elements",
+     *     requirements={
+     *         {"name"="elementName", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename as base64 URL encoded"}
+     *     },
+     *     statusCodes={
+     *         204="Returned when Inbox file is deleted",
+     *         404="Returned when Inbox file is not found"
+     *     }
+     * )
+     *
+     * @param $elementName
+     */
+    public function deleteInboxElementAction($elementName)
+    {
+        $collectionService = $this->get('app.service.collection');
+        $collectionService->deleteElementByEncodedElementName($elementName, CollectionService::INBOX_FOLDER);
     }
 }

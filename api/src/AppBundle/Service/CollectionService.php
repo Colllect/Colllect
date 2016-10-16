@@ -9,6 +9,7 @@ use AppBundle\Form\Type\ElementType;
 use AppBundle\Model\Element;
 use AppBundle\Model\ElementFile;
 use AppBundle\Util\Base64;
+use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,26 +78,15 @@ class CollectionService
     }
 
     /**
-     * Base64 decode elementName to get basename from URL
-     * Also throw error if elementName is invalid or not supported
+     * Get an element from a collection based on base 64 encoded basename
      *
-     * @param string $elementName Base 64 encoded filename
+     * @param string $elementName Base 64 encoded basename
      * @param string $collectionPath Collection name
      * @return Element
      */
     public function getElementByEncodedElementName($elementName, $collectionPath)
     {
-        if (!Base64::isValidBase64($elementName)) {
-            throw new BadRequestHttpException("request.invalid_element_name");
-        }
-
-        $basename = base64_decode($elementName);
-
-        // Check if file type is supported before call filesystem
-        // Throw exception if element type is not supported
-        Element::getTypeByPath($basename);
-
-        $path = $collectionPath . '/' . $basename;
+        $path = $this->getElementPathByEncodedElementName($elementName, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
         $element = Element::get($meta);
@@ -114,6 +104,73 @@ class CollectionService
     public function addElement(Request $request, $collectionPath)
     {
         $elementFile = new ElementFile();
+        $form = $this->handleRequest($request, $elementFile);
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+
+        $this->elementFileHandler->handleFileElement($elementFile);
+
+        $path = $collectionPath . '/' . $elementFile->getBasename();
+        $this->filesystem->write($path, $elementFile->getContent());
+
+        return [
+            'basename' => $elementFile->getBasename(),
+            'type' => $elementFile->getType(),
+        ];
+    }
+
+    /**
+     * Delete an element from a collection based on base 64 encoded basename
+     *
+     * @param string $elementName Base 64 encoded filename
+     * @param string $collectionPath Collection name
+     */
+    public function deleteElementByEncodedElementName($elementName, $collectionPath)
+    {
+        $path = $this->getElementPathByEncodedElementName($elementName, $collectionPath);
+
+        try {
+            $this->filesystem->delete($path);
+        } catch (FileNotFoundException $e) {
+            // If file does not exists or was already deleted, it's OK
+        }
+    }
+
+    /**
+     * Return file path by check and decode elementName
+     *
+     * @param $elementName
+     * @param $collectionPath
+     * @return string
+     */
+    private function getElementPathByEncodedElementName($elementName, $collectionPath)
+    {
+        if (!Base64::isValidBase64($elementName)) {
+            throw new BadRequestHttpException("request.invalid_element_name");
+        }
+
+        $basename = base64_decode($elementName);
+
+        // Check if file type is supported before call filesystem
+        // Throw exception if element type is not supported
+        Element::getTypeByPath($basename);
+
+        $path = $collectionPath . '/' . $basename;
+
+        return $path;
+    }
+
+    /**
+     * Update element file with request data
+     *
+     * @param Request $request
+     * @param ElementFile $elementFile
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    private function handleRequest(Request $request, ElementFile $elementFile)
+    {
         $form = $this->formFactory->create(ElementType::class, $elementFile);
 
         $requestContent = $request->request->all();
@@ -123,18 +180,6 @@ class CollectionService
 
         $form->submit($requestContent);
 
-        if (!$form->isValid()) {
-            return $form;
-        }
-
-        $this->elementFileHandler->handleFileElement($elementFile);
-
-        $fullPath = $collectionPath . '/' . $elementFile->getBasename();
-        $this->filesystem->write($fullPath, $elementFile->getContent());
-
-        return [
-            'basename' => $elementFile->getBasename(),
-            'type' => $elementFile->getType(),
-        ];
+        return $form;
     }
 }

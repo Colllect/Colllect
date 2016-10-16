@@ -80,13 +80,13 @@ class CollectionService
     /**
      * Get an element from a collection based on base 64 encoded basename
      *
-     * @param string $elementName Base 64 encoded basename
+     * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $collectionPath Collection name
      * @return Element
      */
-    public function getElementByEncodedElementName($elementName, $collectionPath)
+    public function getElementByEncodedElementBasename($encodedElementBasename, $collectionPath)
     {
-        $path = $this->getElementPathByEncodedElementName($elementName, $collectionPath);
+        $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
         $element = Element::get($meta);
@@ -124,12 +124,12 @@ class CollectionService
     /**
      * Delete an element from a collection based on base 64 encoded basename
      *
-     * @param string $elementName Base 64 encoded filename
+     * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $collectionPath Collection name
      */
-    public function deleteElementByEncodedElementName($elementName, $collectionPath)
+    public function deleteElementByEncodedElementBasename($encodedElementBasename, $collectionPath)
     {
-        $path = $this->getElementPathByEncodedElementName($elementName, $collectionPath);
+        $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         try {
             $this->filesystem->delete($path);
@@ -141,17 +141,17 @@ class CollectionService
     /**
      * Return file path by check and decode elementName
      *
-     * @param $elementName
+     * @param $encodedElementBasename
      * @param $collectionPath
      * @return string
      */
-    private function getElementPathByEncodedElementName($elementName, $collectionPath)
+    private function getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath)
     {
-        if (!Base64::isValidBase64($elementName)) {
+        if (!Base64::isValidBase64($encodedElementBasename)) {
             throw new BadRequestHttpException("request.invalid_element_name");
         }
 
-        $basename = base64_decode($elementName);
+        $basename = base64_decode($encodedElementBasename);
 
         // Check if file type is supported before call filesystem
         // Throw exception if element type is not supported

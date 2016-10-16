@@ -73,13 +73,13 @@ class InboxElementController extends FOSRestController
     /**
      * Get an Inbox element
      *
-     * @Rest\Route("/inbox/elements/{elementName}")
+     * @Rest\Route("/inbox/elements/{encodedElementBasename}")
      * @Rest\View()
      *
      * @ApiDoc(
      *     section="Inbox Elements",
      *     requirements={
-     *         {"name"="elementName", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename as base64 URL encoded"}
+     *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={
      *         200="Returned when Inbox file is found",
@@ -87,13 +87,13 @@ class InboxElementController extends FOSRestController
      *     }
      * )
      *
-     * @param $elementName
+     * @param $encodedElementBasename
      * @return string
      */
-    public function getInboxElementAction($elementName)
+    public function getInboxElementAction($encodedElementBasename)
     {
         $collectionService = $this->get('app.service.collection');
-        $element = $collectionService->getElementByEncodedElementName($elementName, CollectionService::INBOX_FOLDER);
+        $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
 
         return $element;
     }
@@ -102,13 +102,13 @@ class InboxElementController extends FOSRestController
     /**
      * Delete an Inbox element
      *
-     * @Rest\Route("/inbox/elements/{elementName}")
+     * @Rest\Route("/inbox/elements/{encodedElementBasename}")
      * @Rest\View(statusCode=204)
      *
      * @ApiDoc(
      *     section="Inbox Elements",
      *     requirements={
-     *         {"name"="elementName", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename as base64 URL encoded"}
+     *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={
      *         204="Returned when Inbox file is deleted",
@@ -116,11 +116,11 @@ class InboxElementController extends FOSRestController
      *     }
      * )
      *
-     * @param $elementName
+     * @param $encodedElementBasename
      */
-    public function deleteInboxElementAction($elementName)
+    public function deleteInboxElementAction($encodedElementBasename)
     {
         $collectionService = $this->get('app.service.collection');
-        $collectionService->deleteElementByEncodedElementName($elementName, CollectionService::INBOX_FOLDER);
+        $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
     }
 }

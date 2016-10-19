@@ -22,3 +22,13 @@ parameters:
 
     # Create an app on https://www.dropbox.com/developers/apps get the app secret on the app page
     dropbox_secret:    DropboxSecret
+
+    # Create a secured user https://console.aws.amazon.com/iam then go to "Security Credentials" > "Create Access Key"
+    # Create a bucket here https://console.aws.amazon.com/s3
+    aws_s3_key:        AwsS3Key
+    aws_s3_secret:     AwsS3Secret
+    aws_s3_region:     AwsS3Region
+    aws_s3_bucket:     AwsS3BucketName
+
+    # Can contain the alias of one service tagged with app.flysystem_adapter
+    default_adapter:   aws_s3

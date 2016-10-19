@@ -24,7 +24,8 @@
         "jms/serializer-bundle": "^1.1",
         "nelmio/api-doc-bundle": "2.12.*",
         "league/flysystem": "^1.0",
-        "league/flysystem-dropbox": "^1.0"
+        "league/flysystem-dropbox": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

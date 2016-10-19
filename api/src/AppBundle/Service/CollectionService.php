@@ -2,9 +2,8 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
 use AppBundle\Exception\NotSupportedElementTypeException;
-use AppBundle\FlysystemAdapter\FlysystemAdapterInterface;
+use AppBundle\FlysystemAdapter\FlysystemAdapters;
 use AppBundle\Form\Type\ElementType;
 use AppBundle\Model\Element;
 use AppBundle\Model\ElementFile;
@@ -36,11 +35,10 @@ class CollectionService
     private $elementFileHandler;
 
 
-    public function __construct(TokenStorage $tokenStorage, FlysystemAdapterInterface $flysystemAdapter, FormFactory $formFactory, ElementFileHandler $elementFileHandler)
+    public function __construct(TokenStorage $tokenStorage, FlysystemAdapters $flysystemAdapters, FormFactory $formFactory, ElementFileHandler $elementFileHandler)
     {
-        /** @var User $user */
         $user = $tokenStorage->getToken()->getUser();
-        $this->filesystem = $flysystemAdapter->getFilesystem($user);
+        $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->formFactory = $formFactory;
         $this->elementFileHandler = $elementFileHandler;
     }

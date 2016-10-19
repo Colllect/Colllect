@@ -19,9 +19,23 @@ services:
         tags:
             - { name: nelmio_api_doc.extractor.parser, priority: 1 }
 
+    app.flysystem_adapters:
+        class: AppBundle\FlysystemAdapter\FlysystemAdapters
+        arguments: ["%default_adapter%"]
+
     app.flysystem.dropbox:
         class: AppBundle\FlysystemAdapter\Dropbox
+        public: false
         arguments: ["%dropbox_secret%"]
+        tags:
+            - { name: app.flysystem_adapter, alias: dropbox }
+
+    app.flysystem.aws_s3:
+        class: AppBundle\FlysystemAdapter\AwsS3
+        public: false
+        arguments: ["%aws_s3_key%", "%aws_s3_secret%", "%aws_s3_region%", "%aws_s3_bucket%"]
+        tags:
+            - { name: app.flysystem_adapter, alias: aws_s3 }
 
     app.service.collection:
         class: AppBundle\Service\CollectionService

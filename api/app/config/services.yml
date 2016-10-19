@@ -23,12 +23,12 @@ services:
         class: AppBundle\FlysystemAdapter\FlysystemAdapters
         arguments: ["%default_adapter%"]
 
-    app.flysystem.dropbox:
-        class: AppBundle\FlysystemAdapter\Dropbox
+    app.flysystem.local:
+        class: AppBundle\FlysystemAdapter\Local
         public: false
-        arguments: ["%dropbox_secret%"]
+        arguments: ["%local_root_path%"]
         tags:
-            - { name: app.flysystem_adapter, alias: dropbox }
+            - { name: app.flysystem_adapter, alias: local }
 
     app.flysystem.aws_s3:
         class: AppBundle\FlysystemAdapter\AwsS3
@@ -36,6 +36,13 @@ services:
         arguments: ["%aws_s3_key%", "%aws_s3_secret%", "%aws_s3_region%", "%aws_s3_bucket%"]
         tags:
             - { name: app.flysystem_adapter, alias: aws_s3 }
+
+    app.flysystem.dropbox:
+        class: AppBundle\FlysystemAdapter\Dropbox
+        public: false
+        arguments: ["%dropbox_secret%"]
+        tags:
+            - { name: app.flysystem_adapter, alias: dropbox }
 
     app.service.collection:
         class: AppBundle\Service\CollectionService

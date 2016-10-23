@@ -87,10 +87,16 @@ class CollectionService
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
+        // Add path if needed because some adapters didn't return it in metadata
+        if (!isset($meta['path'])) {
+            $meta['path'] = $path;
+        }
         $element = Element::get($meta);
 
-        $content = $this->filesystem->read($path);
-        $element->setContent($content);
+        if ($element->shouldLoadContent()) {
+            $content = $this->filesystem->read($path);
+            $element->setContent($content);
+        }
 
         return $element;
     }

@@ -35,3 +35,10 @@ parameters:
     aws_s3_secret:     AwsS3Secret
     aws_s3_region:     AwsS3Region
     aws_s3_bucket:     AwsS3BucketName
+
+    # Sftp adapter parameters
+    sftp_host:         SftpHost
+    sftp_port:         SftpPort
+    sftp_username:     SftpUsername
+    sftp_password:     SftpPassword
+    sftp_root:         SftpRoot

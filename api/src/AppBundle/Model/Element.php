@@ -92,6 +92,13 @@ abstract class Element
     }
 
     /**
+     * Determinate if this type of element should have his content loaded in response object
+     *
+     * @return bool
+     */
+    abstract public function shouldLoadContent();
+
+    /**
      * Set content of the file in the element object
      * It can be handled differently by each element typed class
      *

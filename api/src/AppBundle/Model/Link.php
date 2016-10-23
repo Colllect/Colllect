@@ -33,6 +33,14 @@ class Link extends Element
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function shouldLoadContent()
+    {
+        return true;
+    }
+
+    /**
      * @param string $content
      * @return $this
      */

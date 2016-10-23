@@ -44,6 +44,13 @@ services:
         tags:
             - { name: app.flysystem_adapter, alias: dropbox }
 
+    app.flysystem.sftp:
+        class: AppBundle\FlysystemAdapter\Sftp
+        public: false
+        arguments: ["%sftp_host%", "%sftp_port%", "%sftp_username%", "%sftp_password%", "%sftp_root%"]
+        tags:
+            - { name: app.flysystem_adapter, alias: sftp }
+
     app.service.collection:
         class: AppBundle\Service\CollectionService
         autowire: true

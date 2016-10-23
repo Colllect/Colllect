@@ -3,33 +3,37 @@
 namespace AppBundle\FlysystemAdapter;
 
 use AppBundle\Entity\User;
-use Aws\S3\S3Client;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use League\Flysystem\Sftp\SftpAdapter;
 
-class AwsS3 implements FlysystemAdapterInterface
+class Sftp implements FlysystemAdapterInterface
 {
     /**
      * @var string
      */
-    private $key;
+    private $host;
+
+    /**
+     * @var int
+     */
+    private $port;
 
     /**
      * @var string
      */
-    private $secret;
+    private $username;
 
     /**
      * @var string
      */
-    private $region;
+    private $password;
 
     /**
      * @var string
      */
-    private $bucket;
+    private $root;
 
     /**
      * @var FilesystemInterface
@@ -38,17 +42,19 @@ class AwsS3 implements FlysystemAdapterInterface
 
 
     /**
-     * @param string $key
-     * @param string $secret
-     * @param string $region
-     * @param string $bucket
+     * @param string $host
+     * @param int $port
+     * @param string $username
+     * @param string $password
+     * @param string $root
      */
-    public function __construct($key, $secret, $region, $bucket)
+    public function __construct($host, $port, $username, $password, $root)
     {
-        $this->key = $key;
-        $this->secret = $secret;
-        $this->region = $region;
-        $this->bucket = $bucket;
+        $this->host = $host;
+        $this->port = $port;
+        $this->username = $username;
+        $this->password = $password;
+        $this->root = $root;
     }
 
 
@@ -59,18 +65,15 @@ class AwsS3 implements FlysystemAdapterInterface
     public function getFilesystem(User $user)
     {
         if (!$this->filesystem) {
-            $client = new S3Client(
+            $adapter = new SftpAdapter(
                 [
-                    'credentials' => [
-                        'key' => $this->key,
-                        'secret' => $this->secret,
-                    ],
-                    'region' => $this->region,
-                    'version' => 'latest',
+                    'host' => $this->host,
+                    'port' => $this->port,
+                    'username' => $this->username,
+                    'password' => $this->password,
+                    'root' => $this->root,
                 ]
             );
-
-            $adapter = new AwsS3Adapter($client, $this->bucket, $user->getId());
 
             $this->filesystem = new Filesystem(
                 $adapter, new Config(

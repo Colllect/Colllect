@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74f30207585c0510abafea7b2543ad49",
-    "content-hash": "f961ec4f119fca2335f4c310abe2ae6c",
+    "hash": "a364a42fe150a634360e87227d4c2740",
+    "content-hash": "21fa8b41afa9d8f581fef826b5c1b27e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1660,6 +1660,53 @@
             ],
             "description": "Flysystem adapter for Dropbox",
             "time": "2016-04-25 18:51:39"
+        },
+        {
+            "name": "league/flysystem-sftp",
+            "version": "1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-sftp.git",
+                "reference": "b0af1abf18788610da4f1e8bd64b72f6c686d3b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/b0af1abf18788610da4f1e8bd64b72f6c686d3b6",
+                "reference": "b0af1abf18788610da4f1e8bd64b72f6c686d3b6",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0",
+                "phpseclib/phpseclib": "~2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Sftp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for SFTP",
+            "time": "2016-10-17 23:19:19"
         },
         {
             "name": "lexik/jwt-authentication-bundle",

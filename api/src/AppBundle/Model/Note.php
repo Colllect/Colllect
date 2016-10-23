@@ -12,6 +12,14 @@ class Note extends Element
      */
     private $content;
 
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function shouldLoadContent()
+    {
+        return true;
+    }
 
     /**
      * @return string

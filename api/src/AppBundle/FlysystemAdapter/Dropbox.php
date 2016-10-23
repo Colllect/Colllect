@@ -49,9 +49,13 @@ class Dropbox implements FlysystemAdapterInterface
             $client = new DropboxClient($token, $this->secret);
             $adapter = new DropboxAdapter($client);
 
-            $this->filesystem = new Filesystem($adapter, new Config([
-                'disable_asserts' => true,
-            ]));
+            $this->filesystem = new Filesystem(
+                $adapter, new Config(
+                    [
+                        'disable_asserts' => true,
+                    ]
+                )
+            );
         }
 
         return $this->filesystem;

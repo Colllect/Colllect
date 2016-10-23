@@ -42,3 +42,10 @@ parameters:
     sftp_username:     SftpUsername
     sftp_password:     SftpPassword
     sftp_root:         SftpRoot
+
+    # Ftp adapter parameters
+    ftp_host:          FtpHost
+    ftp_port:          FtpPort
+    ftp_username:      FtpUsername
+    ftp_password:      FtpPassword
+    ftp_root:          FtpRoot

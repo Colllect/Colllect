@@ -53,19 +53,25 @@ class CollectionService
     {
         $filesMetadata = $this->filesystem->listContents($collectionPath);
 
-        // Sort files by last updated date
-        uasort($filesMetadata, function ($a, $b) {
-            if ($a['timestamp'] == $b['timestamp']) {
-                return 0;
-            }
+        if (count($filesMetadata) > 0 && isset($filesMetadata[0]['timestamp'])) {
+            // Sort files by last updated date
+            uasort(
+                $filesMetadata,
+                function ($a, $b) {
+                    if ($a['timestamp'] == $b['timestamp']) {
+                        return 0;
+                    }
 
-            return $a['timestamp'] < $b['timestamp'] ? -1 : 1;
-        });
+                    return $a['timestamp'] < $b['timestamp'] ? -1 : 1;
+                }
+            );
+        }
 
         // Get typed element for each file
         $elements = [];
         foreach ($filesMetadata as $fileMetadata) {
             try {
+                $fileMetadata = $this->standardizeMetadata($fileMetadata);
                 $elements[] = Element::get($fileMetadata);
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
@@ -87,10 +93,7 @@ class CollectionService
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
-        // Add path if needed because some adapters didn't return it in metadata
-        if (!isset($meta['path'])) {
-            $meta['path'] = $path;
-        }
+        $meta = $this->standardizeMetadata($meta, $path);
         $element = Element::get($meta);
 
         if ($element->shouldLoadContent()) {
@@ -188,5 +191,27 @@ class CollectionService
         $form->submit($requestContent);
 
         return $form;
+    }
+
+    /**
+     * Standardize metadata format
+     *
+     * @param array $meta
+     * @param string $path
+     * @return array
+     */
+    private function standardizeMetadata($meta, $path = null)
+    {
+        // Add path if needed because some adapters didn't return it in metadata
+        if ($path && !isset($meta['path'])) {
+            $meta['path'] = $path;
+        }
+
+        // Set timestamp to 0 if needed because some adapters didn't return it in metadata
+        if (!isset($meta['timestamp'])) {
+            $meta['timestamp'] = null;
+        }
+
+        return $meta;
     }
 }

@@ -44,6 +44,13 @@ services:
         tags:
             - { name: app.flysystem_adapter, alias: dropbox }
 
+    app.flysystem.ftp:
+        class: AppBundle\FlysystemAdapter\Ftp
+        public: false
+        arguments: ["%ftp_host%", "%ftp_port%", "%ftp_username%", "%ftp_password%", "%ftp_root%"]
+        tags:
+            - { name: app.flysystem_adapter, alias: ftp }
+
     app.flysystem.sftp:
         class: AppBundle\FlysystemAdapter\Sftp
         public: false

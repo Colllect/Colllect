@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -32,10 +34,11 @@ class TokenController extends FOSRestController
      */
     public function postTokenAction(ParamFetcher $paramFetcher)
     {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
         /** @var User $user */
-        $user = $this->getDoctrine()
-            ->getRepository('AppBundle:User')
-            ->findOneBy(['email' => $paramFetcher->get('email')]);
+        $user = $em->getRepository('AppBundle:User')->findOneBy(['email' => $paramFetcher->get('email')]);
 
         if (!$user) {
             throw $this->createNotFoundException('No user');
@@ -50,6 +53,11 @@ class TokenController extends FOSRestController
 
         $token = $this->get('lexik_jwt_authentication.jwt_encoder')
             ->encode(['email' => $user->getEmail()]);
+
+        // Update user last login date
+        $user->setLastLogin(new \DateTime());
+        $em->persist($user);
+        $em->flush();
 
         return [
             'token' => $token,

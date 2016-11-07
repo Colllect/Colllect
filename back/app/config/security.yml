@@ -1,0 +1,26 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+
+    encoders:
+        ApiBundle\Entity\User: bcrypt
+
+    providers:
+        users:
+            entity: { class: ApiBundle\Entity\User, property: email }
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        api:
+            pattern: ^/api/
+            anonymous: true
+            stateless: true
+            guard:
+                authenticator:
+                    - app.security.jwt_authenticator
+
+    access_control:
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }

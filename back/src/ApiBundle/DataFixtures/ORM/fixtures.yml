@@ -1,0 +1,13 @@
+ApiBundle\Entity\User:
+    user_{1..5}:
+        email: demodealex+<current()>@gmail.com
+        nickname: '<userName()>'
+        plainPassword: 12345678
+        createdAt: '<dateTimeThisYear()>'
+
+    user_{6..10}:
+        email: demodealex+<current()>@gmail.com
+        nickname: '<userName()>'
+        plainPassword: 12345678
+        createdAt: '<dateTimeThisYear()>'
+        roles: ['ROLE_ADMIN']

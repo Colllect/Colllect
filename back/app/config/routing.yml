@@ -1,0 +1,18 @@
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
+
+tokens:
+    type: rest
+    resource: ApiBundle\Controller\TokenController
+    prefix: /api
+
+users:
+    type: rest
+    resource: ApiBundle\Controller\UserController
+    prefix: /api
+
+inbox_elements:
+    type: rest
+    resource: ApiBundle\Controller\InboxElementController
+    prefix: /api

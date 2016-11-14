@@ -15,12 +15,12 @@ class FlysystemAdapterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('app.flysystem_adapters')) {
+        if (!$container->has('api.flysystem_adapters')) {
             return;
         }
 
-        $definition = $container->findDefinition('app.flysystem_adapters');
-        $taggedServices = $container->findTaggedServiceIds('app.flysystem_adapter');
+        $definition = $container->findDefinition('api.flysystem_adapters');
+        $taggedServices = $container->findTaggedServiceIds('api.flysystem_adapter');
 
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {

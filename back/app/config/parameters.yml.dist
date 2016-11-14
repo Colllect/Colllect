@@ -27,6 +27,7 @@ parameters:
     local_root_path:   "%kernel.root_dir%/../uploads"
 
     # Create an app on https://www.dropbox.com/developers/apps get the app secret on the app page
+    dropbox_key:       DropboxKey
     dropbox_secret:    DropboxSecret
 
     # Create a secured user https://console.aws.amazon.com/iam then go to "Security Credentials" > "Create Access Key"

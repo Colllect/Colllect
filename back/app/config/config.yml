@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@AppBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -84,7 +85,8 @@ fos_rest:
         view_response_listener: true
     format_listener:
         rules:
-            - { path: '^/', priorities: ['json'], fallback_format: 'json', prefer_extension: false }
+            - { path: '^/api', priorities: ['json'], fallback_format: 'json', prefer_extension: false }
+            - { path: '^/', priorities: [], fallback_format: 'html', prefer_extension: true }
     exception:
         enabled: true
 

@@ -32,7 +32,7 @@ class InboxElementController extends FOSRestController
      */
     public function getInboxElementsAction()
     {
-        $collectionService = $this->get('app.service.collection');
+        $collectionService = $this->get('api.service.collection');
         $elements = $collectionService->listElements(CollectionService::INBOX_FOLDER);
 
         return $elements;
@@ -62,7 +62,7 @@ class InboxElementController extends FOSRestController
      */
     public function postInboxElementsAction(Request $request)
     {
-        $collectionService = $this->get('app.service.collection');
+        $collectionService = $this->get('api.service.collection');
         $response = $collectionService->addElement($request, CollectionService::INBOX_FOLDER);
 
         return $response;
@@ -91,7 +91,7 @@ class InboxElementController extends FOSRestController
      */
     public function getInboxElementAction($encodedElementBasename)
     {
-        $collectionService = $this->get('app.service.collection');
+        $collectionService = $this->get('api.service.collection');
         $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
 
         return $element;
@@ -119,7 +119,7 @@ class InboxElementController extends FOSRestController
      */
     public function deleteInboxElementAction($encodedElementBasename)
     {
-        $collectionService = $this->get('app.service.collection');
+        $collectionService = $this->get('api.service.collection');
         $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
     }
 }

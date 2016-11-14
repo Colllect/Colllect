@@ -1,0 +1,11 @@
+app_oauth2_dropbox:
+    path:     /oauth2/dropbox
+    defaults: { _controller: AppBundle:OAuth2:dropbox }
+
+app_fake:
+    path:     /oauth2/fake
+    defaults: { _controller: AppBundle:OAuth2:fake }
+
+app_oauth2_dropbox_complete:
+    path:     /oauth2/dropbox/complete
+    defaults: { _controller: AppBundle:OAuth2:dropboxComplete }

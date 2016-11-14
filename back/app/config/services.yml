@@ -4,63 +4,67 @@ parameters:
 #    parameter_name: value
 
 services:
-    app.security.jwt_authenticator:
+    api.security.jwt_authenticator:
         class: ApiBundle\Security\JwtAuthenticator
         autowire: true
 
-    app.doctrine.hash_password_listener:
+    app.security.jwt_authenticator:
+        class: AppBundle\Security\JwtAuthenticator
+        autowire: true
+
+    api.doctrine.hash_password_listener:
         class: ApiBundle\Doctrine\HashPasswordListener
         autowire: true
         tags:
             - { name: doctrine.event_subscriber }
 
-    app.api_doc.fos_rest_form_errors_parser:
+    api.api_doc.fos_rest_form_errors_parser:
         class: ApiBundle\Parser\FOSRestFormErrorsParser
         tags:
             - { name: nelmio_api_doc.extractor.parser, priority: 1 }
 
-    app.flysystem_adapters:
+    api.flysystem_adapters:
         class: ApiBundle\FlysystemAdapter\FlysystemAdapters
         arguments: ["%default_adapter%"]
 
-    app.flysystem.local:
+    api.flysystem.local:
         class: ApiBundle\FlysystemAdapter\Local
         public: false
         arguments: ["%local_root_path%"]
         tags:
-            - { name: app.flysystem_adapter, alias: local }
+            - { name: api.flysystem_adapter, alias: local }
 
-    app.flysystem.aws_s3:
+    api.flysystem.aws_s3:
         class: ApiBundle\FlysystemAdapter\AwsS3
         public: false
         arguments: ["%aws_s3_key%", "%aws_s3_secret%", "%aws_s3_region%", "%aws_s3_bucket%"]
         tags:
-            - { name: app.flysystem_adapter, alias: aws_s3 }
+            - { name: api.flysystem_adapter, alias: aws_s3 }
 
-    app.flysystem.dropbox:
+    api.flysystem.dropbox:
         class: ApiBundle\FlysystemAdapter\Dropbox
         public: false
         arguments: ["%dropbox_secret%"]
         tags:
-            - { name: app.flysystem_adapter, alias: dropbox }
+            - { name: api.flysystem_adapter, alias: dropbox }
 
-    app.flysystem.ftp:
+    api.flysystem.ftp:
         class: ApiBundle\FlysystemAdapter\Ftp
         public: false
         arguments: ["%ftp_host%", "%ftp_port%", "%ftp_username%", "%ftp_password%", "%ftp_root%"]
         tags:
-            - { name: app.flysystem_adapter, alias: ftp }
+            - { name: api.flysystem_adapter, alias: ftp }
 
-    app.flysystem.sftp:
+    api.flysystem.sftp:
         class: ApiBundle\FlysystemAdapter\Sftp
         public: false
         arguments: ["%sftp_host%", "%sftp_port%", "%sftp_username%", "%sftp_password%", "%sftp_root%"]
         tags:
-            - { name: app.flysystem_adapter, alias: sftp }
+            - { name: api.flysystem_adapter, alias: sftp }
 
-    app.service.collection:
+    api.service.collection:
         class: ApiBundle\Service\CollectionService
         autowire: true
 
-    app.service.element_file_handler:
+    api.service.element_file_handler:
         class: ApiBundle\Service\ElementFileHandler

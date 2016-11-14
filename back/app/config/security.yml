@@ -20,6 +20,14 @@ security:
             stateless: true
             guard:
                 authenticator:
+                    - api.security.jwt_authenticator
+
+        app:
+            pattern: ^/
+            anonymous: true
+            stateless: true
+            guard:
+                authenticator:
                     - app.security.jwt_authenticator
 
     access_control:

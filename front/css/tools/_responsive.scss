@@ -1,0 +1,45 @@
+$medium: 768px !default;
+$large: 1090px !default;
+$menu-width: 227px !default;
+
+$medium-up: "only screen and (min-width: #{$medium})" !default;
+$medium-down: "only screen and (max-width: #{$medium})" !default;
+$large-up: "only screen and (min-width: #{$large})" !default;
+$large-down: "only screen and (max-width: #{$large})" !default;
+
+/* Menu responsive
+   ========================================================================== */
+body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transition: left 0.3s, right 0.3s;
+}
+
+.menu {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  bottom: 0;
+  right: -1 * $menu-width;
+  width: $menu-width;
+  transition: right 0.3s;
+
+  .menu-open & {
+    right: 0;
+  }
+}
+
+.menu-open {
+  right: $menu-width;
+  left: -1 * $menu-width;
+}
+
+@media #{$large-up} {
+  .container {
+    width: $large;
+    margin: 0 auto;
+    @include clearfix;
+  }
+}

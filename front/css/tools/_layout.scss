@@ -1,0 +1,10 @@
+.container{
+    margin: 0 20px;
+}
+
+@media #{$large-up}{
+    .container{
+        width: 1150px;
+        margin: 0 auto;
+    }
+}

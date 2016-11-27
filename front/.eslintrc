@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": "standard",
+  "plugins": [ "html" ],
+  "rules": {
+    "arrow-parens": 0,
+    "generator-star-spacing": 0,
+    "no-debugger": 0,
+    "no-new": 0
+  }
+}

@@ -15,7 +15,7 @@ before_install:
 install:
     # Composer install
     - composer global require "hirak/prestissimo:^0.3"
-    - cd api && composer install
+    - cd back && composer install
     # Project test init
     - openssl genrsa -out var/jwt/private.test.pem -passout pass:test -aes256 4096
     - openssl rsa -pubout -in var/jwt/private.test.pem -out var/jwt/public.test.pem -passin pass:test

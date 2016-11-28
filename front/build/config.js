@@ -1,6 +1,6 @@
 module.exports = {
   entry: {
-    app: ['./css/app.scss', './js/app.js']
+    app: ['./src/assets/scss/app.scss', './src/app.js']
   },
   port: 3003,
   html: true,

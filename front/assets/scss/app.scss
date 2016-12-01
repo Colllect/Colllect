@@ -2,12 +2,12 @@
    ========================================================================== */
 $color: rgba(#000, .54);
 
-@import "../../../node_modules/normalize.css/normalize.css";
+@import "~normalize.css/normalize.css";
 
 /* MISC
    ========================================================================== */
-@import "tools/helpers";
-@import "tools/responsive";
+@import "tools/_helpers";
+@import "tools/_responsive";
 
 /* Generic
    ========================================================================== */
@@ -17,7 +17,7 @@ body {
 
 /* Tools
    ========================================================================== */
-@import "tools/layout";
+@import "tools/_layout";
 
 /* Modules
    ========================================================================== */

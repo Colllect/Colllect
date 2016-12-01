@@ -5,16 +5,21 @@ Vue.use(VueRouter)
 
 let router = new VueRouter({
   mode: 'history',
-  routes: [{
-    name: 'home',
-    path: '/',
-    component: require('./components/home/Home.vue')
-  }]
+  routes: [
+    {
+      path: '/',
+      redirect: { name: 'inbox' }
+    },
+    {
+      name: 'inbox',
+      path: '/inbox',
+      component: require('./pages/inbox/Inbox.vue')
+    }
+  ]
 })
 
 new Vue({
   el: '#app',
-  components: {
-  },
+  components: {},
   router
 })

@@ -9,13 +9,13 @@ const chokidar = require('chokidar')
 
 // Force le rafraichissement du navigateur
 let refresh = function (path) {
-    console.log('* ' + path + ' changed')
-    hotMiddleware.publish({action: 'reload'})
+  console.log('* ' + path + ' changed')
+  hotMiddleware.publish({ action: 'reload' })
 }
 
 let server = new WebpackDevServer(compiler, {
   hot: true,
-  historyApiFallback: false,
+  historyApiFallback: config.historyApiFallback,
   quiet: false,
   noInfo: false,
   publicPath: webpack_dev.output.publicPath,
@@ -25,7 +25,7 @@ let server = new WebpackDevServer(compiler, {
   }
 })
 server.use(hotMiddleware)
-server.listen(3003, function (err) {
+server.listen(config.port, function (err) {
   if (err) {
     console.log(err)
     return

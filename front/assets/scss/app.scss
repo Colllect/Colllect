@@ -1,28 +1,12 @@
-/* Variables
+/* Dependencies
    ========================================================================== */
-$color: rgba(#000, .54);
-
 @import "~normalize.css/normalize.css";
 
-/* MISC
+/* Variables
    ========================================================================== */
-@import "tools/_helpers";
-@import "tools/_responsive";
+@import "variables";
 
-/* Generic
+/* Global
    ========================================================================== */
-body {
-  color: inherit;
-}
-
-/* Tools
-   ========================================================================== */
-@import "tools/_layout";
-
-/* Modules
-   ========================================================================== */
-// @import "modules/comments";
-
-/* Pages
-   ========================================================================== */
-// @import "pages/single";
+@import "global/base";
+@import "global/fonts";

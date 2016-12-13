@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import CollectHeader from './components/header/Header'
+
 Vue.use(VueRouter)
 
 let router = new VueRouter({
@@ -14,12 +16,19 @@ let router = new VueRouter({
       name: 'inbox',
       path: '/inbox',
       component: require('./pages/inbox/Inbox.vue')
+    },
+    {
+      name: 'collections',
+      path: '/collections',
+      component: require('./pages/collections/Collections.vue')
     }
   ]
 })
 
 new Vue({
   el: '#app',
-  components: {},
+  components: {
+    CollectHeader
+  },
   router
 })

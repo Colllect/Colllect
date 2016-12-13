@@ -1,0 +1,68 @@
+@import "../../../assets/scss/variables";
+
+$header-height: 70px;
+$header-logo-padding: 20px;
+$header-menu-item-border-width: 3px;
+
+header {
+  position: relative;
+  display: flex;
+  height: $header-height;
+  background: $white;
+
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.header--logo {
+  height: $header-height;
+  padding: 0 $header-logo-padding;
+  margin-left: $container-margin - $header-logo-padding;
+  font-family: $font-cocogoose;
+  font-size: 20px;
+  line-height: $header-height;
+  color: $shark;
+  text-decoration: none;
+  text-transform: lowercase;
+  transition: background-color $transition-duration, color $transition-duration;
+
+  &:hover {
+    color: $white;
+    background-color: $shark;
+  }
+}
+
+.header--menu {
+  ul,
+  li {
+    padding: 0;
+    margin: 0;
+  }
+  ul {
+    display: flex;
+    height: $header-height;
+
+    align-items: stretch;
+    justify-content: space-between;
+  }
+
+  &-item {
+    display: inline-block;
+    padding-top: $header-menu-item-border-width;
+    margin: 0 $header-logo-padding;
+    font-weight: bold;
+    line-height: $header-height - $header-menu-item-border-width * 2;
+    color: $gull-gray;
+    text-decoration: none;
+
+    &.router-link-active {
+      border-bottom: $header-menu-item-border-width solid $chetwode-blue;
+    }
+  }
+}
+
+.header--user {
+  padding: 0 100px;
+  line-height: $header-height;
+  background-color: $chetwode-blue;
+}

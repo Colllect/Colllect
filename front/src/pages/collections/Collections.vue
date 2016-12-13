@@ -1,5 +1,5 @@
 <template>
   <div>
-    Inbox
+    Collections
   </div>
 </template>

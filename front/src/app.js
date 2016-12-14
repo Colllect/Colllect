@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import CollectHeader from './components/header/Header'
 
+require('../assets/images/sprite/logo.svg')
+
 Vue.use(VueRouter)
 
 let router = new VueRouter({

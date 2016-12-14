@@ -19,8 +19,8 @@ let webpackBase = {
   resolve: {
     extensions: [ '', '.js', '.vue', '.css', '.json' ],
     alias: {
-      root: path.join(__dirname, '../js'),
-      components: path.join(__dirname, '../js/components'),
+      root: path.resolve(__dirname, '../src'),
+      components: path.resolve(__dirname, '../src/components'),
       vue: 'vue/dist/vue.js'
     }
   },
@@ -55,8 +55,15 @@ let webpackBase = {
       {
         test: /\.css$/,
         loaders: [ 'css', 'postcss' ]
-      }, {
-        test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite?' + JSON.stringify({
+          name: '[name]'
+        })
+      },
+      {
+        test: /\.(png|jpe?g|gif|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
         loader: 'url',
         query: {
           limit: 10,

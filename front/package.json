@@ -43,10 +43,12 @@
     "sass-loader": "^4.0.2",
     "shelljs": "^0.7.0",
     "style-loader": "^0.13.1",
+    "svg-sprite-loader": "^0.1.1",
     "url-loader": "^0.5.7",
     "vue-loader": "^9.4.2",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2",
-    "webpack-hot-middleware": "^2.13.0"
+    "webpack-hot-middleware": "^2.13.0",
+    "webpack-svgstore-plugin": "^3.0.6"
   }
 }

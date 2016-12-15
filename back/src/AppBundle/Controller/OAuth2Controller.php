@@ -5,8 +5,8 @@ namespace AppBundle\Controller;
 use ApiBundle\Entity\User;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class OAuth2Controller extends Controller
@@ -28,7 +28,7 @@ class OAuth2Controller extends Controller
     public function dropboxCompleteAction(Request $request)
     {
         if ($request->get('state') != $this->generateState()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $client = new GuzzleHttpClient();

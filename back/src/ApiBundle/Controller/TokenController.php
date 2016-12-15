@@ -3,7 +3,6 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Entity\User;
-use ApiBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;

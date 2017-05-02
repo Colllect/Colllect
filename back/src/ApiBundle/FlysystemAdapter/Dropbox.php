@@ -4,11 +4,14 @@ namespace ApiBundle\FlysystemAdapter;
 
 use ApiBundle\Entity\User;
 use ApiBundle\Exception\DropboxAccessTokenMissingException;
-use Dropbox\Client as DropboxClient;
+use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\Cached\CachedAdapter;
+use League\Flysystem\Cached\Storage\Adapter;
 use League\Flysystem\Config;
-use League\Flysystem\Dropbox\DropboxAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use Spatie\Dropbox\Client as DropboxClient;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class Dropbox implements FlysystemAdapterInterface
 {
@@ -47,7 +50,14 @@ class Dropbox implements FlysystemAdapterInterface
             }
 
             $client = new DropboxClient($token, $this->secret);
-            $adapter = new DropboxAdapter($client);
+            $adapter = new CachedAdapter(
+                new DropboxAdapter($client),
+                new Adapter(new LocalAdapter(
+                    FlysystemAdapters::CACHE_ROOT . 'dropbox'),
+                    sha1($user->getId()),
+                    FlysystemAdapters::CACHE_DURATION
+                )
+            );
 
             $this->filesystem = new Filesystem(
                 $adapter, new Config(

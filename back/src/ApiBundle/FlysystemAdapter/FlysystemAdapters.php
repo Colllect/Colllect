@@ -6,6 +6,9 @@ use ApiBundle\Entity\User;
 
 class FlysystemAdapters
 {
+    const CACHE_DURATION = 3600 * 24 * 3; // 3 days
+    const CACHE_ROOT = '../var/flysystem_cache/';
+
     /**
      * @var string
      */

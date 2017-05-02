@@ -12,6 +12,7 @@ use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
@@ -93,8 +94,8 @@ class CollectionService
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
-        $meta = $this->standardizeMetadata($meta, $path);
-        $element = Element::get($meta);
+        $standardizedMeta = $this->standardizeMetadata($meta, $path);
+        $element = Element::get($standardizedMeta);
 
         if ($element->shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -102,6 +103,31 @@ class CollectionService
         }
 
         return $element;
+    }
+
+    /**
+     * Get content of an element from a collection based on base 64 encoded basename
+     *
+     * @param string $encodedElementBasename Base 64 encoded basename
+     * @param string $collectionPath Collection name
+     * @return Response
+     */
+    public function getElementContentResponseByEncodedElementBasename($encodedElementBasename, $collectionPath)
+    {
+        $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
+
+        $meta = $this->filesystem->getMetadata($path);
+        $standardizedMeta = $this->standardizeMetadata($meta, $path);
+
+        $content = $this->filesystem->read($path);
+
+        $response = new Response();
+        $response->setContent($content);
+        if (isset($standardizedMeta['mimetype'])) {
+            $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
+        }
+
+        return $response;
     }
 
     /**

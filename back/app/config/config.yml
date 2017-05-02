@@ -91,9 +91,13 @@ fos_rest:
         enabled: true
 
 nelmio_api_doc:
-    name: Collect.io API
+    name: 'Collect.io API'
     sandbox:
         request_format:
             formats:
                 json: application/json
             method: accept_header
+    swagger:
+        api_base_path: '/api'
+        info:
+            title: 'Collect.io API'

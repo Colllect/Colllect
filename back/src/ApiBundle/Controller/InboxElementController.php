@@ -21,6 +21,8 @@ class InboxElementController extends FOSRestController
      * @Rest\View()
      *
      * @ApiDoc(
+     *     resource=true,
+     *     resourceDescription="Inbox Elements",
      *     section="Inbox Elements",
      *     statusCodes={
      *         200="Returned when inbox files are listed"

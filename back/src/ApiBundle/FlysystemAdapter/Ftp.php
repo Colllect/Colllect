@@ -8,7 +8,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Adapter\Ftp as FtpAdapter;
 
-class Ftp implements FlysystemAdapterInterface
+class Ftp extends FlysystemAdapter implements FlysystemAdapterInterface
 {
     /**
      * @var string
@@ -65,7 +65,7 @@ class Ftp implements FlysystemAdapterInterface
     public function getFilesystem(User $user)
     {
         if (!$this->filesystem) {
-            $adapter = new FtpAdapter(
+            $adapter = $this->cacheAdapter(new FtpAdapter(
                 [
                     'host' => $this->host,
                     'port' => $this->port,
@@ -73,7 +73,7 @@ class Ftp implements FlysystemAdapterInterface
                     'password' => $this->password,
                     'root' => $this->root,
                 ]
-            );
+            ), $user);
 
             $this->filesystem = new Filesystem(
                 $adapter, new Config(

@@ -9,7 +9,7 @@ use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 
-class AwsS3 implements FlysystemAdapterInterface
+class AwsS3 extends FlysystemAdapter implements FlysystemAdapterInterface
 {
     /**
      * @var string
@@ -70,7 +70,7 @@ class AwsS3 implements FlysystemAdapterInterface
                 ]
             );
 
-            $adapter = new AwsS3Adapter($client, $this->bucket, $user->getId());
+            $adapter = $this->cacheAdapter(new AwsS3Adapter($client, $this->bucket, $user->getId()), $user);
 
             $this->filesystem = new Filesystem(
                 $adapter, new Config(

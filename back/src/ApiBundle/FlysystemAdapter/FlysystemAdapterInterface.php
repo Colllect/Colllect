@@ -13,5 +13,5 @@ interface FlysystemAdapterInterface
      * @param User $user
      * @return FilesystemInterface
      */
-    public function getFilesystem(User $user);
+    function getFilesystem(User $user);
 }

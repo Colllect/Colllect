@@ -8,7 +8,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Sftp\SftpAdapter;
 
-class Sftp implements FlysystemAdapterInterface
+class Sftp extends FlysystemAdapter implements FlysystemAdapterInterface
 {
     /**
      * @var string
@@ -65,7 +65,7 @@ class Sftp implements FlysystemAdapterInterface
     public function getFilesystem(User $user)
     {
         if (!$this->filesystem) {
-            $adapter = new SftpAdapter(
+            $adapter = $this->cacheAdapter(new SftpAdapter(
                 [
                     'host' => $this->host,
                     'port' => $this->port,
@@ -73,7 +73,7 @@ class Sftp implements FlysystemAdapterInterface
                     'password' => $this->password,
                     'root' => $this->root,
                 ]
-            );
+            ), $user);
 
             $this->filesystem = new Filesystem(
                 $adapter, new Config(

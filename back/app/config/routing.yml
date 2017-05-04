@@ -20,7 +20,7 @@ users:
     resource: ApiBundle\Controller\UserController
     prefix: /api
 
-inbox_elements:
+collection_elements:
     type: rest
-    resource: ApiBundle\Controller\InboxElementController
+    resource: ApiBundle\Controller\CollectionElementController
     prefix: /api

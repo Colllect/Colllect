@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 class CollectionService
 {
     const INBOX_FOLDER = 'Inbox';
+    const COLLECTIONS_FOLDER = 'Collections';
 
     /**
      * @var FilesystemInterface
@@ -109,11 +110,12 @@ class CollectionService
      * Get content of an element from a collection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $collectionPath Collection name
+     * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Response
      */
-    public function getElementContentResponseByEncodedElementBasename($encodedElementBasename, $collectionPath)
+    public function getElementContentResponseByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
     {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
@@ -134,10 +136,10 @@ class CollectionService
      * Add an element to a collection
      *
      * @param Request $request
-     * @param string $collectionPath
+     * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return array|\Symfony\Component\Form\FormInterface
      */
-    public function addElement(Request $request, $collectionPath)
+    public function addElement(Request $request, $encodedCollectionPath)
     {
         $elementFile = new ElementFile();
         $form = $this->handleRequest($request, $elementFile);
@@ -148,6 +150,7 @@ class CollectionService
 
         $this->elementFileHandler->handleFileElement($elementFile);
 
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $collectionPath . '/' . $elementFile->getBasename();
         $this->filesystem->write($path, $elementFile->getContent());
 
@@ -161,10 +164,11 @@ class CollectionService
      * Delete an element from a collection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $collectionPath Collection name
+     * @param string $encodedCollectionPath Base 64 encoded collection path
      */
-    public function deleteElementByEncodedElementBasename($encodedElementBasename, $collectionPath)
+    public function deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
     {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         try {
@@ -175,10 +179,31 @@ class CollectionService
     }
 
     /**
+     * Return decoded collection path by check and decode collectionPath
+     *
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @return string
+     */
+    private function decodeCollectionPath($encodedCollectionPath)
+    {
+        if (!Base64::isValidBase64($encodedCollectionPath)) {
+            throw new BadRequestHttpException("request.invalid_element_name");
+        }
+
+        $name = base64_decode($encodedCollectionPath);
+
+        if (strtolower($name) === strtolower(self::INBOX_FOLDER)) {
+            return self::INBOX_FOLDER;
+        }
+
+        return $name;
+    }
+
+    /**
      * Return file path by check and decode elementName
      *
-     * @param $encodedElementBasename
-     * @param $collectionPath
+     * @param string $encodedElementBasename Base 64 encoded basename
+     * @param string $collectionPath Collection path
      * @return string
      */
     private function getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath)

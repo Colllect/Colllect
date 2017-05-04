@@ -4,8 +4,6 @@ namespace ApiBundle\FlysystemAdapter;
 
 use ApiBundle\Entity\User;
 use ApiBundle\Exception\DropboxAccessTokenMissingException;
-use League\Flysystem\Cached\CachedAdapter;
-use League\Flysystem\Cached\Storage\Adapter;
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
@@ -15,23 +13,9 @@ use Spatie\FlysystemDropbox\DropboxAdapter;
 class Dropbox extends FlysystemAdapter implements FlysystemAdapterInterface
 {
     /**
-     * @var string
-     */
-    private $secret;
-
-    /**
      * @var FilesystemInterface
      */
     private $filesystem;
-
-
-    /**
-     * @param string $secret
-     */
-    public function __construct($secret)
-    {
-        $this->secret = $secret;
-    }
 
 
     /**
@@ -48,7 +32,7 @@ class Dropbox extends FlysystemAdapter implements FlysystemAdapterInterface
                 throw new DropboxAccessTokenMissingException("error.dropbox_not_linked");
             }
 
-            $client = new DropboxClient($token, $this->secret);
+            $client = new DropboxClient($token);
             $adapter = $this->cacheAdapter(new DropboxAdapter($client), $user);
 
             $this->filesystem = new Filesystem(

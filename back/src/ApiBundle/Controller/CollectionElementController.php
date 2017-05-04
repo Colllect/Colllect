@@ -12,18 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Security("has_role('ROLE_USER')")
  */
-class InboxElementController extends FOSRestController
+class CollectionElementController extends FOSRestController
 {
     /**
-     * List all Inbox elements
+     * List all Collection elements
      *
-     * @Rest\Route("/inbox/elements")
+     * @Rest\Route("/collections/{encodedCollectionPath}/elements")
      * @Rest\View()
      *
      * @ApiDoc(
      *     resource=true,
-     *     resourceDescription="Inbox Elements",
-     *     section="Inbox Elements",
+     *     resourceDescription="Collection Elements",
+     *     section="Collection Elements",
      *     statusCodes={
      *         200="Returned when inbox files are listed"
      *     },
@@ -31,27 +31,29 @@ class InboxElementController extends FOSRestController
      *         200="array<ApiBundle\Model\Element>"
      *     }
      * )
+     * @param string $encodedCollectionPath
+     * @return \ApiBundle\Model\Element[]
      */
-    public function getInboxElementsAction()
+    public function getCollectionElementsAction($encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
-        $elements = $collectionService->listElements(CollectionService::INBOX_FOLDER);
+        $elements = $collectionService->listElements($encodedCollectionPath);
 
         return $elements;
     }
 
 
     /**
-     * Add an element to Inbox
+     * Add an element to Collection
      *
-     * @Rest\Route("/inbox/elements")
+     * @Rest\Route("/collections/{encodedCollectionPath}/elements")
      * @Rest\View(statusCode=201)
      *
      * @ApiDoc(
-     *     section="Inbox Elements",
+     *     section="Collection Elements",
      *     input={"class"=\ApiBundle\Form\Type\ElementType::class, "name"=""},
      *     statusCodes={
-     *         201="Returned when element was created in Inbox",
+     *         201="Returned when element was created in Collection",
      *         400="Returned when form is invalid"
      *     },
      *     responseMap={
@@ -60,68 +62,71 @@ class InboxElementController extends FOSRestController
      * )
      *
      * @param Request $request
+     * @param string $encodedCollectionPath
      * @return array|\Symfony\Component\Form\Form
      */
-    public function postInboxElementsAction(Request $request)
+    public function postCollectionElementsAction(Request $request, $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
-        $response = $collectionService->addElement($request, CollectionService::INBOX_FOLDER);
+        $response = $collectionService->addElement($request, $encodedCollectionPath);
 
         return $response;
     }
 
 
     /**
-     * Get an Inbox element
+     * Get an Collection element
      *
-     * @Rest\Route("/inbox/elements/{encodedElementBasename}")
+     * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View()
      *
      * @ApiDoc(
-     *     section="Inbox Elements",
+     *     section="Collection Elements",
      *     requirements={
      *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={
-     *         200="Returned when Inbox file is found",
-     *         404="Returned when Inbox file is not found"
+     *         200="Returned when Collection file is found",
+     *         404="Returned when Collection file is not found"
      *     }
      * )
      *
-     * @param $encodedElementBasename
+     * @param string $encodedCollectionPath
+     * @param string $encodedElementBasename
      * @return string
      */
-    public function getInboxElementAction($encodedElementBasename)
+    public function getCollectionElementAction($encodedCollectionPath, $encodedElementBasename)
     {
         $collectionService = $this->get('api.service.collection');
-        $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
+        $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
 
         return $element;
     }
 
 
     /**
-     * Delete an Inbox element
+     * Delete an Collection element
      *
-     * @Rest\Route("/inbox/elements/{encodedElementBasename}")
+     * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View(statusCode=204)
      *
      * @ApiDoc(
-     *     section="Inbox Elements",
+     *     section="Collection Elements",
      *     requirements={
      *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={
-     *         204="Returned when Inbox file is deleted",
-     *         404="Returned when Inbox file is not found"
+     *         204="Returned when Collection file is deleted",
+     *         404="Returned when Collection file is not found"
      *     }
      * )
      *
-     * @param $encodedElementBasename
+     * @param string $encodedCollectionPath
+     * @param string $encodedElementBasename
      */
-    public function deleteInboxElementAction($encodedElementBasename)
+    public function deleteCollectionElementAction($encodedCollectionPath, $encodedElementBasename)
     {
         $collectionService = $this->get('api.service.collection');
-        $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, CollectionService::INBOX_FOLDER);
+        $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
     }
 }

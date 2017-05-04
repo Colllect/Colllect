@@ -44,7 +44,6 @@ services:
     api.flysystem.dropbox:
         class: ApiBundle\FlysystemAdapter\Dropbox
         public: false
-        arguments: ["%dropbox_secret%"]
         tags:
             - { name: api.flysystem_adapter, alias: dropbox }
 

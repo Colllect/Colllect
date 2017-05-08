@@ -20,6 +20,7 @@ class CollectionService
 {
     const INBOX_FOLDER = 'Inbox';
     const COLLECTIONS_FOLDER = 'Collections';
+    const VALID_FOLDERS = [self::INBOX_FOLDER, self::COLLECTIONS_FOLDER];
 
     /**
      * @var FilesystemInterface
@@ -48,23 +49,33 @@ class CollectionService
     /**
      * Get an array of typed elements from a collection
      *
-     * @param $collectionPath
+     * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element[]
      */
-    public function listElements($collectionPath)
+    public function listElements($encodedCollectionPath)
     {
-        $filesMetadata = $this->filesystem->listContents($collectionPath);
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+        try {
+            $filesMetadata = $this->filesystem->listContents($collectionPath);
+        } catch (\Exception $e) {
+            // We can't catch "not found"-like exception for each adapter,
+            // so we normalize the result
+            return [];
+        }
 
         if (count($filesMetadata) > 0 && isset($filesMetadata[0]['timestamp'])) {
             // Sort files by last updated date
             uasort(
                 $filesMetadata,
                 function ($a, $b) {
-                    if ($a['timestamp'] == $b['timestamp']) {
+                    $aTimestamp = isset($a['timestamp']) ? $a['timestamp'] : -1;
+                    $bTimestamp = isset($b['timestamp']) ? $b['timestamp'] : -1;
+
+                    if ($aTimestamp == $bTimestamp) {
                         return 0;
                     }
 
-                    return $a['timestamp'] < $b['timestamp'] ? -1 : 1;
+                    return $aTimestamp < $bTimestamp ? -1 : 1;
                 }
             );
         }
@@ -87,11 +98,12 @@ class CollectionService
      * Get an element from a collection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $collectionPath Collection name
+     * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element
      */
-    public function getElementByEncodedElementBasename($encodedElementBasename, $collectionPath)
+    public function getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
     {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
@@ -187,16 +199,16 @@ class CollectionService
     private function decodeCollectionPath($encodedCollectionPath)
     {
         if (!Base64::isValidBase64($encodedCollectionPath)) {
-            throw new BadRequestHttpException("request.invalid_element_name");
+            throw new BadRequestHttpException("request.badly_encoded_collection_path");
         }
 
-        $name = base64_decode($encodedCollectionPath);
+        $path = base64_decode($encodedCollectionPath);
 
-        if (strtolower($name) === strtolower(self::INBOX_FOLDER)) {
-            return self::INBOX_FOLDER;
+        if (!in_array(explode('/', $path)[0], self::VALID_FOLDERS)) {
+            throw new BadRequestHttpException("request.invalid_collection_path");
         }
 
-        return $name;
+        return $path;
     }
 
     /**
@@ -209,7 +221,7 @@ class CollectionService
     private function getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath)
     {
         if (!Base64::isValidBase64($encodedElementBasename)) {
-            throw new BadRequestHttpException("request.invalid_element_name");
+            throw new BadRequestHttpException("request.badly_encoded_element_name");
         }
 
         $basename = base64_decode($encodedElementBasename);
@@ -260,7 +272,7 @@ class CollectionService
 
         // Set timestamp to 0 if needed because some adapters didn't return it in metadata
         if (!isset($meta['timestamp'])) {
-            $meta['timestamp'] = null;
+            $meta['timestamp'] = -1;
         }
 
         return $meta;

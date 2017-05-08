@@ -87,6 +87,7 @@ abstract class Element
         $this->name = $name;
         $this->tags = $tags;
         $this->updated = $updated;
+        $this->size = $meta['size'];
         $this->extension = $pathParts['extension'];
     }
 

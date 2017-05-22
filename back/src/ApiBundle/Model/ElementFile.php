@@ -107,7 +107,7 @@ class ElementFile
      */
     public function setBasename($basename)
     {
-        $this->basename = $basename;
+        $this->basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
 
         return $this;
     }

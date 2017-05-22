@@ -130,7 +130,8 @@ class ElementFileHandler
 
             // Check if content type is in image allowed content types
             foreach (self::ALLOWED_IMAGE_CONTENT_TYPE as $allowedContentType) {
-                if (strstr($headers['Content-Type'], $allowedContentType) !== false) {
+                $contentType = isset($headers['Content-Type']) ?: $headers['content-type'];
+                if (strstr($contentType, $allowedContentType) !== false) {
                     $allowedContentTypeParts = explode('/', $allowedContentType);
                     $extension = end($allowedContentTypeParts);
                     $pathInfos = pathinfo($elementFile->getBasename());

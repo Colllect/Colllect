@@ -22,7 +22,7 @@ class TokenController extends FOSRestController
      * @Rest\RequestParam(name="password", description="User password")
      * @Rest\View(statusCode=201)
      * @ApiDoc(
-     *     section="Token",
+     *     section="Tokens",
      *     statusCodes={
      *         201="Returned when token was created",
      *         400="Returned when bad credentials"

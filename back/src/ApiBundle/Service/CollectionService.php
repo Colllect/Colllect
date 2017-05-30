@@ -4,13 +4,16 @@ namespace ApiBundle\Service;
 
 use ApiBundle\Exception\NotSupportedElementTypeException;
 use ApiBundle\FlysystemAdapter\FlysystemAdapters;
+use ApiBundle\Form\Type\CollectionType;
 use ApiBundle\Form\Type\ElementType;
+use ApiBundle\Model\Collection;
 use ApiBundle\Model\Element;
 use ApiBundle\Model\ElementFile;
 use ApiBundle\Util\Base64;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -47,12 +50,109 @@ class CollectionService
     }
 
     /**
+     * Get an array of all user Collections
+     *
+     * @return Collection[]
+     */
+    public function list(): array
+    {
+        try {
+            $collectionsMetadata = $this->filesystem->listContents(self::COLLECTIONS_FOLDER);
+        } catch (\Exception $e) {
+            // We can't catch "not found"-like exception for each adapter,
+            // so we normalize the result
+            return [];
+        }
+
+        if (count($collectionsMetadata) === 0) {
+            return [];
+        }
+
+        // Get typed collection for each folder
+        $collections = [];
+        foreach ($collectionsMetadata as $collectionMetadata) {
+            if ($collectionMetadata['type'] !== 'dir') {
+                continue;
+            }
+
+            $collectionMetadata = $this->standardizeMetadata($collectionMetadata);
+            $collections[] = new Collection($collectionMetadata);
+        }
+
+        // Sort collections by name
+        uasort(
+            $collections,
+            function (Collection $a, Collection $b) {
+                return $a->getName() < $b->getName() ? -1 : 1;
+            }
+        );
+
+        return $collections;
+    }
+
+    /**
+     * Get a collection by path
+     *
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @return Collection
+     */
+    public function get(string $encodedCollectionPath): Collection
+    {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+
+        $meta = $this->filesystem->getMetadata($collectionPath);
+        $standardizedMeta = $this->standardizeMetadata($meta, $collectionPath);
+
+        $collection = new Collection($standardizedMeta);
+
+        return $collection;
+    }
+
+    /**
+     * Create a collection
+     *
+     * @param Request $request
+     * @return Collection|FormInterface
+     */
+    public function create(Request $request)
+    {
+        $collection = new Collection();
+        $form = $this->formFactory->create(CollectionType::class, $collection);
+        $form->submit($request->request->all());
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+
+        $path = self::COLLECTIONS_FOLDER . '/' . $collection->getName();
+        $this->filesystem->createDir($path);
+
+        return $collection;
+    }
+
+    /**
+     * Delete a collection based on base 64 encoded basename
+     *
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     */
+    public function delete(string $encodedCollectionPath)
+    {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+
+        try {
+            $this->filesystem->deleteDir($collectionPath);
+        } catch (FileNotFoundException $e) {
+            // If file does not exists or was already deleted, it's OK
+        }
+    }
+
+    /**
      * Get an array of typed elements from a collection
      *
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element[]
      */
-    public function listElements($encodedCollectionPath)
+    public function listElements(string $encodedCollectionPath): array
     {
         $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         try {
@@ -101,7 +201,7 @@ class CollectionService
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element
      */
-    public function getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
+    public function getElementByEncodedElementBasename(string $encodedElementBasename, string $encodedCollectionPath): Element
     {
         $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
@@ -125,7 +225,7 @@ class CollectionService
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Response
      */
-    public function getElementContentResponseByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
+    public function getElementContentResponseByEncodedElementBasename(string $encodedElementBasename, string $encodedCollectionPath): Response
     {
         $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
@@ -149,9 +249,9 @@ class CollectionService
      *
      * @param Request $request
      * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @return array|\Symfony\Component\Form\FormInterface
+     * @return Element|FormInterface
      */
-    public function addElement(Request $request, $encodedCollectionPath)
+    public function addElement(Request $request, $encodedCollectionPath): Element
     {
         $elementFile = new ElementFile();
         $form = $this->handleRequest($request, $elementFile);
@@ -166,10 +266,10 @@ class CollectionService
         $path = $collectionPath . '/' . $elementFile->getBasename();
         $this->filesystem->write($path, $elementFile->getContent());
 
-        return [
-            'basename' => $elementFile->getBasename(),
-            'type' => $elementFile->getType(),
-        ];
+        $elementMetadata = $this->filesystem->getMetadata($path);
+        $element = Element::get($elementMetadata);
+
+        return $element;
     }
 
     /**
@@ -178,7 +278,7 @@ class CollectionService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedCollectionPath Base 64 encoded collection path
      */
-    public function deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath)
+    public function deleteElementByEncodedElementBasename(string $encodedElementBasename, string $encodedCollectionPath)
     {
         $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
@@ -196,7 +296,7 @@ class CollectionService
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return string
      */
-    private function decodeCollectionPath($encodedCollectionPath)
+    private function decodeCollectionPath(string $encodedCollectionPath): string
     {
         if (!Base64::isValidBase64($encodedCollectionPath)) {
             throw new BadRequestHttpException("request.badly_encoded_collection_path");
@@ -218,7 +318,7 @@ class CollectionService
      * @param string $collectionPath Collection path
      * @return string
      */
-    private function getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath)
+    private function getElementPathByEncodedElementBasename(string $encodedElementBasename, string $collectionPath): string
     {
         if (!Base64::isValidBase64($encodedElementBasename)) {
             throw new BadRequestHttpException("request.badly_encoded_element_name");
@@ -240,9 +340,9 @@ class CollectionService
      *
      * @param Request $request
      * @param ElementFile $elementFile
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
-    private function handleRequest(Request $request, ElementFile $elementFile)
+    private function handleRequest(Request $request, ElementFile $elementFile): FormInterface
     {
         $form = $this->formFactory->create(ElementType::class, $elementFile);
 
@@ -263,7 +363,7 @@ class CollectionService
      * @param string $path
      * @return array
      */
-    private function standardizeMetadata($meta, $path = null)
+    private function standardizeMetadata(array $meta, string $path = null): array
     {
         // Add path if needed because some adapters didn't return it in metadata
         if ($path && !isset($meta['path'])) {

@@ -20,6 +20,11 @@ users:
     resource: ApiBundle\Controller\UserController
     prefix: /api
 
+collections:
+    type: rest
+    resource: ApiBundle\Controller\CollectionController
+    prefix: /api
+
 collection_elements:
     type: rest
     resource: ApiBundle\Controller\CollectionElementController

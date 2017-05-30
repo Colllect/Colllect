@@ -24,6 +24,7 @@ class ElementType extends AbstractType
             ->add('type', TextType::class, ['required' => false])
             ->add('basename', TextType::class, ['required' => false])
             ->add('content', TextType::class, ['required' => false])
+            ->add('encodedCollectionPath', TextType::class, ['mapped' => false])
         ;
     }
 

@@ -2,7 +2,7 @@
 
 namespace ApiBundle\Controller;
 
-use ApiBundle\Service\CollectionService;
+use ApiBundle\Model\Element;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -25,12 +25,13 @@ class CollectionElementController extends FOSRestController
      *     resourceDescription="Collection Elements",
      *     section="Collection Elements",
      *     statusCodes={
-     *         200="Returned when inbox files are listed"
+     *         200="Returned when collection files are listed"
      *     },
      *     responseMap={
      *         200="array<ApiBundle\Model\Element>"
      *     }
      * )
+     *
      * @param string $encodedCollectionPath
      * @return \ApiBundle\Model\Element[]
      */
@@ -63,19 +64,19 @@ class CollectionElementController extends FOSRestController
      *
      * @param Request $request
      * @param string $encodedCollectionPath
-     * @return array|\Symfony\Component\Form\Form
+     * @return Element|\Symfony\Component\Form\Form
      */
-    public function postCollectionElementsAction(Request $request, $encodedCollectionPath)
+    public function postCollectionElementAction(Request $request, $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
-        $response = $collectionService->addElement($request, $encodedCollectionPath);
+        $element = $collectionService->addElement($request, $encodedCollectionPath);
 
-        return $response;
+        return $element;
     }
 
 
     /**
-     * Get an Collection element
+     * Get a Collection element
      *
      * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View()
@@ -83,6 +84,7 @@ class CollectionElementController extends FOSRestController
      * @ApiDoc(
      *     section="Collection Elements",
      *     requirements={
+     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"},
      *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={
@@ -105,7 +107,7 @@ class CollectionElementController extends FOSRestController
 
 
     /**
-     * Delete an Collection element
+     * Delete a Collection element
      *
      * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View(statusCode=204)
@@ -113,6 +115,7 @@ class CollectionElementController extends FOSRestController
      * @ApiDoc(
      *     section="Collection Elements",
      *     requirements={
+     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"},
      *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
      *     },
      *     statusCodes={

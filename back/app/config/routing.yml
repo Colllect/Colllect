@@ -3,12 +3,8 @@ app:
     prefix:   /
 
 NelmioApiDocBundle:
-    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
     prefix:   /api/doc
-
-nelmio_api_swagger:
-    resource: "@NelmioApiDocBundle/Resources/config/swagger_routing.yml"
-    prefix: /api/doc.json
 
 tokens:
     type: rest

@@ -54,9 +54,10 @@ class User implements UserInterface
     private $nickname;
 
     /**
-     * @var array
+     * @var string[]
      *
      * @ORM\Column(name="roles", type="json_array")
+     * @Serializer\Type("array<string>")
      * @Serializer\Accessor(getter="getRoles",setter="setRoles")
      * @Serializer\Expose
      */
@@ -141,7 +142,7 @@ class User implements UserInterface
     {
         return $this->email;
     }
-    
+
     /**
      * Get username is an alias for getEmail needed by the UserInterface
      *
@@ -179,7 +180,7 @@ class User implements UserInterface
     /**
      * Set roles
      *
-     * @param array $roles
+     * @param string[] $roles
      *
      * @return User
      */
@@ -193,7 +194,7 @@ class User implements UserInterface
     /**
      * Get roles
      *
-     * @return array
+     * @return string[]
      */
     public function getRoles()
     {

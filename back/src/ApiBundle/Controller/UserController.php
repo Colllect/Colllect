@@ -6,7 +6,10 @@ use ApiBundle\Entity\User;
 use ApiBundle\Form\Type\UserType;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Swagger\Annotations as SWG;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,21 +22,28 @@ class UserController extends FOSRestController
      *
      * @Rest\View(statusCode=201)
      *
-     * @ApiDoc(
-     *     section="Users",
-     *     input={"class"=UserType::class, "name"=""},
-     *     statusCodes={
-     *         201="Returned when user was created",
-     *         400="Returned when parameters are invalids"
-     *     },
-     *     responseMap={
-     *         201=User::class,
-     *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
-     *     }
+     * @Operation(
+     *     tags={"Users"},
+     *     summary="Create a new user account",
+     *     @SWG\Parameter(
+     *         name="form",
+     *         in="body",
+     *         description="User",
+     *         @Model(type=UserType::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Returned when user was created",
+     *         @Model(type=User::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when parameters are invalids"
+     *     )
      * )
      *
      * @param Request $request
-     * @return User
+     * @return User|Form
      */
     public function postUsersAction(Request $request)
     {
@@ -58,28 +68,41 @@ class UserController extends FOSRestController
      *
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     section="Users",
-     *     requirements={
-     *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
-     *     },
-     *     input={"class"=UserType::class, "name"=""},
-     *     statusCodes={
-     *         200="Returned when user was updated",
-     *         400="Returned when parameters are invalids",
-     *         404="Returned when user was not found"
-     *     },
-     *     responseMap={
-     *         200=User::class,
-     *         400={"class"=UserType::class, "fos_rest_form_errors"=true, "name"=""}
-     *     }
+     * @Operation(
+     *     tags={"Users"},
+     *     summary="Update an user account data",
+     *     @SWG\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="User ID",
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="form",
+     *         in="body",
+     *         description="User",
+     *         @Model(type=UserType::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when user was updated",
+     *         @Model(type=User::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when parameters are invalids"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when user was not found"
+     *     )
      * )
      *
      * @param Request $request
      * @param int $userId
-     * @return User|\Symfony\Component\Form\Form
+     * @return User|Form
      */
-    public function putUsersAction(Request $request, $userId)
+    public function putUsersAction(Request $request, int $userId)
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('ApiBundle:User')->findOneBy([
@@ -110,24 +133,35 @@ class UserController extends FOSRestController
      *
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     section="Users",
-     *     requirements={
-     *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
-     *     },
-     *     output=User::class,
-     *     statusCodes={
-     *         200="Returned when user was found",
-     *         403="Returned when user is not authorized to get an user",
-     *         404="Returned when user was not found"
-     *     }
+     * @Operation(
+     *     tags={"Users"},
+     *     summary="Get an user",
+     *     @SWG\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="User ID",
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when user was found",
+     *         @Model(type=User::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="403",
+     *         description="Returned when user is not authorized to get an user"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when user was not found"
+     *     )
      * )
      *
-     * @param $userId
+     * @param int $userId
      *
      * @return User
      */
-    public function getUserAction($userId)
+    public function getUserAction(int $userId)
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('ApiBundle:User')->findOneBy([
@@ -147,21 +181,32 @@ class UserController extends FOSRestController
      *
      * @Rest\View(statusCode=204)
      *
-     * @ApiDoc(
-     *     section="Users",
-     *     requirements={
-     *         {"name"="userId", "requirement"="\d+", "dataType"="integer", "description"="User ID"}
-     *     },
-     *     statusCodes={
-     *         204="Returned when user was found and deleted",
-     *         403="Returned when user is not authorized to delete this user",
-     *         404="Returned when user was not found"
-     *     }
+     * @Operation(
+     *     tags={"Users"},
+     *     summary="Delete an user account",
+     *     @SWG\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="User ID",
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="204",
+     *         description="Returned when user was found and deleted"
+     *     ),
+     *     @SWG\Response(
+     *         response="403",
+     *         description="Returned when user is not authorized to delete this user"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when user was not found"
+     *     )
      * )
      *
      * @param int $userId
      */
-    public function deleteUserAction($userId)
+    public function deleteUserAction(int $userId)
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository('ApiBundle:User')->findOneBy([

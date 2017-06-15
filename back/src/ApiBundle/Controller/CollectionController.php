@@ -2,10 +2,14 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Model\Collection;
 use FOS\RestBundle\Controller\FOSRestController;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Swagger\Annotations as SWG;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,19 +23,20 @@ class CollectionController extends FOSRestController
      * @Rest\Route("/collections")
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     resource=true,
-     *     resourceDescription="Collections",
-     *     section="Collections",
-     *     statusCodes={
-     *         200="Returned when collections are listed"
-     *     },
-     *     responseMap={
-     *         200="array<ApiBundle\Model\Collection>"
-     *     }
+     * @Operation(
+     *     tags={"Collections"},
+     *     summary="List all Collections",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when collections are listed",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @Model(type=Collection::class)
+     *         )
+     *     )
      * )
      *
-     * @return \ApiBundle\Model\Collection[]
+     * @return Collection[]
      */
     public function getCollectionsAction()
     {
@@ -48,20 +53,29 @@ class CollectionController extends FOSRestController
      * @Rest\Route("/collections")
      * @Rest\View(statusCode=201)
      *
-     * @ApiDoc(
-     *     section="Collections",
-     *     input={"class"=\ApiBundle\Form\Type\CollectionType::class, "name"=""},
-     *     statusCodes={
-     *         201="Returned when Collection was created",
-     *         400="Returned when form is invalid"
-     *     },
-     *     responseMap={
-     *         201=ApiBundle\Model\Collection::class
-     *     }
+     * @Operation(
+     *     tags={"Collections"},
+     *     summary="Create a Collection",
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="Name of the collection",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Returned when Collection was created",
+     *         @Model(type=Collection::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when form is invalid"
+     *     )
      * )
      *
      * @param Request $request
-     * @return array|\Symfony\Component\Form\Form
+     * @return Collection|FormInterface
      */
     public function postCollectionAction(Request $request)
     {
@@ -78,21 +92,30 @@ class CollectionController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}")
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     section="Collections",
-     *     requirements={
-     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"}
-     *     },
-     *     statusCodes={
-     *         200="Returned when Collection is found",
-     *         404="Returned when Collection file is not found"
-     *     }
+     * @Operation(
+     *     tags={"Collections"},
+     *     summary="Get a Collection",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when Collection is found",
+     *         @Model(type=Collection::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
      * )
      *
      * @param string $encodedCollectionPath
-     * @return string
+     * @return Collection
      */
-    public function getCollectionAction($encodedCollectionPath)
+    public function getCollectionAction(string $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
         $collection = $collectionService->get($encodedCollectionPath);
@@ -107,20 +130,28 @@ class CollectionController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}")
      * @Rest\View(statusCode=204)
      *
-     * @ApiDoc(
-     *     section="Collections",
-     *     requirements={
-     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"}
-     *     },
-     *     statusCodes={
-     *         204="Returned when Collection file is deleted",
-     *         404="Returned when Collection file is not found"
-     *     }
+     * @Operation(
+     *     tags={"Collections"},
+     *     summary="Delete a Collection",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="204",
+     *         description="Returned when Collection file is deleted"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
      * )
      *
      * @param string $encodedCollectionPath
      */
-    public function deleteCollectionAction($encodedCollectionPath)
+    public function deleteCollectionAction(string $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
         $collectionService->delete($encodedCollectionPath);

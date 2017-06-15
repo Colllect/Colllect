@@ -11,6 +11,8 @@ class Collection
 {
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $name;

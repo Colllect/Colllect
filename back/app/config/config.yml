@@ -32,6 +32,7 @@ framework:
     fragments:       ~
     http_method_override: true
     assets: ~
+    ide: "http://localhost:63342/api/file?file=%%f&line=%%l"
 
 # Twig Configuration
 twig:
@@ -85,22 +86,19 @@ fos_rest:
         view_response_listener: true
     format_listener:
         rules:
+            - { path: '^/api/doc', priorities: ['html'], fallback_format: 'html', prefer_extension: false }
             - { path: '^/api', priorities: ['json'], fallback_format: 'json', prefer_extension: false }
             - { path: '^/', priorities: [], fallback_format: 'html', prefer_extension: true }
     exception:
         enabled: true
 
 nelmio_api_doc:
-    name: 'Collect.io API'
-    sandbox:
-        request_format:
-            formats:
-                json: application/json
-            method: accept_header
-        authentication:
-            delivery: header
-            name: Authorization
-    swagger:
-        api_base_path: '/api'
+    documentation:
         info:
-            title: 'Collect.io API'
+            title: 'Collect.io'
+            description: 'Collect.io Open API'
+            version: 1.0.0
+    routes:
+        path_patterns: ['^/api(?!/doc)']
+    models:
+        use_jms: true

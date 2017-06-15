@@ -3,11 +3,14 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Entity\User;
+use ApiBundle\Model\Token;
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Swagger\Annotations as SWG;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
@@ -21,15 +24,37 @@ class TokenController extends FOSRestController
      * @Rest\RequestParam(name="email", description="User email")
      * @Rest\RequestParam(name="password", description="User password")
      * @Rest\View(statusCode=201)
-     * @ApiDoc(
-     *     section="Tokens",
-     *     statusCodes={
-     *         201="Returned when token was created",
-     *         400="Returned when bad credentials"
-     *     }
+     *
+     * @Operation(
+     *     tags={"Tokens"},
+     *     summary="Generate a new JWT",
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="formData",
+     *         description="User email",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="formData",
+     *         description="User password",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Returned when token was created",
+     *         @Model(type=Token::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when bad credentials"
+     *     )
      * )
+     *
      * @param ParamFetcher $paramFetcher
-     * @return array
+     * @return Token
      */
     public function postTokenAction(ParamFetcher $paramFetcher)
     {
@@ -58,8 +83,6 @@ class TokenController extends FOSRestController
         $em->persist($user);
         $em->flush();
 
-        return [
-            'token' => $token,
-        ];
+        return new Token($token);
     }
 }

@@ -26,36 +26,48 @@ abstract class Element
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $type;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $name;
 
     /**
      * @var array
+     *
+     * @Serializer\Type("array<string>")
      * @Serializer\Expose()
      */
     private $tags;
 
     /**
      * @var DateTime
+     *
+     * @Serializer\Type("DateTime")
      * @Serializer\Expose()
      */
     private $updated;
 
     /**
      * @var int
+     *
+     * @Serializer\Type("int")
      * @Serializer\Expose()
      */
     private $size;
 
     /**
      * @var string
+     *
+     * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $extension;

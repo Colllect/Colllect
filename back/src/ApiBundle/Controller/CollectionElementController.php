@@ -3,10 +3,14 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Model\Element;
+use ApiBundle\Form\Type\ElementType;
 use FOS\RestBundle\Controller\FOSRestController;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Swagger\Annotations as SWG;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,22 +24,29 @@ class CollectionElementController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}/elements")
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     resource=true,
-     *     resourceDescription="Collection Elements",
-     *     section="Collection Elements",
-     *     statusCodes={
-     *         200="Returned when collection files are listed"
-     *     },
-     *     responseMap={
-     *         200="array<ApiBundle\Model\Element>"
-     *     }
+     * @Operation(
+     *     tags={"Collection Elements"},
+     *     summary="List all Collection elements",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when collection files are listed",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @Model(type=Element::class)
+     *         )
+     *     )
      * )
      *
      * @param string $encodedCollectionPath
-     * @return \ApiBundle\Model\Element[]
+     * @return Element[]
      */
-    public function getCollectionElementsAction($encodedCollectionPath)
+    public function getCollectionElementsAction(string $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
         $elements = $collectionService->listElements($encodedCollectionPath);
@@ -50,23 +61,37 @@ class CollectionElementController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}/elements")
      * @Rest\View(statusCode=201)
      *
-     * @ApiDoc(
-     *     section="Collection Elements",
-     *     input={"class"=\ApiBundle\Form\Type\ElementType::class, "name"=""},
-     *     statusCodes={
-     *         201="Returned when element was created in Collection",
-     *         400="Returned when form is invalid"
-     *     },
-     *     responseMap={
-     *         201=ApiBundle\Model\AbstractElement::class
-     *     }
+     * @Operation(
+     *     tags={"Collection Elements"},
+     *     summary="Add an element to Collection",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="form",
+     *         in="body",
+     *         description="Element",
+     *         @Model(type=ElementType::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Returned when element was created in Collection",
+     *         @Model(type=Element::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when form is invalid"
+     *     )
      * )
      *
      * @param Request $request
      * @param string $encodedCollectionPath
-     * @return Element|\Symfony\Component\Form\Form
+     * @return Element|FormInterface
      */
-    public function postCollectionElementAction(Request $request, $encodedCollectionPath)
+    public function postCollectionElementAction(Request $request, string $encodedCollectionPath)
     {
         $collectionService = $this->get('api.service.collection');
         $element = $collectionService->addElement($request, $encodedCollectionPath);
@@ -81,23 +106,37 @@ class CollectionElementController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View()
      *
-     * @ApiDoc(
-     *     section="Collection Elements",
-     *     requirements={
-     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"},
-     *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
-     *     },
-     *     statusCodes={
-     *         200="Returned when Collection file is found",
-     *         404="Returned when Collection file is not found"
-     *     }
+     * @Operation(
+     *     tags={"Collection Elements"},
+     *     summary="Get a Collection element",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="encodedElementBasename",
+     *         in="path",
+     *         description="Encoded element basename",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when Collection file is found",
+     *         @Model(type=Element::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
      * )
      *
      * @param string $encodedCollectionPath
      * @param string $encodedElementBasename
-     * @return string
+     * @return Element
      */
-    public function getCollectionElementAction($encodedCollectionPath, $encodedElementBasename)
+    public function getCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
         $collectionService = $this->get('api.service.collection');
         $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
@@ -112,22 +151,35 @@ class CollectionElementController extends FOSRestController
      * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
      * @Rest\View(statusCode=204)
      *
-     * @ApiDoc(
-     *     section="Collection Elements",
-     *     requirements={
-     *         {"name"="encodedCollectionPath", "requirement"="base64 URL encoded", "dataType"="string", "description"="Collection path encoded as base64 URL"},
-     *         {"name"="encodedElementBasename", "requirement"="base64 URL encoded", "dataType"="string", "description"="Element basename encoded as base64 URL"}
-     *     },
-     *     statusCodes={
-     *         204="Returned when Collection file is deleted",
-     *         404="Returned when Collection file is not found"
-     *     }
+     * @Operation(
+     *     tags={"Collection Elements"},
+     *     summary="Delete a Collection element",
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="encodedElementBasename",
+     *         in="path",
+     *         description="Encoded element basename",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="204",
+     *         description="Returned when Collection file is deleted"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
      * )
      *
      * @param string $encodedCollectionPath
      * @param string $encodedElementBasename
      */
-    public function deleteCollectionElementAction($encodedCollectionPath, $encodedElementBasename)
+    public function deleteCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
         $collectionService = $this->get('api.service.collection');
         $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);

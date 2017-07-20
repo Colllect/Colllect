@@ -2,8 +2,9 @@
 
 namespace ApiBundle\Service;
 
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use ApiBundle\Exception\NotSupportedElementTypeException;
-use ApiBundle\FlysystemAdapter\FlysystemAdapters;
+use ApiBundle\FilesystemAdapter\FilesystemAdapterManager;
 use ApiBundle\Form\Type\CollectionType;
 use ApiBundle\Form\Type\ElementType;
 use ApiBundle\Model\Collection;
@@ -11,7 +12,6 @@ use ApiBundle\Model\Element;
 use ApiBundle\Model\ElementFile;
 use ApiBundle\Util\Base64;
 use League\Flysystem\FileNotFoundException;
-use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ class CollectionService
     const VALID_FOLDERS = [self::INBOX_FOLDER, self::COLLECTIONS_FOLDER];
 
     /**
-     * @var FilesystemInterface
+     * @var EnhancedFilesystemInterface
      */
     private $filesystem;
 
@@ -41,9 +41,10 @@ class CollectionService
     private $elementFileHandler;
 
 
-    public function __construct(TokenStorage $tokenStorage, FlysystemAdapters $flysystemAdapters, FormFactory $formFactory, ElementFileHandler $elementFileHandler)
+    public function __construct(TokenStorage $tokenStorage, FilesystemAdapterManager $flysystemAdapters, FormFactory $formFactory, ElementFileHandler $elementFileHandler)
     {
         $user = $tokenStorage->getToken()->getUser();
+
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->formFactory = $formFactory;
         $this->elementFileHandler = $elementFileHandler;
@@ -91,24 +92,6 @@ class CollectionService
     }
 
     /**
-     * Get a collection by path
-     *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @return Collection
-     */
-    public function get(string $encodedCollectionPath): Collection
-    {
-        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
-
-        $meta = $this->filesystem->getMetadata($collectionPath);
-        $standardizedMeta = $this->standardizeMetadata($meta, $collectionPath);
-
-        $collection = new Collection($standardizedMeta);
-
-        return $collection;
-    }
-
-    /**
      * Create a collection
      *
      * @param Request $request
@@ -128,6 +111,50 @@ class CollectionService
         $this->filesystem->createDir($path);
 
         return $collection;
+    }
+
+    /**
+     * Get a collection by path
+     *
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @return Collection
+     */
+    public function get(string $encodedCollectionPath): Collection
+    {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+
+        $meta = $this->filesystem->getMetadata($collectionPath);
+        $standardizedMeta = $this->standardizeMetadata($meta, $collectionPath);
+
+        $collection = new Collection($standardizedMeta);
+
+        return $collection;
+    }
+
+    /**
+     * Update a collection by path
+     *
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param Request $request
+     * @return Collection|FormInterface
+     */
+    public function update(string $encodedCollectionPath, Request $request)
+    {
+        $collection = $this->get($encodedCollectionPath);
+
+        $renamedCollection = new Collection();
+        $form = $this->formFactory->create(CollectionType::class, $renamedCollection);
+        $form->submit($request->request->all());
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+
+        $path = self::COLLECTIONS_FOLDER . '/' . $collection->getName();
+        $renamedPath = self::COLLECTIONS_FOLDER . '/' . $renamedCollection->getName();
+        $this->filesystem->renameDir($path, $renamedPath);
+
+        return $renamedCollection;
     }
 
     /**
@@ -370,7 +397,7 @@ class CollectionService
             $meta['path'] = $path;
         }
 
-        // Set timestamp to 0 if needed because some adapters didn't return it in metadata
+        // Set timestamp to -1 if needed because some adapters didn't return it in metadata
         if (!isset($meta['timestamp'])) {
             $meta['timestamp'] = -1;
         }

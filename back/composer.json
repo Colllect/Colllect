@@ -7,12 +7,6 @@
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Alex-D/flysystem-dropbox"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
@@ -34,7 +28,7 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-sftp": "^1.0",
         "league/flysystem-cached-adapter": "^1.0",
-        "spatie/flysystem-dropbox": "dev-master"
+        "spatie/flysystem-dropbox": "1.0.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

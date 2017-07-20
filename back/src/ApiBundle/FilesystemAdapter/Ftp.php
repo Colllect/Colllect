@@ -1,14 +1,14 @@
 <?php
 
-namespace ApiBundle\FlysystemAdapter;
+namespace ApiBundle\FilesystemAdapter;
 
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFtpAdapter;
 use ApiBundle\Entity\User;
 use League\Flysystem\Config;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
 
-class Ftp extends FlysystemAdapter implements FlysystemAdapterInterface
+class Ftp extends AbstractFilesystemAdapter implements FilesystemAdapterInterface
 {
     /**
      * @var string
@@ -59,24 +59,36 @@ class Ftp extends FlysystemAdapter implements FlysystemAdapterInterface
 
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getCacheName(): string
+    {
+        return 'ftp';
+    }
+
+    /**
      * @param User $user
      * @return FilesystemInterface
      */
     public function getFilesystem(User $user)
     {
         if (!$this->filesystem) {
-            $adapter = $this->cacheAdapter(new FtpAdapter(
-                [
-                    'host' => $this->host,
-                    'port' => $this->port,
-                    'username' => $this->username,
-                    'password' => $this->password,
-                    'root' => $this->root,
-                ]
-            ), $user);
+            $adapter = $this->cacheAdapter(
+                new EnhancedFtpAdapter(
+                    [
+                        'host' => $this->host,
+                        'port' => $this->port,
+                        'username' => $this->username,
+                        'password' => $this->password,
+                        'root' => $this->root,
+                    ]
+                ),
+                $user
+            );
 
-            $this->filesystem = new Filesystem(
-                $adapter, new Config(
+            $this->filesystem = new EnhancedFilesystem(
+                $adapter,
+                new Config(
                     [
                         'disable_asserts' => true,
                     ]

@@ -1,14 +1,14 @@
 <?php
 
-namespace ApiBundle\FlysystemAdapter;
+namespace ApiBundle\FilesystemAdapter;
 
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 use ApiBundle\Entity\User;
 use ApiBundle\Exception\DropboxAccessTokenMissingException;
-use League\Flysystem\Adapter\Local as LocalAdapter;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 
-class Local implements FlysystemAdapterInterface
+class Local implements FilesystemAdapterInterface
 {
     /**
      * @var string
@@ -38,9 +38,13 @@ class Local implements FlysystemAdapterInterface
     public function getFilesystem(User $user)
     {
         if (!$this->filesystem) {
-            $adapter = new LocalAdapter($this->rootPath.'/'.$user->getId(), LOCK_EX, LocalAdapter::SKIP_LINKS);
+            $adapter = new EnhancedLocalAdapter(
+                $this->rootPath . '/' . $user->getId(),
+                LOCK_EX,
+                EnhancedLocalAdapter::SKIP_LINKS
+            );
 
-            $this->filesystem = new Filesystem($adapter);
+            $this->filesystem = new EnhancedFilesystem($adapter);
         }
 
         return $this->filesystem;

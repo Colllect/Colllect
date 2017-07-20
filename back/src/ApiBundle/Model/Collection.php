@@ -22,7 +22,7 @@ class Collection
      * Collection constructor.
      * @param array $collectionMetadata
      */
-    function __construct(array $collectionMetadata = [])
+    public function __construct(array $collectionMetadata = [])
     {
         if (count($collectionMetadata) > 0) {
             $this->setName($collectionMetadata['filename']);

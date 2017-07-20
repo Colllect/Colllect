@@ -23,43 +23,43 @@ services:
         tags:
             - { name: nelmio_api_doc.extractor.parser, priority: 1 }
 
-    api.flysystem_adapters:
-        class: ApiBundle\FlysystemAdapter\FlysystemAdapters
+    api.filesystem_adapter_manager:
+        class: ApiBundle\FilesystemAdapter\FilesystemAdapterManager
         arguments: ["%default_adapter%"]
 
     api.flysystem.local:
-        class: ApiBundle\FlysystemAdapter\Local
+        class: ApiBundle\FilesystemAdapter\Local
         public: false
         arguments: ["%local_root_path%"]
         tags:
-            - { name: api.flysystem_adapter, alias: local }
+            - { name: api.filesystem_adapter, alias: local }
 
     api.flysystem.aws_s3:
-        class: ApiBundle\FlysystemAdapter\AwsS3
+        class: ApiBundle\FilesystemAdapter\AwsS3
         public: false
         arguments: ["%aws_s3_key%", "%aws_s3_secret%", "%aws_s3_region%", "%aws_s3_bucket%"]
         tags:
-            - { name: api.flysystem_adapter, alias: aws_s3 }
+            - { name: api.filesystem_adapter, alias: aws_s3 }
 
     api.flysystem.dropbox:
-        class: ApiBundle\FlysystemAdapter\Dropbox
+        class: ApiBundle\FilesystemAdapter\Dropbox
         public: false
         tags:
-            - { name: api.flysystem_adapter, alias: dropbox }
+            - { name: api.filesystem_adapter, alias: dropbox }
 
     api.flysystem.ftp:
-        class: ApiBundle\FlysystemAdapter\Ftp
+        class: ApiBundle\FilesystemAdapter\Ftp
         public: false
         arguments: ["%ftp_host%", "%ftp_port%", "%ftp_username%", "%ftp_password%", "%ftp_root%"]
         tags:
-            - { name: api.flysystem_adapter, alias: ftp }
+            - { name: api.filesystem_adapter, alias: ftp }
 
     api.flysystem.sftp:
-        class: ApiBundle\FlysystemAdapter\Sftp
+        class: ApiBundle\FilesystemAdapter\Sftp
         public: false
         arguments: ["%sftp_host%", "%sftp_port%", "%sftp_username%", "%sftp_password%", "%sftp_root%"]
         tags:
-            - { name: api.flysystem_adapter, alias: sftp }
+            - { name: api.filesystem_adapter, alias: sftp }
 
     api.service.collection:
         class: ApiBundle\Service\CollectionService

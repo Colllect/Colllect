@@ -96,8 +96,14 @@ nelmio_api_doc:
     documentation:
         info:
             title: 'Collect.io'
-            description: 'Collect.io Open API'
+            description: 'Collect.io API'
             version: 1.0.0
+        securityDefinitions:
+            api_key:
+                type: apiKey
+                name: Authorization
+                in: header
+                description: "User's JWT"
     routes:
         path_patterns: ['^/api(?!/doc)']
     models:

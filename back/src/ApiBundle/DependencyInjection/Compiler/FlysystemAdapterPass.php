@@ -15,16 +15,16 @@ class FlysystemAdapterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('api.flysystem_adapters')) {
+        if (!$container->has('api.filesystem_adapter_manager')) {
             return;
         }
 
-        $definition = $container->findDefinition('api.flysystem_adapters');
-        $taggedServices = $container->findTaggedServiceIds('api.flysystem_adapter');
+        $definition = $container->findDefinition('api.filesystem_adapter_manager');
+        $taggedServices = $container->findTaggedServiceIds('api.filesystem_adapter');
 
         foreach ($taggedServices as $id => $tags) {
             foreach ($tags as $attributes) {
-                $definition->addMethodCall('addFlysystemAdapter', [
+                $definition->addMethodCall('addFilesystemAdapter', [
                     new Reference($id),
                     $attributes['alias'],
                 ]);

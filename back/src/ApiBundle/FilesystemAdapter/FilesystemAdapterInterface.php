@@ -1,11 +1,11 @@
 <?php
 
-namespace ApiBundle\FlysystemAdapter;
+namespace ApiBundle\FilesystemAdapter;
 
 use ApiBundle\Entity\User;
 use League\Flysystem\FilesystemInterface;
 
-interface FlysystemAdapterInterface
+interface FilesystemAdapterInterface
 {
     /**
      * Get an initialized filesystem for a given user
@@ -13,5 +13,5 @@ interface FlysystemAdapterInterface
      * @param User $user
      * @return FilesystemInterface
      */
-    function getFilesystem(User $user);
+    public function getFilesystem(User $user);
 }

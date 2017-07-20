@@ -1,22 +1,30 @@
 <?php
 
-namespace ApiBundle\FlysystemAdapter;
+namespace ApiBundle\FilesystemAdapter;
 
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use ApiBundle\Entity\User;
 use ApiBundle\Exception\DropboxAccessTokenMissingException;
 use League\Flysystem\Config;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;
-use Spatie\FlysystemDropbox\DropboxAdapter;
 
-class Dropbox extends FlysystemAdapter implements FlysystemAdapterInterface
+class Dropbox extends AbstractFilesystemAdapter implements FilesystemAdapterInterface
 {
     /**
      * @var FilesystemInterface
      */
     private $filesystem;
 
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getCacheName(): string
+    {
+        return 'dropbox';
+    }
 
     /**
      * @param User $user
@@ -33,10 +41,11 @@ class Dropbox extends FlysystemAdapter implements FlysystemAdapterInterface
             }
 
             $client = new DropboxClient($token);
-            $adapter = $this->cacheAdapter(new DropboxAdapter($client), $user);
+            $adapter = $this->cacheAdapter(new EnhancedDropboxAdapter($client), $user);
 
-            $this->filesystem = new Filesystem(
-                $adapter, new Config(
+            $this->filesystem = new EnhancedFilesystem(
+                $adapter,
+                new Config(
                     [
                         'disable_asserts' => true,
                     ]

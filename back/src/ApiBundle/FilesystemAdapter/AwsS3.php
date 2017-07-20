@@ -1,15 +1,15 @@
 <?php
 
-namespace ApiBundle\FlysystemAdapter;
+namespace ApiBundle\FilesystemAdapter;
 
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedAwsS3Adapter;
+use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use ApiBundle\Entity\User;
 use Aws\S3\S3Client;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\Config;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 
-class AwsS3 extends FlysystemAdapter implements FlysystemAdapterInterface
+class AwsS3 extends AbstractFilesystemAdapter implements FilesystemAdapterInterface
 {
     /**
      * @var string
@@ -53,6 +53,14 @@ class AwsS3 extends FlysystemAdapter implements FlysystemAdapterInterface
 
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getCacheName(): string
+    {
+        return 'aws_s3';
+    }
+
+    /**
      * @param User $user
      * @return FilesystemInterface
      */
@@ -70,10 +78,11 @@ class AwsS3 extends FlysystemAdapter implements FlysystemAdapterInterface
                 ]
             );
 
-            $adapter = $this->cacheAdapter(new AwsS3Adapter($client, $this->bucket, $user->getId()), $user);
+            $adapter = $this->cacheAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, $user->getId()), $user);
 
-            $this->filesystem = new Filesystem(
-                $adapter, new Config(
+            $this->filesystem = new EnhancedFilesystem(
+                $adapter,
+                new Config(
                     [
                         'disable_asserts' => true,
                     ]

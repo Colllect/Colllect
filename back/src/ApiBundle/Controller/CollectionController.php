@@ -125,6 +125,46 @@ class CollectionController extends FOSRestController
 
 
     /**
+     * Update a Collection
+     *
+     * @Rest\Route("/collections/{encodedCollectionPath}")
+     * @Rest\View(statusCode=200)
+     *
+     * @Operation(
+     *     tags={"Collections"},
+     *     summary="Update a Collection",
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="Name of the collection",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when Collection was updated",
+     *         @Model(type=Collection::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when form is invalid"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param string $encodedCollectionPath
+     * @return Collection|FormInterface
+     */
+    public function putCollectionAction(Request $request, string $encodedCollectionPath)
+    {
+        $collectionService = $this->get('api.service.collection');
+        $response = $collectionService->update($encodedCollectionPath, $request);
+
+        return $response;
+    }
+
+
+    /**
      * Delete a Collection
      *
      * @Rest\Route("/collections/{encodedCollectionPath}")

@@ -50,4 +50,12 @@ class Link extends Element
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent()
+    {
+        return $this->url;
+    }
 }

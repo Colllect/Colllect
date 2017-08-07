@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class CollectionService
@@ -222,6 +223,76 @@ class CollectionService
     }
 
     /**
+     * Add an element to a collection
+     *
+     * @param Request $request
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @return Element|FormInterface
+     */
+    public function addElement(Request $request, string $encodedCollectionPath)
+    {
+        $elementFile = new ElementFile();
+        $form = $this->handleRequest($request, $elementFile);
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+
+        $this->elementFileHandler->handleFileElement($elementFile);
+
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+        $path = $collectionPath . '/' . $elementFile->getBasename();
+        $this->filesystem->write($path, $elementFile->getContent());
+
+        $elementMetadata = $this->filesystem->getMetadata($path);
+        $element = Element::get($elementMetadata);
+
+        return $element;
+    }
+
+    /**
+     * Update an element from a collection
+     *
+     * @param Request $request
+     * @param string $encodedElementBasename Base 64 encoded basename
+     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @return Element|FormInterface
+     */
+    public function updateElementByEncodedElementBasename(Request $request, string $encodedElementBasename, string $encodedCollectionPath)
+    {
+        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
+
+        $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
+        $elementMetadata = $this->filesystem->getMetadata($path);
+        $element = Element::get($elementMetadata);
+
+        $elementFile = new ElementFile($element);
+        $form = $this->handleRequest($request, $elementFile);
+
+        if (!$form->isValid()) {
+            return $form;
+        }
+
+        $newPath = $collectionPath . '/' . $elementFile->getBasename();
+
+        // Rename if necessary
+        if ($path !== $newPath) {
+            $this->filesystem->rename($path, $newPath);
+        }
+
+        // Update content if necessary
+        if ($element->shouldLoadContent() && $element->getContent() !== $elementFile->getContent()) {
+            $this->filesystem->write($newPath, $elementFile->getContent());
+        }
+
+        // Get fresh data about updated element
+        $elementMetadata = $this->filesystem->getMetadata($newPath);
+        $updatedElement = Element::get($elementMetadata);
+
+        return $updatedElement;
+    }
+
+    /**
      * Get an element from a collection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
@@ -234,6 +305,11 @@ class CollectionService
         $path = $this->getElementPathByEncodedElementBasename($encodedElementBasename, $collectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
+
+        if (!$meta) {
+            throw new NotFoundHttpException();
+        }
+
         $standardizedMeta = $this->standardizeMetadata($meta, $path);
         $element = Element::get($standardizedMeta);
 
@@ -269,34 +345,6 @@ class CollectionService
         }
 
         return $response;
-    }
-
-    /**
-     * Add an element to a collection
-     *
-     * @param Request $request
-     * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @return Element|FormInterface
-     */
-    public function addElement(Request $request, $encodedCollectionPath): Element
-    {
-        $elementFile = new ElementFile();
-        $form = $this->handleRequest($request, $elementFile);
-
-        if (!$form->isValid()) {
-            return $form;
-        }
-
-        $this->elementFileHandler->handleFileElement($elementFile);
-
-        $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
-        $path = $collectionPath . '/' . $elementFile->getBasename();
-        $this->filesystem->write($path, $elementFile->getContent());
-
-        $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata);
-
-        return $element;
     }
 
     /**
@@ -378,7 +426,7 @@ class CollectionService
             $requestContent[$k] = $requestFile;
         }
 
-        $form->submit($requestContent);
+        $form->submit($requestContent, false);
 
         return $form;
     }

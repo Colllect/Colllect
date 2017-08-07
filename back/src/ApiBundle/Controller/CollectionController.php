@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Model\Collection;
+use ApiBundle\Service\CollectionService;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -26,6 +27,9 @@ class CollectionController extends FOSRestController
      * @Operation(
      *     tags={"Collections"},
      *     summary="List all Collections",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Response(
      *         response="200",
      *         description="Returned when collections are listed",
@@ -40,6 +44,7 @@ class CollectionController extends FOSRestController
      */
     public function getCollectionsAction()
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $elements = $collectionService->list();
 
@@ -56,6 +61,9 @@ class CollectionController extends FOSRestController
      * @Operation(
      *     tags={"Collections"},
      *     summary="Create a Collection",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="name",
      *         in="formData",
@@ -79,6 +87,7 @@ class CollectionController extends FOSRestController
      */
     public function postCollectionAction(Request $request)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $response = $collectionService->create($request);
 
@@ -95,6 +104,9 @@ class CollectionController extends FOSRestController
      * @Operation(
      *     tags={"Collections"},
      *     summary="Get a Collection",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -117,6 +129,7 @@ class CollectionController extends FOSRestController
      */
     public function getCollectionAction(string $encodedCollectionPath)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $collection = $collectionService->get($encodedCollectionPath);
 
@@ -133,6 +146,9 @@ class CollectionController extends FOSRestController
      * @Operation(
      *     tags={"Collections"},
      *     summary="Update a Collection",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="name",
      *         in="formData",
@@ -157,6 +173,7 @@ class CollectionController extends FOSRestController
      */
     public function putCollectionAction(Request $request, string $encodedCollectionPath)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $response = $collectionService->update($encodedCollectionPath, $request);
 
@@ -173,6 +190,9 @@ class CollectionController extends FOSRestController
      * @Operation(
      *     tags={"Collections"},
      *     summary="Delete a Collection",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -193,6 +213,7 @@ class CollectionController extends FOSRestController
      */
     public function deleteCollectionAction(string $encodedCollectionPath)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $collectionService->delete($encodedCollectionPath);
     }

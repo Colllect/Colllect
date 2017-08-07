@@ -3,7 +3,7 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Model\Element;
-use ApiBundle\Form\Type\ElementType;
+use ApiBundle\Service\CollectionService;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Operation;
@@ -27,6 +27,9 @@ class CollectionElementController extends FOSRestController
      * @Operation(
      *     tags={"Collection Elements"},
      *     summary="List all Collection elements",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -48,6 +51,7 @@ class CollectionElementController extends FOSRestController
      */
     public function getCollectionElementsAction(string $encodedCollectionPath)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $elements = $collectionService->listElements($encodedCollectionPath);
 
@@ -58,12 +62,23 @@ class CollectionElementController extends FOSRestController
     /**
      * Add an element to Collection
      *
+     * To create an element you need to match one of these combination:
+     *  - `file`: `type` parameter is ignored as type is detected with file data
+     *  - `url` (+ `type`)
+     *  - content + type
+     *
+     * In any case you can define the name of the element with `basename`
+     *
      * @Rest\Route("/collections/{encodedCollectionPath}/elements")
      * @Rest\View(statusCode=201)
      *
      * @Operation(
      *     tags={"Collection Elements"},
      *     summary="Add an element to Collection",
+     *     consumes={"multipart/form-data"},
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -71,10 +86,41 @@ class CollectionElementController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Parameter(
-     *         name="form",
-     *         in="body",
-     *         description="Element",
-     *         @Model(type=ElementType::class)
+     *         name="file",
+     *         in="formData",
+     *         description="Element file to import",
+     *         type="file"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="url",
+     *         in="formData",
+     *         description="Element URL to import from",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="type",
+     *         in="formData",
+     *         description="Element type",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="Element name",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="tags",
+     *         in="formData",
+     *         description="Element tag list",
+     *         type="array",
+     *         @SWG\Items(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="content",
+     *         in="formData",
+     *         description="Element content",
+     *         type="string"
      *     ),
      *     @SWG\Response(
      *         response="201",
@@ -93,6 +139,7 @@ class CollectionElementController extends FOSRestController
      */
     public function postCollectionElementAction(Request $request, string $encodedCollectionPath)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $element = $collectionService->addElement($request, $encodedCollectionPath);
 
@@ -109,6 +156,9 @@ class CollectionElementController extends FOSRestController
      * @Operation(
      *     tags={"Collection Elements"},
      *     summary="Get a Collection element",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -138,8 +188,76 @@ class CollectionElementController extends FOSRestController
      */
     public function getCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
+
+        return $element;
+    }
+
+
+    /**
+     * Update a Collection element
+     *
+     * @Rest\Route("/collections/{encodedCollectionPath}/elements/{encodedElementBasename}")
+     * @Rest\View()
+     *
+     * @Operation(
+     *     tags={"Collection Elements"},
+     *     summary="Update a Collection element",
+     *     security={{
+     *         "api_key": {}
+     *     }},
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="encodedElementBasename",
+     *         in="path",
+     *         description="Encoded element basename",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="Element name",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="tags",
+     *         in="formData",
+     *         description="Element tag list",
+     *         type="array",
+     *         @SWG\Items(type="string")
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when Collection file is updated",
+     *         @Model(type=Element::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when form is invalid"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param string $encodedCollectionPath
+     * @param string $encodedElementBasename
+     * @return Element
+     */
+    public function putCollectionElementAction(Request $request, string $encodedCollectionPath, string $encodedElementBasename)
+    {
+        /** @var CollectionService $collectionService */
+        $collectionService = $this->get('api.service.collection');
+        $element = $collectionService->updateElementByEncodedElementBasename($request, $encodedElementBasename, $encodedCollectionPath);
 
         return $element;
     }
@@ -154,6 +272,9 @@ class CollectionElementController extends FOSRestController
      * @Operation(
      *     tags={"Collection Elements"},
      *     summary="Delete a Collection element",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="encodedCollectionPath",
      *         in="path",
@@ -181,6 +302,7 @@ class CollectionElementController extends FOSRestController
      */
     public function deleteCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
+        /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
         $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
     }

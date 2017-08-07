@@ -19,4 +19,12 @@ class Color extends Element
     {
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent()
+    {
+        return null;
+    }
 }

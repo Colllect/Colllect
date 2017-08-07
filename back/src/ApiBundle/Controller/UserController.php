@@ -26,10 +26,22 @@ class UserController extends FOSRestController
      *     tags={"Users"},
      *     summary="Create a new user account",
      *     @SWG\Parameter(
-     *         name="form",
-     *         in="body",
-     *         description="User",
-     *         @Model(type=UserType::class)
+     *         name="email",
+     *         in="formData",
+     *         description="User email address",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="nickname",
+     *         in="formData",
+     *         description="User nickname",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="formData",
+     *         description="User password",
+     *         type="string"
      *     ),
      *     @SWG\Response(
      *         response="201",
@@ -71,6 +83,9 @@ class UserController extends FOSRestController
      * @Operation(
      *     tags={"Users"},
      *     summary="Update an user account data",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="userId",
      *         in="path",
@@ -78,10 +93,22 @@ class UserController extends FOSRestController
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         name="form",
-     *         in="body",
-     *         description="User",
-     *         @Model(type=UserType::class)
+     *         name="email",
+     *         in="formData",
+     *         description="User email address",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="nickname",
+     *         in="formData",
+     *         description="User nickname",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="formData",
+     *         description="User password",
+     *         type="string"
      *     ),
      *     @SWG\Response(
      *         response="200",
@@ -136,6 +163,9 @@ class UserController extends FOSRestController
      * @Operation(
      *     tags={"Users"},
      *     summary="Get an user",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="userId",
      *         in="path",
@@ -184,6 +214,9 @@ class UserController extends FOSRestController
      * @Operation(
      *     tags={"Users"},
      *     summary="Delete an user account",
+     *     security={{
+     *         "api_key": {}
+     *     }},
      *     @SWG\Parameter(
      *         name="userId",
      *         in="path",

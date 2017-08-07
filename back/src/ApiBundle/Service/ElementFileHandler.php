@@ -68,8 +68,14 @@ class ElementFileHandler
     {
         if (!$elementFile->getBasename()) {
             $parsedUrl = parse_url($elementFile->getUrl());
-            $path = explode('/', $parsedUrl['path']);
-            $elementFile->setBasename(end($path));
+            $path = explode('/', trim($parsedUrl['path'], '/'));
+            $endPath = end($path);
+
+            if (array_key_exists('extension', pathinfo($endPath))) {
+                $elementFile->setBasename($endPath);
+            } else {
+                $elementFile->setName($endPath);
+            }
         }
 
         // Guess element type by header or file extension
@@ -103,12 +109,12 @@ class ElementFileHandler
         }
 
         // Add default extension to typed file
-        $pathInfos = pathinfo($elementFile->getBasename());
-        if (!isset($pathInfos['extension']) || !in_array($pathInfos['extension'], Element::EXTENSIONS_BY_TYPE[$elementFile->getType()])) {
-            $elementFile->setBasename($elementFile->getBasename() . '.' . Element::EXTENSIONS_BY_TYPE[$elementFile->getType()][0]);
+        $typeExtensions = Element::EXTENSIONS_BY_TYPE[$elementFile->getType()];
+        if (!$elementFile->getExtension() || !in_array($elementFile->getExtension(), $typeExtensions)) {
+            $elementFile->setExtension($typeExtensions[0]);
         }
-        if (!isset($pathInfos['filename']) || strlen($pathInfos['filename']) === 0) {
-            $elementFile->setBasename(uniqid() . $elementFile->getBasename());
+        if (!$elementFile->getName() || strlen($elementFile->getName()) === 0) {
+            $elementFile->setName(uniqid());
         }
     }
 
@@ -130,13 +136,13 @@ class ElementFileHandler
 
             // Check if content type is in image allowed content types
             foreach (self::ALLOWED_IMAGE_CONTENT_TYPE as $allowedContentType) {
-                $contentType = isset($headers['Content-Type']) ?: $headers['content-type'];
+                $contentType = isset($headers['Content-Type']) ? $headers['Content-Type'] : $headers['content-type'];
                 if (strstr($contentType, $allowedContentType) !== false) {
                     $allowedContentTypeParts = explode('/', $allowedContentType);
                     $extension = end($allowedContentTypeParts);
-                    $pathInfos = pathinfo($elementFile->getBasename());
-                    if (!isset($pathInfos['extension']) || (isset($pathInfos['extension']) && $pathInfos['extension'] !== $extension)) {
-                        $elementFile->setBasename($elementFile->getBasename() . '.' . $extension);
+                    $elementFileExtension = $elementFile->getExtension();
+                    if (!isset($elementFileExtension) || (isset($elementFileExtension) && $elementFileExtension !== $extension)) {
+                        $elementFile->setExtension($extension);
                     }
                     $elementFile->setType(Element::IMAGE_TYPE);
                     return $elementFile;

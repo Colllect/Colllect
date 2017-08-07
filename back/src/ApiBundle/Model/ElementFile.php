@@ -27,17 +27,47 @@ class ElementFile
 
     /**
      * @var string
+     * @Assert\Type("string")
      */
-    protected $basename;
+    protected $name;
+
+    /**
+     * @var array
+     * @Assert\Type("array")
+     */
+    protected $tags;
 
     /**
      * @var string
+     * @Assert\Type("string")
+     */
+    protected $extension;
+
+    /**
+     * @var string
+     * @Assert\Type("string")
      */
     protected $type;
 
 
+    public function __construct(Element $element = null)
+    {
+        $this->tags = [];
+
+        if ($element !== null) {
+            $this->setName($element->getName());
+            $this->setTags($element->getTags());
+            $this->setExtension($element->getExtension());
+
+            if ($element->shouldLoadContent()) {
+                $this->setContent($element->getContent());
+            }
+        }
+    }
+
+
     /**
-     * @return mixed
+     * @return UploadedFile
      */
     public function getFile()
     {
@@ -67,7 +97,7 @@ class ElementFile
      * @param string $url
      * @return $this
      */
-    public function setUrl($url)
+    public function setUrl(string $url)
     {
         $this->url = $url;
 
@@ -86,7 +116,7 @@ class ElementFile
      * @param string $content
      * @return $this
      */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->content = $content;
 
@@ -98,18 +128,80 @@ class ElementFile
      */
     public function getBasename()
     {
-        return $this->basename;
+        if (!$this->name || !$this->extension) {
+            return null;
+        }
+
+        $concatTags = implode('', array_map(function ($tag) {
+            return ' #' . str_replace(' ', '_', $tag);
+        }, $this->tags));
+
+        return $this->name . $concatTags . '.' . $this->extension;
     }
 
     /**
      * @param string $basename
      * @return $this
      */
-    public function setBasename($basename)
+    public function setBasename(string $basename)
     {
-        $this->basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
+        $basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
+
+        $elementMeta = Element::parseBasename($basename);
+
+        $this->setName($elementMeta['name']);
+        $this->setTags($elementMeta['tags']);
+        $this->setExtension($elementMeta['extension']);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public function setTags(array $tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param string $extension
+     */
+    public function setExtension(string $extension)
+    {
+        $this->extension = $extension;
     }
 
     /**
@@ -121,12 +213,11 @@ class ElementFile
     }
 
     /**
-     *
      * @param string $type
      * @return $this
      * @throws \Exception
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         if (!in_array($type, array_keys(Element::EXTENSIONS_BY_TYPE))) {
             throw new \Exception('error.invalid_type');

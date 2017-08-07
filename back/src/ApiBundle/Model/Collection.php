@@ -17,6 +17,14 @@ class Collection
      */
     private $name;
 
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     * @Serializer\Expose()
+     */
+    private $encodedCollectionPath;
+
 
     /**
      * Collection constructor.
@@ -26,6 +34,7 @@ class Collection
     {
         if (count($collectionMetadata) > 0) {
             $this->setName($collectionMetadata['filename']);
+            $this->setEncodedCollectionPath(urlencode(base64_encode($collectionMetadata['path'])));
         }
     }
 
@@ -44,5 +53,21 @@ class Collection
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncodedCollectionPath(): string
+    {
+        return $this->encodedCollectionPath;
+    }
+
+    /**
+     * @param string $encodedCollectionPath
+     */
+    public function setEncodedCollectionPath(string $encodedCollectionPath)
+    {
+        $this->encodedCollectionPath = $encodedCollectionPath;
     }
 }

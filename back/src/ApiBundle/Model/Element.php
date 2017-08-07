@@ -72,36 +72,32 @@ abstract class Element
      */
     private $extension;
 
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     * @Serializer\Expose()
+     */
+    private $encodedElementBasename;
+
 
     public function __construct(array $meta)
     {
-        // Can throw an NotSupportedElementTypeException
-        $this->type = self::getTypeByPath($meta['path']);
-
-        $pathParts = pathinfo($meta['path']);
-        $filename = $pathParts['filename'];
-
-        // Parse tags from filename
-        preg_match_all('/#([^\s.,\/#!$%\^&\*;:{}=\-`~()]+)/', $filename, $tags);
-        $tags = $tags[1];
-        foreach ($tags as $k => $tag) {
-            // Remove tags from filename
-            $filename = str_replace("#$tag", "", $filename);
-            // Replace underscores by spaces in tags
-            $tags[$k] = str_replace("_", " ", $tag);
-        }
-        // Replace multiple spaces by single space
-        $name = preg_replace('/\s+/', ' ', trim($filename));
+        $basename = pathinfo($meta['path'])['basename'];
+        $elementMeta = self::parseBasename($basename);
 
         $updated = new DateTime();
         $updated->setTimestamp($meta['timestamp']);
 
-        $this->name = $name;
-        $this->tags = $tags;
+        $this->type = $elementMeta['type'];
+        $this->name = $elementMeta['name'];
+        $this->tags = $elementMeta['tags'];
         $this->updated = $updated;
         $this->size = $meta['size'];
-        $this->extension = $pathParts['extension'];
+        $this->extension = $elementMeta['extension'];
+        $this->encodedElementBasename = urlencode(base64_encode($basename));
     }
+
 
     /**
      * Determinate if this type of element should have his content loaded in response object
@@ -109,6 +105,14 @@ abstract class Element
      * @return bool
      */
     abstract public function shouldLoadContent();
+
+    /**
+     * Get content of the file from the element object
+     * It can be handled differently by each element typed class
+     *
+     * @return $this
+     */
+    abstract public function getContent();
 
     /**
      * Set content of the file in the element object
@@ -137,6 +141,19 @@ abstract class Element
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set element name
+     *
+     * @param string $name
+     * @return Element
+     */
+    public function setName(string $name): Element
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -180,6 +197,22 @@ abstract class Element
     }
 
     /**
+     * @return string
+     */
+    public function getEncodedElementBasename(): string
+    {
+        return $this->encodedElementBasename;
+    }
+
+    /**
+     * @param string $encodedElementBasename
+     */
+    public function setEncodedElementBasename(string $encodedElementBasename)
+    {
+        $this->encodedElementBasename = $encodedElementBasename;
+    }
+
+    /**
      * @param $elementFilePath
      * @return string
      * @throws \Exception
@@ -208,7 +241,7 @@ abstract class Element
     public static function get($elementMetadata)
     {
         $type = self::getTypeByPath($elementMetadata['path']);
-        switch($type) {
+        switch ($type) {
             case self::COLORS_TYPE:
                 return new Color($elementMetadata);
                 break;
@@ -224,5 +257,40 @@ abstract class Element
         }
 
         throw new NotSupportedElementTypeException();
+    }
+
+    /**
+     * Parse basename to get type, name, tags and extension
+     *
+     * @param string $basename
+     * @return array
+     */
+    public static function parseBasename(string $basename): array
+    {
+        $meta = [];
+
+        // Can throw an NotSupportedElementTypeException
+        $meta['type'] = self::getTypeByPath($basename);
+
+        $pathParts = pathinfo($basename);
+        $filename = $pathParts['filename'];
+
+        // Parse tags from filename
+        preg_match_all('/#([^\s.,\/#!$%\^&\*;:{}=\-`~()]+)/', $filename, $tags);
+        $tags = $tags[1];
+        foreach ($tags as $k => $tag) {
+            // Remove tags from filename
+            $filename = str_replace("#$tag", "", $filename);
+            // Replace underscores by spaces in tags
+            $tags[$k] = str_replace("_", " ", $tag);
+        }
+        // Replace multiple spaces by single space
+        $name = preg_replace('/\s+/', ' ', trim($filename));
+
+        $meta['name'] = $name;
+        $meta['tags'] = $tags;
+        $meta['extension'] = $pathParts['extension'];
+
+        return $meta;
     }
 }

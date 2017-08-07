@@ -22,7 +22,7 @@ class Note extends Element
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getContent()
     {

@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.32.0",
+            "version": "3.32.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3cd5606efca95480a17b0f9d0f21190cd25cef77"
+                "reference": "d34a5779803ae7bc3efd3c6cab6e4e6f3b7409dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3cd5606efca95480a17b0f9d0f21190cd25cef77",
-                "reference": "3cd5606efca95480a17b0f9d0f21190cd25cef77",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d34a5779803ae7bc3efd3c6cab6e4e6f3b7409dd",
+                "reference": "d34a5779803ae7bc3efd3c6cab6e4e6f3b7409dd",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-07-26 22:05:53"
+            "time": "2017-08-01 21:51:56"
         },
         {
             "name": "composer/ca-bundle",
@@ -2656,16 +2656,16 @@
         },
         {
             "name": "sensiolabs/security-checker",
-            "version": "v4.0.5",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/security-checker.git",
-                "reference": "6a3b0c3b42e41c777b1ad75032d8177863fdc5e1"
+                "reference": "7d60f01b9a56dfd152796877d009b1a0578d6ef4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/6a3b0c3b42e41c777b1ad75032d8177863fdc5e1",
-                "reference": "6a3b0c3b42e41c777b1ad75032d8177863fdc5e1",
+                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/7d60f01b9a56dfd152796877d009b1a0578d6ef4",
+                "reference": "7d60f01b9a56dfd152796877d009b1a0578d6ef4",
                 "shasum": ""
             },
             "require": {
@@ -2678,7 +2678,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -2697,20 +2697,20 @@
                 }
             ],
             "description": "A security checker for your composer.lock",
-            "time": "2017-07-24 11:42:56"
+            "time": "2017-08-03 12:24:05"
         },
         {
             "name": "spatie/dropbox-api",
-            "version": "1.5.2",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/dropbox-api.git",
-                "reference": "bc41967b264c8baaf2c4c0b135ddf0a3a72830c8"
+                "reference": "f27b329f7567a3e0f5e5ef573af77a48ef0d0d54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/dropbox-api/zipball/bc41967b264c8baaf2c4c0b135ddf0a3a72830c8",
-                "reference": "bc41967b264c8baaf2c4c0b135ddf0a3a72830c8",
+                "url": "https://api.github.com/repos/spatie/dropbox-api/zipball/f27b329f7567a3e0f5e5ef573af77a48ef0d0d54",
+                "reference": "f27b329f7567a3e0f5e5ef573af77a48ef0d0d54",
                 "shasum": ""
             },
             "require": {
@@ -2753,7 +2753,7 @@
                 "spatie",
                 "v2"
             ],
-            "time": "2017-07-17 19:37:40"
+            "time": "2017-07-29 23:13:10"
         },
         {
             "name": "spatie/flysystem-dropbox",
@@ -3319,16 +3319,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.2.12",
+            "version": "v3.2.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "d65d8fad37fdbb599b13f0aade2407ae88465a58"
+                "reference": "e1aabd6f50fb4586b330f9ac54b4bcdf7352a0f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/d65d8fad37fdbb599b13f0aade2407ae88465a58",
-                "reference": "d65d8fad37fdbb599b13f0aade2407ae88465a58",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/e1aabd6f50fb4586b330f9ac54b4bcdf7352a0f8",
+                "reference": "e1aabd6f50fb4586b330f9ac54b4bcdf7352a0f8",
                 "shasum": ""
             },
             "require": {
@@ -3459,7 +3459,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-07-17 18:15:19"
+            "time": "2017-08-01 09:40:44"
         },
         {
             "name": "twig/twig",
@@ -4637,29 +4637,29 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.11",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7"
+                "reference": "ecb0b2cdaa0add708fe6f329ef65ae0c5225130b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/e03f8f67534427a787e21a385a67ec3ca6978ea7",
-                "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/ecb0b2cdaa0add708fe6f329ef65ae0c5225130b",
+                "reference": "ecb0b2cdaa0add708fe6f329ef65ae0c5225130b",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
-                "php": ">=5.3.3"
+                "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.2"
+                "phpunit/phpunit": "^6.2.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "2.0-dev"
                 }
             },
             "autoload": {
@@ -4682,7 +4682,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27 10:12:30"
+            "time": "2017-08-03 14:17:41"
         },
         {
             "name": "phpunit/phpunit",

@@ -58,10 +58,6 @@ class ElementFile
             $this->setName($element->getName());
             $this->setTags($element->getTags());
             $this->setExtension($element->getExtension());
-
-            if ($element->shouldLoadContent()) {
-                $this->setContent($element->getContent());
-            }
         }
     }
 

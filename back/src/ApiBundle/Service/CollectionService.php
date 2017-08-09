@@ -281,8 +281,8 @@ class CollectionService
         }
 
         // Update content if necessary
-        if ($element->shouldLoadContent() && $element->getContent() !== $elementFile->getContent()) {
-            $this->filesystem->write($newPath, $elementFile->getContent());
+        if ($element->shouldLoadContent() && !!$elementFile->getContent()) {
+            $this->filesystem->update($newPath, $elementFile->getContent());
         }
 
         // Get fresh data about updated element

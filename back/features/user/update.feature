@@ -46,12 +46,15 @@ Feature: User update
     When I send a PUT request to "/api/users/1" with values:
       | email         | demodealex+emailonly@gmail.com |
     Then the response code should be 200
+    And the response should not contain "password"
+    And the response should not contain "plainPassword"
+    And the response should contain "nickname"
+    And the response should contain "created_at"
     And the response should contain json:
       """
       {
         "id": 1,
         "email": "demodealex+emailonly@gmail.com",
-        "nickname": "monty93",
         "roles": ["ROLE_USER"]
       }
       """

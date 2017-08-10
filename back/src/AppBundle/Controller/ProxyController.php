@@ -7,12 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ProxyController extends Controller
 {
-    public function inboxElementAction($encodedElementBasename)
+    public function elementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
         $collectionService = $this->get('api.service.collection');
         $response = $collectionService->getElementContentResponseByEncodedElementBasename(
             $encodedElementBasename,
-            CollectionService::INBOX_FOLDER
+            $encodedCollectionPath
         );
 
         return $response;

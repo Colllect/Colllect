@@ -351,9 +351,7 @@ class CollectionService
 
         $response = new Response();
         $response->setContent($content);
-        if (isset($standardizedMeta['mimetype'])) {
-            $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
-        }
+        $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
 
         return $response;
     }
@@ -459,6 +457,14 @@ class CollectionService
         // Set timestamp to -1 if needed because some adapters didn't return it in metadata
         if (!isset($meta['timestamp'])) {
             $meta['timestamp'] = -1;
+        }
+
+        if (!isset($meta['mimetype'])) {
+            if (in_array('image/' . $meta['extension'], ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE)) {
+                $meta['mimetype'] = 'application/octet-stream';
+            } else {
+                $meta['mimetype'] = 'text/html; charset=UTF-8';
+            }
         }
 
         return $meta;

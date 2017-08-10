@@ -37,7 +37,7 @@ class Dropbox extends AbstractFilesystemAdapter implements FilesystemAdapterInte
             $token = $user->getDropboxToken();
 
             if (!$token) {
-                throw new DropboxAccessTokenMissingException("error.dropbox_not_linked");
+                throw new DropboxAccessTokenMissingException('error.dropbox_not_linked');
             }
 
             $client = new DropboxClient($token);

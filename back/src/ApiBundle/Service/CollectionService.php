@@ -61,7 +61,7 @@ class CollectionService
         try {
             $collectionsMetadata = $this->filesystem->listContents(self::COLLECTIONS_FOLDER);
         } catch (\Exception $e) {
-            // We can't catch "not found"-like exception for each adapter,
+            // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             return [];
         }
@@ -186,7 +186,7 @@ class CollectionService
         try {
             $filesMetadata = $this->filesystem->listContents($collectionPath);
         } catch (\Exception $e) {
-            // We can't catch "not found"-like exception for each adapter,
+            // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             return [];
         }
@@ -374,13 +374,13 @@ class CollectionService
     private function decodeCollectionPath(string $encodedCollectionPath): string
     {
         if (!Base64::isValidBase64($encodedCollectionPath)) {
-            throw new BadRequestHttpException("request.badly_encoded_collection_path");
+            throw new BadRequestHttpException('request.badly_encoded_collection_path');
         }
 
         $path = base64_decode($encodedCollectionPath);
 
         if (!in_array(explode('/', $path)[0], self::VALID_FOLDERS)) {
-            throw new BadRequestHttpException("request.invalid_collection_path");
+            throw new BadRequestHttpException('request.invalid_collection_path');
         }
 
         return $path;
@@ -396,7 +396,7 @@ class CollectionService
     private function getElementPathByEncodedElementBasename(string $encodedElementBasename, string $collectionPath): string
     {
         if (!Base64::isValidBase64($encodedElementBasename)) {
-            throw new BadRequestHttpException("request.badly_encoded_element_name");
+            throw new BadRequestHttpException('request.badly_encoded_element_name');
         }
 
         $basename = base64_decode($encodedElementBasename);

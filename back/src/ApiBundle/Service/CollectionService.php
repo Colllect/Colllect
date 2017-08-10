@@ -3,6 +3,8 @@
 namespace ApiBundle\Service;
 
 use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use ApiBundle\Exception\FilesystemCannotRenameException;
+use ApiBundle\Exception\FilesystemCannotWriteException;
 use ApiBundle\Exception\NotSupportedElementTypeException;
 use ApiBundle\FilesystemAdapter\FilesystemAdapterManager;
 use ApiBundle\Form\Type\CollectionType;
@@ -228,6 +230,7 @@ class CollectionService
      * @param Request $request
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element|FormInterface
+     * @throws FilesystemCannotWriteException
      */
     public function addElement(Request $request, string $encodedCollectionPath)
     {
@@ -242,7 +245,9 @@ class CollectionService
 
         $collectionPath = $this->decodeCollectionPath($encodedCollectionPath);
         $path = $collectionPath . '/' . $elementFile->getBasename();
-        $this->filesystem->write($path, $elementFile->getContent());
+        if (!$this->filesystem->write($path, $elementFile->getContent())) {
+            throw new FilesystemCannotWriteException();
+        }
 
         $elementMetadata = $this->filesystem->getMetadata($path);
         $element = Element::get($elementMetadata);
@@ -257,6 +262,8 @@ class CollectionService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Element|FormInterface
+     * @throws FilesystemCannotRenameException
+     * @throws FilesystemCannotWriteException
      */
     public function updateElementByEncodedElementBasename(Request $request, string $encodedElementBasename, string $encodedCollectionPath)
     {
@@ -277,12 +284,16 @@ class CollectionService
 
         // Rename if necessary
         if ($path !== $newPath) {
-            $this->filesystem->rename($path, $newPath);
+            if (!$this->filesystem->rename($path, $newPath)) {
+                throw new FilesystemCannotRenameException();
+            }
         }
 
         // Update content if necessary
         if ($element->shouldLoadContent() && !!$elementFile->getContent()) {
-            $this->filesystem->update($newPath, $elementFile->getContent());
+            if (!$this->filesystem->update($newPath, $elementFile->getContent())) {
+                throw new FilesystemCannotWriteException();
+            }
         }
 
         // Get fresh data about updated element
@@ -307,7 +318,7 @@ class CollectionService
         $meta = $this->filesystem->getMetadata($path);
 
         if (!$meta) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException('error.element_not_found');
         }
 
         $standardizedMeta = $this->standardizeMetadata($meta, $path);

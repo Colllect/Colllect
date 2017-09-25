@@ -100,12 +100,12 @@ class CollectionElementService
     /**
      * Add an element to a collection
      *
-     * @param Request $request
      * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param Request $request
      * @return Element|FormInterface
      * @throws FilesystemCannotWriteException
      */
-    public function create(Request $request, string $encodedCollectionPath)
+    public function create(string $encodedCollectionPath, Request $request)
     {
         $elementFile = new ElementFile();
         $form = $this->handleRequest($request, $elementFile);
@@ -131,14 +131,14 @@ class CollectionElementService
     /**
      * Update an element from a collection
      *
-     * @param Request $request
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param Request $request
      * @return Element|FormInterface
      * @throws FilesystemCannotRenameException
      * @throws FilesystemCannotWriteException
      */
-    public function update(Request $request, string $encodedElementBasename, string $encodedCollectionPath)
+    public function update(string $encodedElementBasename, string $encodedCollectionPath, Request $request)
     {
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
 

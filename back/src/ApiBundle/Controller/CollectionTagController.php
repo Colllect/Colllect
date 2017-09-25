@@ -91,7 +91,7 @@ class CollectionTagController extends FOSRestController
     {
         /** @var CollectionTagService $collectionTagService */
         $collectionTagService = $this->get('api.service.collection_tag');
-        $response = $collectionTagService->create($request, $encodedCollectionPath);
+        $response = $collectionTagService->create($encodedCollectionPath, $request);
 
         return $response;
     }

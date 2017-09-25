@@ -142,7 +142,7 @@ class CollectionElementController extends FOSRestController
     {
         /** @var CollectionElementService $collectionElementService */
         $collectionElementService = $this->get('api.service.collection_element');
-        $element = $collectionElementService->create($request, $encodedCollectionPath);
+        $element = $collectionElementService->create($encodedCollectionPath, $request);
 
         return $element;
     }
@@ -258,7 +258,7 @@ class CollectionElementController extends FOSRestController
     {
         /** @var CollectionElementService $collectionElementService */
         $collectionElementService = $this->get('api.service.collection_element');
-        $element = $collectionElementService->update($request, $encodedElementBasename, $encodedCollectionPath);
+        $element = $collectionElementService->update($encodedElementBasename, $encodedCollectionPath, $request);
 
         return $element;
     }

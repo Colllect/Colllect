@@ -74,13 +74,13 @@ class CollectionTagService
     /**
      * Add a tag to a collection
      *
-     * @param Request $request
      * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param Request $request
      * @return Tag|FormInterface
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
      */
-    public function create(Request $request, string $encodedCollectionPath)
+    public function create(string $encodedCollectionPath, Request $request)
     {
         $tag = new Tag();
         $form = $this->formFactory->create(TagType::class, $tag);

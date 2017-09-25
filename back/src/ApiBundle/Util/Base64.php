@@ -4,8 +4,10 @@ namespace ApiBundle\Util;
 
 class Base64
 {
-    public static function isValidBase64($string)
+    public static function isValidBase64(string $string): bool
     {
+        $string = urldecode($string);
+
         if (!preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string)) {
             return false;
         }

@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use ApiBundle\Model\Element;
+use ApiBundle\Service\CollectionElementService;
 use ApiBundle\Service\CollectionService;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -51,9 +52,9 @@ class CollectionElementController extends FOSRestController
      */
     public function getCollectionElementsAction(string $encodedCollectionPath)
     {
-        /** @var CollectionService $collectionService */
-        $collectionService = $this->get('api.service.collection');
-        $elements = $collectionService->listElements($encodedCollectionPath);
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $elements = $collectionElementService->list($encodedCollectionPath);
 
         return $elements;
     }
@@ -139,9 +140,9 @@ class CollectionElementController extends FOSRestController
      */
     public function postCollectionElementAction(Request $request, string $encodedCollectionPath)
     {
-        /** @var CollectionService $collectionService */
-        $collectionService = $this->get('api.service.collection');
-        $element = $collectionService->addElement($request, $encodedCollectionPath);
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $element = $collectionElementService->create($request, $encodedCollectionPath);
 
         return $element;
     }
@@ -188,9 +189,9 @@ class CollectionElementController extends FOSRestController
      */
     public function getCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
-        /** @var CollectionService $collectionService */
-        $collectionService = $this->get('api.service.collection');
-        $element = $collectionService->getElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $element = $collectionElementService->get($encodedElementBasename, $encodedCollectionPath);
 
         return $element;
     }
@@ -255,9 +256,9 @@ class CollectionElementController extends FOSRestController
      */
     public function putCollectionElementAction(Request $request, string $encodedCollectionPath, string $encodedElementBasename)
     {
-        /** @var CollectionService $collectionService */
-        $collectionService = $this->get('api.service.collection');
-        $element = $collectionService->updateElementByEncodedElementBasename($request, $encodedElementBasename, $encodedCollectionPath);
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $element = $collectionElementService->update($request, $encodedElementBasename, $encodedCollectionPath);
 
         return $element;
     }
@@ -302,8 +303,8 @@ class CollectionElementController extends FOSRestController
      */
     public function deleteCollectionElementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
-        /** @var CollectionService $collectionService */
-        $collectionService = $this->get('api.service.collection');
-        $collectionService->deleteElementByEncodedElementBasename($encodedElementBasename, $encodedCollectionPath);
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $collectionElementService->delete($encodedElementBasename, $encodedCollectionPath);
     }
 }

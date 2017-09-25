@@ -25,3 +25,8 @@ collection_elements:
     type: rest
     resource: ApiBundle\Controller\CollectionElementController
     prefix: /api
+
+collection_tags:
+    type: rest
+    resource: ApiBundle\Controller\CollectionTagController
+    prefix: /api

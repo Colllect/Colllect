@@ -65,5 +65,13 @@ services:
         class: ApiBundle\Service\CollectionService
         autowire: true
 
+    api.service.collection_element:
+        class: ApiBundle\Service\CollectionElementService
+        autowire: true
+
+    api.service.collection_tag:
+        class: ApiBundle\Service\CollectionTagService
+        autowire: true
+
     api.service.element_file_handler:
         class: ApiBundle\Service\ElementFileHandler

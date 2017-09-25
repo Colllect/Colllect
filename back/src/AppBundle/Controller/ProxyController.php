@@ -2,15 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use ApiBundle\Service\CollectionService;
+use ApiBundle\Service\CollectionElementService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ProxyController extends Controller
 {
     public function elementAction(string $encodedCollectionPath, string $encodedElementBasename)
     {
-        $collectionService = $this->get('api.service.collection');
-        $response = $collectionService->getElementContentResponseByEncodedElementBasename(
+        /** @var CollectionElementService $collectionElementService */
+        $collectionElementService = $this->get('api.service.collection_element');
+        $response = $collectionElementService->getContent(
             $encodedElementBasename,
             $encodedCollectionPath
         );

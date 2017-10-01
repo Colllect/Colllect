@@ -3,36 +3,28 @@
 namespace ApiBundle\Service;
 
 use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
-use ApiBundle\Exception\FilesystemCannotRenameException;
-use ApiBundle\Exception\FilesystemCannotWriteException;
-use ApiBundle\Exception\TagAlreadyExistsException;
 use ApiBundle\FilesystemAdapter\FilesystemAdapterManager;
 use ApiBundle\Form\Type\TagType;
 use ApiBundle\Model\Element;
 use ApiBundle\Model\ElementFile;
 use ApiBundle\Model\Tag;
 use ApiBundle\Util\Base64;
-use ApiBundle\Util\CollectionPath;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class CollectionTagService
 {
-    const TAGS_FILE = '.tags.json';
-
-    /**
-     * @var EnhancedFilesystemInterface
-     */
-    private $filesystem;
-
     /**
      * @var CollectionElementService
      */
     private $collectionElementService;
+
+    /**
+     * @var CollectionTagFileService
+     */
+    private $collectionTagFileService;
 
     /**
      * @var FormFactory
@@ -40,12 +32,14 @@ class CollectionTagService
     private $formFactory;
 
 
-    public function __construct(TokenStorage $tokenStorage, FilesystemAdapterManager $flysystemAdapters, CollectionElementService $collectionElementService, FormFactory $formFactory)
+    public function __construct(
+        CollectionElementService $collectionElementService,
+        CollectionTagFileService $collectionTagFileService,
+        FormFactory $formFactory
+    )
     {
-        $user = $tokenStorage->getToken()->getUser();
-
-        $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->collectionElementService = $collectionElementService;
+        $this->collectionTagFileService = $collectionTagFileService;
         $this->formFactory = $formFactory;
     }
 
@@ -57,27 +51,7 @@ class CollectionTagService
      */
     public function list(string $encodedCollectionPath): array
     {
-        $tagsFilePath = $this->getTagsFilePath($encodedCollectionPath);
-
-        // If tags file does not exists, return an array
-        if (!$this->filesystem->has($tagsFilePath)) {
-            return [];
-        }
-
-        $tagsFileContent = $this->filesystem->read($tagsFilePath);
-
-        try {
-            $flatTags = \GuzzleHttp\json_decode($tagsFileContent, true);
-        } catch (\Exception $exception) {
-            return [];
-        }
-
-        $tags = [];
-        foreach ($flatTags as $flatTag) {
-            $tags[] = new Tag($flatTag);
-        }
-
-        return $tags;
+        return $this->collectionTagFileService->getAll($encodedCollectionPath);
     }
 
     /**
@@ -86,8 +60,6 @@ class CollectionTagService
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @param Request $request
      * @return Tag|FormInterface
-     * @throws FilesystemCannotWriteException
-     * @throws TagAlreadyExistsException
      */
     public function create(string $encodedCollectionPath, Request $request)
     {
@@ -100,29 +72,8 @@ class CollectionTagService
             return $form;
         }
 
-        // Check if tag does not already exists
-        $tags = $this->list($encodedCollectionPath);
-        if ($this->has($tag->getName(), $tags)) {
-            throw new TagAlreadyExistsException();
-        }
-
-        // Add the tag to tag list
-        $tags[] = $tag;
-
-        // Remap tag objects to flat array
-        $flatTags = array_map(function (Tag $tag) {
-            return [
-                'name' => $tag->getName(),
-            ];
-        }, $tags);
-        $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
-
-        $tagsFilePath = $this->getTagsFilePath($encodedCollectionPath);
-
-        // Put new tag list info Collection tags file
-        if (!$this->filesystem->put($tagsFilePath, $tagsFileContent)) {
-            throw new FilesystemCannotWriteException();
-        }
+        $this->collectionTagFileService->add($encodedCollectionPath, $tag);
+        $this->collectionTagFileService->save($encodedCollectionPath);
 
         return $tag;
     }
@@ -141,18 +92,7 @@ class CollectionTagService
         }
         $tagName = Base64::decode($encodedTagName);
 
-        /** @var Tag[] $tags */
-        $tags = $this->list($encodedCollectionPath);
-
-        $filteredTags = array_filter($tags, function (Tag $tag) use ($tagName) {
-            return $tag->getName() === $tagName;
-        });
-
-        if (count($filteredTags) === 0) {
-            throw new NotFoundHttpException('error.tag_not_found');
-        }
-
-        $tag = array_shift($filteredTags);
+        $tag = $this->collectionTagFileService->get($encodedCollectionPath, $tagName);
 
         return $tag;
     }
@@ -164,9 +104,6 @@ class CollectionTagService
      * @param string $encodedTagName Base 64 encoded tag name
      * @param Request $request
      * @return Tag|FormInterface
-     * @throws FilesystemCannotRenameException
-     * @throws FilesystemCannotWriteException
-     * @throws TagAlreadyExistsException
      */
     public function update(string $encodedCollectionPath, string $encodedTagName, Request $request)
     {
@@ -186,83 +123,54 @@ class CollectionTagService
             return $oldTag;
         }
 
-        // Check if tag does not already exists
-        $tags = $this->list($encodedCollectionPath);
-        if ($this->has($tag->getName(), $tags)) {
-            throw new TagAlreadyExistsException();
-        }
+        // Add the new tag (throws if tag name already exists)
+        $this->collectionTagFileService->add($encodedCollectionPath, $tag);
 
         // Rename all elements which has this tag
-        /** @var Element[] $elements */
-        $elements = $this->collectionElementService->list($encodedCollectionPath);
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        foreach ($elements as $element) {
-            if (in_array($oldTag->getName(), $element->getTags())) {
-                $elementFile = new ElementFile($element);
-                $path = $collectionPath . '/' . $elementFile->getBasename();
+        $this->collectionElementService->batchRename(
+            $encodedCollectionPath,
+            function (Element $element) use ($oldTag) {
+                return in_array($oldTag->getName(), $element->getTags());
+            },
+            function (ElementFile $elementFile) use ($oldTag, $tag) {
                 $elementFile
                     ->removeTag($oldTag->getName())
                     ->addTag($tag->getName());
-                $newPath = $collectionPath . '/' . $elementFile->getCleanedBasename();
-
-                $this->filesystem->rename($path, $newPath);
             }
-        }
+        );
 
-        // Remove old tag version from list
-        $tags = array_filter($tags, function (Tag $tag) use ($oldTag) {
-            return $tag->getName() !== $oldTag->getName();
-        });
-
-        // Add the updated tag
-        $tags[] = $tag;
-
-        // Remap tag objects to flat array
-        $flatTags = array_map(function (Tag $tag) {
-            return [
-                'name' => $tag->getName(),
-            ];
-        }, $tags);
-
-        $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
-
-        $tagsFilePath = $this->getTagsFilePath($encodedCollectionPath);
-
-        // Put new tag list info Collection tags file
-        if (!$this->filesystem->put($tagsFilePath, $tagsFileContent)) {
-            throw new FilesystemCannotWriteException();
-        }
+        // Remove the old one and save the tag file
+        $this->collectionTagFileService->remove($encodedCollectionPath, $oldTag);
+        $this->collectionTagFileService->save($encodedCollectionPath);
 
         return $tag;
     }
 
     /**
-     * Get tags file path from a collection
+     * Delete a tag from a collection
      *
      * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @return string Collection tags file path
+     * @param string $encodedTagName Base 64 encoded tag name
      */
-    private function getTagsFilePath(string $encodedCollectionPath): string
+    public function delete(string $encodedCollectionPath, string $encodedTagName)
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $tagsFilePath = $collectionPath . '/' . self::TAGS_FILE;
+        $tag = $this->get($encodedCollectionPath, $encodedTagName);
 
-        return $tagsFilePath;
-    }
+        // Add the new tag (throws if tag name already exists)
+        $this->collectionTagFileService->remove($encodedCollectionPath, $tag);
 
-    /**
-     * Collection has tagName
-     *
-     * @param string $tagName Collection tag to find
-     * @param Tag[] $tags Collection tags list
-     * @return bool
-     */
-    private function has(string $tagName, array $tags): bool
-    {
-        $existingTagNames = array_map(function (Tag $tag) {
-            return $tag->getName();
-        }, $tags);
+        // Rename all elements which has this tag
+        $this->collectionElementService->batchRename(
+            $encodedCollectionPath,
+            function (Element $element) use ($tag) {
+                return in_array($tag->getName(), $element->getTags());
+            },
+            function (ElementFile $elementFile) use ($tag) {
+                $elementFile->removeTag($tag->getName());
+            }
+        );
 
-        return in_array($tagName, $existingTagNames);
+        // Save the tag file
+        $this->collectionTagFileService->save($encodedCollectionPath);
     }
 }

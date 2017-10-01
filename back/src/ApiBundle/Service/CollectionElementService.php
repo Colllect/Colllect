@@ -13,6 +13,7 @@ use ApiBundle\Model\ElementFile;
 use ApiBundle\Util\Base64;
 use ApiBundle\Util\CollectionPath;
 use ApiBundle\Util\Metadata;
+use Closure;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
@@ -244,6 +245,28 @@ class CollectionElementService
             $this->filesystem->delete($path);
         } catch (FileNotFoundException $e) {
             // If file does not exists or was already deleted, it's OK
+        }
+    }
+
+    /**
+     * @param string $encodedCollectionPath
+     * @param Closure $matches Should return true if the element need to be process
+     * @param Closure $process The process applied to element file
+     */
+    public function batchRename(string $encodedCollectionPath, Closure $matches, Closure $process)
+    {
+        /** @var Element[] $elements */
+        $elements = $this->list($encodedCollectionPath);
+        $collectionPath = CollectionPath::decode($encodedCollectionPath);
+        foreach ($elements as $element) {
+            if ($matches($element)) {
+                $elementFile = new ElementFile($element);
+                $path = $collectionPath . '/' . $elementFile->getBasename();
+                $process($elementFile);
+                $newPath = $collectionPath . '/' . $elementFile->getCleanedBasename();
+
+                $this->filesystem->rename($path, $newPath);
+            }
         }
     }
 

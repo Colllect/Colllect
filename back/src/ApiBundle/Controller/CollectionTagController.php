@@ -118,7 +118,7 @@ class CollectionTagController extends FOSRestController
      *     @SWG\Parameter(
      *         name="encodedTagName",
      *         in="path",
-     *         description="Encoded tag name",
+     *         description="Encoded collection tag name",
      *         type="string"
      *     ),
      *     @SWG\Response(
@@ -159,6 +159,18 @@ class CollectionTagController extends FOSRestController
      *         "api_key": {}
      *     }},
      *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="encodedTagName",
+     *         in="path",
+     *         description="Encoded collection tag name",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
      *         name="name",
      *         in="formData",
      *         description="Name of the collection tag",
@@ -188,5 +200,50 @@ class CollectionTagController extends FOSRestController
         $response = $collectionTagService->update($encodedCollectionPath, $encodedTagName, $request);
 
         return $response;
+    }
+
+
+    /**
+     * Delete a Collection tag
+     *
+     * @Rest\Route("/collections/{encodedCollectionPath}/tags/{encodedTagName}")
+     * @Rest\View(statusCode=204)
+     *
+     * @Operation(
+     *     tags={"Collection Tags"},
+     *     summary="Delete a Collection tag",
+     *     security={{
+     *         "api_key": {}
+     *     }},
+     *     @SWG\Parameter(
+     *         name="encodedCollectionPath",
+     *         in="path",
+     *         description="Encoded collection path",
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="encodedTagName",
+     *         in="path",
+     *         description="Encoded collection tag name",
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="204",
+     *         description="Returned when Collection file is deleted"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Returned when Collection file is not found"
+     *     )
+     * )
+     *
+     * @param string $encodedCollectionPath
+     * @param string $encodedTagName
+     */
+    public function deleteCollectionAction(string $encodedCollectionPath, string $encodedTagName)
+    {
+        /** @var CollectionTagService $collectionTagService */
+        $collectionTagService = $this->get('api.service.collection_tag');
+        $collectionTagService->delete($encodedCollectionPath, $encodedTagName);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Model;
 
+use ApiBundle\Util\Base64;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -34,7 +35,7 @@ class Collection
     {
         if (count($collectionMetadata) > 0) {
             $this->setName($collectionMetadata['filename']);
-            $this->setEncodedCollectionPath(urlencode(base64_encode($collectionMetadata['path'])));
+            $this->setEncodedCollectionPath(Base64::encode($collectionMetadata['path']));
         }
     }
 

@@ -117,7 +117,7 @@ class CollectionElementService
         $this->elementFileHandler->handleFileElement($elementFile);
 
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $collectionPath . '/' . $elementFile->getBasename();
+        $path = $collectionPath . '/' . $elementFile->getCleanedBasename();
         if (!$this->filesystem->write($path, $elementFile->getContent())) {
             throw new FilesystemCannotWriteException();
         }
@@ -153,7 +153,7 @@ class CollectionElementService
             return $form;
         }
 
-        $newPath = $collectionPath . '/' . $elementFile->getBasename();
+        $newPath = $collectionPath . '/' . $elementFile->getCleanedBasename();
 
         // Rename if necessary
         if ($path !== $newPath) {
@@ -260,7 +260,7 @@ class CollectionElementService
             throw new BadRequestHttpException('request.badly_encoded_element_name');
         }
 
-        $basename = base64_decode($encodedElementBasename);
+        $basename = Base64::decode($encodedElementBasename);
 
         // Check if file type is supported before call filesystem
         // Throw exception if element type is not supported

@@ -50,7 +50,7 @@ class ElementFileHandler
      */
     protected function handleElementFileByFile(ElementFile $elementFile)
     {
-        if (!$elementFile->getBasename()) {
+        if (!$elementFile->getCleanedBasename()) {
             $elementFile->setBasename($elementFile->getFile()->getClientOriginalName());
         }
 
@@ -66,7 +66,7 @@ class ElementFileHandler
      */
     protected function handleElementFileByUrl(ElementFile $elementFile)
     {
-        if (!$elementFile->getBasename()) {
+        if (!$elementFile->getCleanedBasename()) {
             $parsedUrl = parse_url($elementFile->getUrl());
             $path = explode('/', trim($parsedUrl['path'], '/'));
             $endPath = end($path);
@@ -151,7 +151,7 @@ class ElementFileHandler
         }
 
         try {
-            $elementFile->setType(Element::getTypeByPath($elementFile->getBasename()));
+            $elementFile->setType(Element::getTypeByPath($elementFile->getCleanedBasename()));
             return $elementFile;
         } catch (\Exception $e) {
         }

@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Model;
 
+use ApiBundle\Util\Base64;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,15 +50,21 @@ class ElementFile
      */
     protected $type;
 
+    /**
+     * @var string
+     */
+    private $basename;
+
 
     public function __construct(Element $element = null)
     {
         $this->tags = [];
 
         if ($element !== null) {
-            $this->setName($element->getName());
-            $this->setTags($element->getTags());
-            $this->setExtension($element->getExtension());
+            $this->name = $element->getName();
+            $this->tags = $element->getTags();
+            $this->extension = $element->getExtension();
+            $this->basename = Base64::decode($element->getEncodedElementBasename());
         }
     }
 
@@ -72,7 +79,7 @@ class ElementFile
 
     /**
      * @param UploadedFile $file
-     * @return $this
+     * @return ElementFile $this
      */
     public function setFile(UploadedFile $file)
     {
@@ -91,7 +98,7 @@ class ElementFile
 
     /**
      * @param string $url
-     * @return $this
+     * @return ElementFile $this
      */
     public function setUrl(string $url)
     {
@@ -110,7 +117,7 @@ class ElementFile
 
     /**
      * @param string $content
-     * @return $this
+     * @return ElementFile $this
      */
     public function setContent(string $content)
     {
@@ -124,6 +131,34 @@ class ElementFile
      */
     public function getBasename()
     {
+        return $this->basename;
+    }
+
+    /**
+     * @param string $basename
+     * @return ElementFile $this
+     */
+    public function setBasename(string $basename): ElementFile
+    {
+        $this->basename = $basename;
+
+        // Remove illegal chars
+        $basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
+
+        $elementMeta = Element::parseBasename($basename);
+
+        $this->name = $elementMeta['name'];
+        $this->tags = $elementMeta['tags'];
+        $this->extension = $elementMeta['extension'];
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCleanedBasename()
+    {
         if (!$this->name || !$this->extension) {
             return null;
         }
@@ -136,23 +171,6 @@ class ElementFile
     }
 
     /**
-     * @param string $basename
-     * @return $this
-     */
-    public function setBasename(string $basename)
-    {
-        $basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
-
-        $elementMeta = Element::parseBasename($basename);
-
-        $this->setName($elementMeta['name']);
-        $this->setTags($elementMeta['tags']);
-        $this->setExtension($elementMeta['extension']);
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -162,14 +180,17 @@ class ElementFile
 
     /**
      * @param string $name
+     * @return ElementFile $this
      */
-    public function setName(string $name)
+    public function setName(string $name): ElementFile
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getTags()
     {
@@ -177,11 +198,42 @@ class ElementFile
     }
 
     /**
-     * @param array $tags
+     * @param string[] $tags
+     * @return ElementFile $this
      */
-    public function setTags(array $tags)
+    public function setTags(array $tags): ElementFile
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Add a tag to element file
+     *
+     * @param string $tag
+     * @return ElementFile $this
+     */
+    public function addTag(string $tag): ElementFile
+    {
+        $this->tags[] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * Remove a tag from element file
+     *
+     * @param string $tag
+     * @return ElementFile $this
+     */
+    public function removeTag(string $tag): ElementFile
+    {
+        $this->tags = array_filter($this->tags, function(string $existingTagName) use ($tag) {
+            return $tag !== $existingTagName;
+        });
+
+        return $this;
     }
 
     /**
@@ -194,10 +246,13 @@ class ElementFile
 
     /**
      * @param string $extension
+     * @return ElementFile $this
      */
-    public function setExtension(string $extension)
+    public function setExtension(string $extension): ElementFile
     {
         $this->extension = $extension;
+
+        return $this;
     }
 
     /**
@@ -210,7 +265,7 @@ class ElementFile
 
     /**
      * @param string $type
-     * @return $this
+     * @return ElementFile $this
      * @throws \Exception
      */
     public function setType(string $type)

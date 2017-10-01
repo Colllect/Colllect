@@ -20,7 +20,7 @@ class Metadata
 
         // Add mimetype to files (ignore that for dirs)
         if ($meta['type'] !== 'dir' && !isset($meta['mimetype'])) {
-            if (in_array('image/' . $meta['extension'], ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE)) {
+            if (isset($meta['extension']) && in_array('image/' . $meta['extension'], ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE)) {
                 $meta['mimetype'] = 'application/octet-stream';
             } else {
                 $meta['mimetype'] = 'text/html; charset=UTF-8';

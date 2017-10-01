@@ -144,4 +144,49 @@ class CollectionTagController extends FOSRestController
 
         return $tag;
     }
+
+
+    /**
+     * Update a Collection tag
+     *
+     * @Rest\Route("/collections/{encodedCollectionPath}/tags/{encodedTagName}")
+     * @Rest\View(statusCode=200)
+     *
+     * @Operation(
+     *     tags={"Collection Tags"},
+     *     summary="Update a Collection tag",
+     *     security={{
+     *         "api_key": {}
+     *     }},
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         description="Name of the collection tag",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when Collection tag was updated",
+     *         @Model(type=Tag::class)
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Returned when form is invalid"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param string $encodedCollectionPath
+     * @param string $encodedTagName
+     * @return Tag|FormInterface
+     */
+    public function putCollectionTagAction(Request $request, string $encodedCollectionPath, string $encodedTagName)
+    {
+        /** @var CollectionTagService $collectionTagService */
+        $collectionTagService = $this->get('api.service.collection_tag');
+        $response = $collectionTagService->update($encodedCollectionPath, $encodedTagName, $request);
+
+        return $response;
+    }
 }

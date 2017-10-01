@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Model;
 
+use ApiBundle\Util\Base64;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -52,6 +53,6 @@ class Tag
     public function setName(string $name)
     {
         $this->name = $name;
-        $this->encodedName = urlencode(base64_encode($name));
+        $this->encodedName = Base64::encode($name);
     }
 }

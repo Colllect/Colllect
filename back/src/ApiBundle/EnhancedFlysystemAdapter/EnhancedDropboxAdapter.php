@@ -30,7 +30,6 @@ class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystem
     public function listContents($directory = '', $recursive = false): array
     {
         $location = $this->applyPathPrefix($directory);
-
         $result = $this->client->listFolder($location, $recursive);
 
         if (!count($result['entries'])) {
@@ -40,19 +39,12 @@ class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystem
         $cleanedPathDisplay = [];
         foreach ($result['entries'] as $item) {
             if ($item['.tag'] === 'folder') {
-                $cleanedPathDisplay[$item['path_lower']] = $item['path_display'];
-
-                $pathParts = explode('/', $item['path_lower']);
-                do {
-                    array_pop($pathParts);
-                    $parentPathLower = implode('/', $pathParts);
-                    if (!array_key_exists($parentPathLower, $cleanedPathDisplay)) {
-                        $prefixedPath = $this->applyPathPrefix($parentPathLower);
-                        $metadata = $this->client->getMetadata($prefixedPath);
-                        $cleanedPathDisplay = [$metadata['path_lower'] => $metadata['path_display']] + $cleanedPathDisplay;
-                    }
-                } while (count($pathParts) > 2);
+                $this->fillCleanedPathDisplay($cleanedPathDisplay, $item['path_display']);
             }
+        }
+
+        if (count($cleanedPathDisplay) === 0) {
+            $this->fillCleanedPathDisplay($cleanedPathDisplay, $directory);
         }
 
         $cleanedPathDisplay = array_reverse($cleanedPathDisplay);
@@ -61,7 +53,7 @@ class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystem
             $path = $this->removePathPrefix($entry['path_display']);
 
             foreach ($cleanedPathDisplay as $pathLower => $pathDisplay) {
-                $path = preg_replace('/^' . preg_quote($pathLower, '/') . '/i', $pathDisplay, $path);
+                $path = preg_replace('/^\/?' . preg_quote($pathLower, '/') . '/i', $pathDisplay, $path);
             }
 
             $entry['path_display'] = $path;
@@ -70,5 +62,24 @@ class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystem
         }, $result['entries']);
 
         return $result;
+    }
+
+    private function fillCleanedPathDisplay(array &$cleanedPathDisplay, string $pathDisplay)
+    {
+        $pathLower = strtolower($pathDisplay);
+        $cleanedPathDisplay[$pathLower] = $pathDisplay;
+
+        $pathParts = explode('/', $pathLower);
+        while (count($pathParts) > 3) {
+            array_pop($pathParts);
+            $parentPathLower = implode('/', $pathParts);
+            if (!array_key_exists($parentPathLower, $cleanedPathDisplay)) {
+                $prefixedPath = $this->applyPathPrefix($parentPathLower);
+                $metadata = $this->client->getMetadata($prefixedPath);
+                $cleanedPathDisplay = array_merge([
+                    $metadata['path_lower'] => $metadata['path_display']
+                ], $cleanedPathDisplay);
+            }
+        }
     }
 }

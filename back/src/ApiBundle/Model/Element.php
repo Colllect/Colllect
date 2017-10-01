@@ -3,6 +3,7 @@
 namespace ApiBundle\Model;
 
 use ApiBundle\Exception\NotSupportedElementTypeException;
+use ApiBundle\Util\Base64;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -95,7 +96,7 @@ abstract class Element
         $this->updated = $updated;
         $this->size = $meta['size'];
         $this->extension = $elementMeta['extension'];
-        $this->encodedElementBasename = urlencode(base64_encode($basename));
+        $this->encodedElementBasename = Base64::encode($basename);
     }
 
 
@@ -159,7 +160,7 @@ abstract class Element
     /**
      * Get element tags
      *
-     * @return array
+     * @return string[]
      */
     public function getTags()
     {
@@ -215,7 +216,7 @@ abstract class Element
     /**
      * @param $elementFilePath
      * @return string
-     * @throws \Exception
+     * @throws NotSupportedElementTypeException
      */
     public static function getTypeByPath($elementFilePath)
     {
@@ -284,6 +285,8 @@ abstract class Element
             // Replace underscores by spaces in tags
             $tags[$k] = str_replace("_", " ", $tag);
         }
+        sort($tags);
+
         // Replace multiple spaces by single space
         $name = preg_replace('/\s+/', ' ', trim($filename));
 

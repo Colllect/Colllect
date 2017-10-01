@@ -16,7 +16,7 @@ class CollectionPath
             throw new BadRequestHttpException('request.badly_encoded_collection_path');
         }
 
-        $path = base64_decode(urldecode($encodedCollectionPath));
+        $path = Base64::decode($encodedCollectionPath);
 
         if (!in_array(explode('/', $path)[0], self::VALID_FOLDERS)) {
             throw new BadRequestHttpException('request.invalid_collection_path');

@@ -1,15 +1,15 @@
-Collect.io
+Colllect
 ==========
 
-[![Build Status](https://travis-ci.org/Collect-io/Collect.io.svg?branch=develop)](https://travis-ci.org/Collect-io/Collect.io) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Collect-io/Collect.io.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/Colllect/Colllect.svg?branch=develop)](https://travis-ci.org/Colllect/Colllect) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Colllect/Colllect.svg)](LICENSE)
 
-[Go to Collect.io website](http://getcollect.io/) and subscribe to get notified of the launch.
+[Go to Colllect website](http://getcollect.io/) and subscribe to get notified of the launch.
 
 
 Introduction
 ------------
 
-Collect.io is your new bookmark manager!
+Colllect is your new bookmark manager!
 
 With it, you can manage your inspiration and resources into collections.
 

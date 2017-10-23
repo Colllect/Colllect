@@ -95,7 +95,7 @@ fos_rest:
 nelmio_api_doc:
     documentation:
         info:
-            title: 'Collect.io'
+            title: 'Colllect'
             version: 1.0.0
         securityDefinitions:
             api_key:

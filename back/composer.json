@@ -1,8 +1,8 @@
 {
-    "name": "collect-io/collect-io",
+    "name": "colllect/colllect",
     "license": "MIT",
     "type": "project",
-    "description": "Collect.io - Your new bookmark manager",
+    "description": "Colllect - Your new bookmark manager",
     "autoload": {
         "psr-4": { "": "src/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]

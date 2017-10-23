@@ -6,7 +6,7 @@
       <svg viewBox="0 0 100 100" class="header--logo-image">
         <use xlink:href="#logo"></use>
       </svg>
-      Collect.io
+      Colllect
     </router-link>
 
     <nav class="header--menu">

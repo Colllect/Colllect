@@ -2,31 +2,36 @@ app:
     resource: "@AppBundle/Resources/config/routing.yml"
     prefix:   /
 
-NelmioApiDocBundle:
+api.swagger_ui:
     resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
     prefix:   /api/doc
 
-tokens:
+api.swagger:
+    path: /api/doc.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger }
+
+api.tokens:
     type: rest
     resource: ApiBundle\Controller\TokenController
     prefix: /api
 
-users:
+api.users:
     type: rest
     resource: ApiBundle\Controller\UserController
     prefix: /api
 
-collections:
+api.collections:
     type: rest
     resource: ApiBundle\Controller\CollectionController
     prefix: /api
 
-collection_elements:
+api.collection_elements:
     type: rest
     resource: ApiBundle\Controller\CollectionElementController
     prefix: /api
 
-collection_tags:
+api.collection_tags:
     type: rest
     resource: ApiBundle\Controller\CollectionTagController
     prefix: /api

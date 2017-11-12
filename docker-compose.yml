@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  database:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DATABASE}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - database:/var/lib/mysql
+  php:
+    build:
+      context: ./.docker/php7-fpm
+      args:
+        TIMEZONE: ${TIMEZONE}
+        DOCKER_HOST_IP: ${DOCKER_HOST_IP}
+        IDE_KEY: ${IDE_KEY}
+    volumes:
+      - ./back:/var/www/colllect
+      - ./logs/colllect-back:/var/www/colllect/var/logs
+  nginx:
+    build: ./.docker/nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./back:/var/www/colllect
+      - ./logs/nginx/:/var/log/nginx
+
+volumes:
+  database:

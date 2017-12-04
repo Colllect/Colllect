@@ -17,4 +17,23 @@ With it, you can manage your inspiration and resources into collections.
 Project status
 --------------
 
-The project is in progress. It has just started, so nothing works for the moment.
+The project is in progress. 
+
+- API is ready with Swagger 2 support :)
+- Front still WIP
+
+
+Install & run
+-------------
+
+```bash
+git clone git@github.com:Colllect/Colllect.git
+cd Colllect/back
+composer install
+cd ..
+cp .env.dist .env
+echo "127.0.0.1 colllect.dev" >> /etc/hosts
+docker-compose up
+```
+
+Go to [http://colllect.dev/api/doc/](http://colllect.dev/api/doc/)

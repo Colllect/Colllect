@@ -60,7 +60,7 @@ abstract class Element
     /**
      * @var int
      *
-     * @Serializer\Type("int")
+     * @Serializer\Type("integer")
      * @Serializer\Expose()
      */
     private $size;

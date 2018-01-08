@@ -1,0 +1,27 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "indent": [
+      true
+    ],
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "arrow-parens": false,
+    "semicolon": [
+      true,
+      "never"
+    ],
+    // Pending fix for shorthand property names.
+    "object-literal-sort-keys": false
+  },
+  "rulesDirectory": []
+}

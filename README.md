@@ -32,8 +32,7 @@ cd Colllect/back
 composer install
 cd ..
 cp .env.dist .env
-echo "127.0.0.1 colllect.dev" >> /etc/hosts
 docker-compose up
 ```
 
-Go to [http://colllect.dev/api/doc/](http://colllect.dev/api/doc/)
+Go to [http://colllect.localhost/api/doc/](http://colllect.localhost/api/doc/)

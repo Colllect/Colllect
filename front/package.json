@@ -44,6 +44,7 @@
     "tslint": "^5.8.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.6.2",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "^0.6.2",
     "vue-property-decorator": "^6.0.0",
     "vue-template-compiler": "^2.5.13",

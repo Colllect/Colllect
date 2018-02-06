@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -20,7 +21,11 @@ let config = {
   devServer: {
     noInfo: true,
     overlay: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: [{
+      context: ['/api', '/proxy', '/oauth2'],
+      target: 'http://127.0.0.1/app_dev.php'
+    }]
   },
   module: {
     rules: [
@@ -66,7 +71,7 @@ let config = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin())
+  config.plugins.push(new UglifyJsPlugin())
 } else {
   config.devtool = 'cheap-module-eval-source-map'
   config.plugins.push(new webpack.NamedModulesPlugin())

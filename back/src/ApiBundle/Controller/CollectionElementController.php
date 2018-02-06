@@ -137,6 +137,7 @@ class CollectionElementController extends FOSRestController
      * @param Request $request
      * @param string $encodedCollectionPath
      * @return Element|FormInterface
+     * @throws \ApiBundle\Exception\FilesystemCannotWriteException
      */
     public function postCollectionElementAction(Request $request, string $encodedCollectionPath)
     {

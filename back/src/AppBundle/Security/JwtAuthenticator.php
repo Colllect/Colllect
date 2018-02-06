@@ -51,11 +51,11 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
             throw new CustomUserMessageAuthenticationException('Invalid token');
         }
 
-        $email = $data['email'];
+        $id = $data['id'];
 
         return $this->em
             ->getRepository('ApiBundle:User')
-            ->findOneBy(['email' => $email]);
+            ->findOneBy(['id' => $id]);
     }
 
     public function checkCredentials($credentials, UserInterface $user)

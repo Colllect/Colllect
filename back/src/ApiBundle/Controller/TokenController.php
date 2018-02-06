@@ -5,6 +5,7 @@ namespace ApiBundle\Controller;
 use ApiBundle\Entity\User;
 use ApiBundle\Model\Token;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -75,13 +76,21 @@ class TokenController extends FOSRestController
             throw new BadCredentialsException();
         }
 
+        $tokenData = [
+            'id' => $user->getId(),
+            'nickname' => $user->getNickname(),
+            'roles' => $user->getRoles(),
+        ];
         $token = $this->get('lexik_jwt_authentication.jwt_encoder')
-            ->encode(['email' => $user->getEmail()]);
+            ->encode($tokenData);
 
         // Update user last login date
         $user->setLastLogin(new \DateTime());
         $em->persist($user);
-        $em->flush();
+        try {
+            $em->flush();
+        } catch (OptimisticLockException $e) {
+        }
 
         return new Token($token);
     }

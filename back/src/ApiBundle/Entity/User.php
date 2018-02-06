@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * User
  *
- * @ORM\Table(name="collectio_user")
+ * @ORM\Table(name="colllect_user")
  * @ORM\Entity(repositoryClass="ApiBundle\Repository\UserRepository")
  * @UniqueEntity("email", message="already_used")
  * @Serializer\ExclusionPolicy("all")

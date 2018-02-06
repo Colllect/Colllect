@@ -14,7 +14,7 @@ class DevLoginController extends Controller
     public function loginAction()
     {
         $token = $this->get('lexik_jwt_authentication.jwt_encoder')
-            ->encode(['email' => 'demodealex+1@gmail.com']);
+            ->encode(['id' => 1]);
 
         $response = new Response();
         $response->headers->setCookie(new Cookie('access_token', $token));

@@ -1,12 +1,12 @@
 {
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./generated/**/*"],
   "compilerOptions": {
     "outDir": "./dist/",
     "sourceMap": true,
     "strict": true,
-    "module": "es2015",
+    "module": "es6",
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "es6",
     "experimentalDecorators": true
   }
 }

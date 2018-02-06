@@ -1,0 +1,106 @@
+/**
+* {{&summary}}
+*
+* @method {{&method}}
+* @name {{&className}}#{{&methodName}}
+{{#parameters}}
+{{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> parameters.{{&camelCaseName}} - {{&description}}{{/isSingleton}}
+{{/parameters}}
+*/
+public {{&methodName}}(parameters: {
+  {{#parameters}}{{^isSingleton}}{{&camelCaseName}}{{&cardinality}}: {{> type}},
+  {{/isSingleton}}{{/parameters}}
+  $queryParameters?: any,
+  $domain?: string,
+}): Promise<request.Response> {
+  const domain = parameters.$domain ? parameters.$domain : this.domain
+  let path = '{{&path}}'
+  let body: any
+  let queryParameters: any = {}
+  let headers: any = {}
+  let form: any = {}
+
+  return new Promise((resolve, reject) => {
+    {{#headers}}
+    headers['{{&name}}'] = {{&value}}
+    {{/headers}}
+
+    {{#parameters}}
+
+    {{#isQueryParameter}}
+    {{#isSingleton}}
+    queryParameters.{{&name}} = '{{&singleton}}'
+    {{/isSingleton}}
+    {{^isSingleton}}
+    {{#isPatternType}}
+    Object.keys(parameters).forEach((parameterName) => {
+      if(new RegExp('{{&pattern}}').test(parameterName)){
+        queryParameters[parameterName] = parameters[parameterName]
+      }
+    })
+    {{/isPatternType}}
+    {{^isPatternType}}
+    if(parameters.{{&camelCaseName}} !== undefined) {
+      queryParameters.{{&name}} = parameters.{{&camelCaseName}}
+    }
+    {{/isPatternType}}
+    {{/isSingleton}}
+    {{/isQueryParameter}}
+
+    {{#isPathParameter}}
+    path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters.{{&camelCaseName}})
+    {{/isPathParameter}}
+
+    {{#isHeaderParameter}}
+    {{#isSingleton}}
+    headers['{{&name}}'] = '{{&singleton}}'
+    {{/isSingleton}}
+    {{^isSingleton}}
+    if(parameters.{{&camelCaseName}} !== undefined) {
+      headers['{{&name}}'] = parameters.{{&camelCaseName}}
+    }
+    {{/isSingleton}}
+    {{/isHeaderParameter}}
+
+    {{#isBodyParameter}}
+    if(parameters.{{&camelCaseName}} !== undefined) {
+      body = parameters.{{&camelCaseName}}
+    }
+    {{/isBodyParameter}}
+
+    {{#isFormParameter}}
+    {{#isSingleton}}
+    form.{{&name}} = '{{&singleton}}'
+    {{/isSingleton}}
+    {{^isSingleton}}
+    if(parameters.{{&camelCaseName}} !== undefined) {
+      form.{{&name}} = parameters.{{&camelCaseName}}
+    }
+    {{/isSingleton}}
+    {{/isFormParameter}}
+
+    {{#required}}
+    if(parameters.{{&camelCaseName}} === undefined) {
+      reject(new Error('Missing required {{&paramType}} parameter: {{&camelCaseName}}'))
+      return
+    }
+    {{/required}}
+
+    {{/parameters}}
+
+    if(parameters.$queryParameters) {
+      Object.keys(parameters.$queryParameters).forEach((parameterName) => {
+        queryParameters[parameterName] = parameters.$queryParameters[parameterName]
+      })
+    }
+
+    {{^isBodyParameter}}
+    {{#isPOST}}
+    form = Object.assign(form, queryParameters)
+    queryParameters = {}
+    {{/isPOST}}
+    {{/isBodyParameter}}
+
+    this.request('{{method}}', domain + path, body, headers, queryParameters, form, reject, resolve)
+  })
+}

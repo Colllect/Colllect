@@ -24,7 +24,7 @@ let config = {
     historyApiFallback: true,
     proxy: [{
       context: ['/api', '/proxy', '/oauth2'],
-      target: 'http://127.0.0.1/app_dev.php'
+      target: 'http://127.0.0.1'
     }]
   },
   module: {

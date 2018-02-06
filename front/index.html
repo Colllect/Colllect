@@ -3,9 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>Colllect</title>
+  <style>
+    body {
+      background: #1d1f21;
+    }
+
+    .m-app {
+      opacity: 0;
+    }
+    .m-app__loaded {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-<div id="app"></div>
+<div class="m-app">
+  <div id="app"></div>
+</div>
 <script src="./dist/main.js"></script>
+<script>
+  // Avoid some blink during app loading
+  setTimeout(function () {
+    document.querySelector('.m-app').classList.add('m-app__loaded')
+  })
+</script>
 </body>
 </html>

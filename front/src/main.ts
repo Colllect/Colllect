@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
 
 import App from './App'
-import AppRouter from './AppRouter'
+import router from './router'
+import store from './store'
 
-Vue.use(VueRouter)
+import auth from './store/modules/auth'
 
 const CollectApp = new Vue({
   el: '#app',
@@ -12,5 +12,9 @@ const CollectApp = new Vue({
   render(h) {
     return h('App')
   },
-  router: AppRouter,
+  router,
+  store,
+  mounted() {
+    auth.dispatchTryLoginFromCookie()
+  },
 })

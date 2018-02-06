@@ -12,6 +12,7 @@ import {
 } from 'superagent'
 
 type CallbackHandler = (err: any, res?: request.Response) => void
+type RequestHandler = (req: request.Request) => void
 
 {{#definitions}}
 export interface {{&name}} {{#tsType}}{{> type}}{{/tsType}}
@@ -29,6 +30,7 @@ interface Logger {
 export default class {{&className}} {
   private domain: string = '{{&domain}}'
   private errorHandlers: CallbackHandler[] = []
+  private requestHandlers: RequestHandler[] = []
 
   constructor(domain?: string, private logger?: Logger) {
     if (domain) {
@@ -42,6 +44,10 @@ export default class {{&className}} {
 
   public addErrorHandler(handler: CallbackHandler) {
     this.errorHandlers.push(handler)
+  }
+
+  public addRequestHandler(handler: RequestHandler) {
+    this.requestHandlers.push(handler)
   }
 
   {{#methods}}
@@ -81,6 +87,8 @@ export default class {{&className}} {
       req.type('form')
       req.send(form)
     }
+
+    this.requestHandlers.forEach(handler => handler(req))
 
     req.end((error, response) => {
       if (!response.ok) {

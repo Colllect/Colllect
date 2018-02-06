@@ -1,0 +1,12 @@
+<div>
+  <h1>Inbox</h1>
+
+  <div v-for="element in elements" :id="element.encoded_element_basename">
+    {{ element.name }}
+    <template v-if="element.tags.length > 0">
+      {{ '#' + element.tags.join(' #') }}
+    </template>
+    <br>
+    <img :src="element.proxy_url" alt="" v-if="element.type == 'image'" width="300px"> <br>
+  </div>
+</div>

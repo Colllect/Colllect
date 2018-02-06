@@ -13,8 +13,11 @@
   "dependencies": {
     "normalize.css": "^7.0.0",
     "superagent": "^3.8.2",
+    "tiny-cookie": "^2.1.1",
     "vue": "^2.5.13",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "vuex-typex": "^3.0.1"
   },
   "devDependencies": {
     "@types/superagent": "^3.5.7",

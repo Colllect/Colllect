@@ -5498,6 +5498,10 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
+tiny-cookie@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tiny-cookie/-/tiny-cookie-2.1.1.tgz#6f1ea2fdbef15c8978de54372b4314c5984ff020"
+
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
@@ -5885,6 +5889,16 @@ vue-template-loader@^0.3.1:
 vue@^2.5.13:
   version "2.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
+
+vuex-typex@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vuex-typex/-/vuex-typex-3.0.1.tgz#f54619d76081e2bd902120d145284a3ba0a95758"
+  dependencies:
+    vuex "^3.0.0"
+
+vuex@^3.0.0, vuex@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.0.1.tgz#e761352ebe0af537d4bb755a9b9dc4be3df7efd2"
 
 watchpack@^1.4.0:
   version "1.4.0"

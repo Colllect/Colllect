@@ -12,6 +12,7 @@ use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class CollectionService
@@ -103,12 +104,18 @@ class CollectionService
      *
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @return Collection
+     * @throws FileNotFoundException
      */
     public function get(string $encodedCollectionPath): Collection
     {
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
 
         $meta = $this->filesystem->getMetadata($collectionPath);
+
+        if (!$meta) {
+            throw new NotFoundHttpException('error.collection_not_found');
+        }
+
         $standardizedMeta = Metadata::standardize($meta, $collectionPath);
 
         $collection = new Collection($standardizedMeta);
@@ -122,6 +129,7 @@ class CollectionService
      * @param string $encodedCollectionPath Base 64 encoded collection path
      * @param Request $request
      * @return Collection|FormInterface
+     * @throws FileNotFoundException
      */
     public function update(string $encodedCollectionPath, Request $request)
     {

@@ -4,6 +4,7 @@ namespace ApiBundle\FilesystemAdapter;
 
 use ApiBundle\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use ApiBundle\Entity\User;
+use League\Flysystem\Plugin\ListWith;
 
 class FilesystemAdapterManager
 {
@@ -47,6 +48,7 @@ class FilesystemAdapterManager
         }
 
         $filesystem = $adapter->getFilesystem($user);
+        $filesystem->addPlugin(new ListWith());
 
         return $filesystem;
     }

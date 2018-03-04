@@ -2,7 +2,6 @@
 
 namespace ApiBundle\EnhancedFlysystemAdapter;
 
-use Spatie\Dropbox\Exceptions\BadRequest;
 use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystemAdapterInterface
@@ -15,11 +14,7 @@ class EnhancedDropboxAdapter extends DropboxAdapter implements EnhancedFlysystem
         $prefixedPath = $this->applyPathPrefix($path);
         $prefixedNewPath = $this->applyPathPrefix($newPath);
 
-        try {
-            $this->client->move($prefixedPath, $prefixedNewPath);
-        } catch (BadRequest $e) {
-            return false;
-        }
+        $this->client->move($prefixedPath, $prefixedNewPath);
 
         return true;
     }

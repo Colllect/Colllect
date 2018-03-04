@@ -33,7 +33,6 @@ class Local implements FilesystemAdapterInterface
     /**
      * @param User $user
      * @return FilesystemInterface
-     * @throws DropboxAccessTokenMissingException
      */
     public function getFilesystem(User $user)
     {

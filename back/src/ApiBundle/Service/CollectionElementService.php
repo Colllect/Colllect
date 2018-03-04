@@ -17,6 +17,7 @@ use Closure;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -41,8 +42,12 @@ class CollectionElementService
     private $elementFileHandler;
 
 
-    public function __construct(TokenStorage $tokenStorage, FilesystemAdapterManager $flysystemAdapters, FormFactory $formFactory, ElementFileHandler $elementFileHandler)
-    {
+    public function __construct(
+        TokenStorage $tokenStorage,
+        FilesystemAdapterManager $flysystemAdapters,
+        FormFactory $formFactory,
+        ElementFileHandler $elementFileHandler
+    ) {
         $user = $tokenStorage->getToken()->getUser();
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
@@ -60,20 +65,20 @@ class CollectionElementService
     {
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
         try {
-            $filesMetadata = $this->filesystem->listContents($collectionPath);
+            $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $collectionPath);
         } catch (\Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             return [];
         }
 
-        if (count($filesMetadata) > 0 && isset($filesMetadata[0]['timestamp'])) {
+        if (count($filesMetadata) > 0) {
             // Sort files by last updated date
             uasort(
                 $filesMetadata,
                 function ($a, $b) {
-                    $aTimestamp = isset($a['timestamp']) ? $a['timestamp'] : -1;
-                    $bTimestamp = isset($b['timestamp']) ? $b['timestamp'] : -1;
+                    $aTimestamp = $a['timestamp'];
+                    $bTimestamp = $b['timestamp'];
 
                     if ($aTimestamp == $bTimestamp) {
                         return 0;
@@ -89,7 +94,7 @@ class CollectionElementService
         foreach ($filesMetadata as $fileMetadata) {
             try {
                 $fileMetadata = Metadata::standardize($fileMetadata);
-                $elements[] = Element::get($fileMetadata);
+                $elements[] = Element::get($fileMetadata, $encodedCollectionPath);
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
             }
@@ -118,13 +123,13 @@ class CollectionElementService
         $this->elementFileHandler->handleFileElement($elementFile);
 
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $collectionPath . '/' . $elementFile->getCleanedBasename();
+        $path = $collectionPath.'/'.$elementFile->getCleanedBasename();
         if (!$this->filesystem->write($path, $elementFile->getContent())) {
             throw new FilesystemCannotWriteException();
         }
 
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata);
+        $element = Element::get($elementMetadata, $encodedCollectionPath);
 
         return $element;
     }
@@ -145,7 +150,7 @@ class CollectionElementService
 
         $path = $this->getElementPath($encodedElementBasename, $collectionPath);
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata);
+        $element = Element::get($elementMetadata, $encodedCollectionPath);
 
         $elementFile = new ElementFile($element);
         $form = $this->handleRequest($request, $elementFile);
@@ -154,7 +159,7 @@ class CollectionElementService
             return $form;
         }
 
-        $newPath = $collectionPath . '/' . $elementFile->getCleanedBasename();
+        $newPath = $collectionPath.'/'.$elementFile->getCleanedBasename();
 
         // Rename if necessary
         if ($path !== $newPath) {
@@ -172,7 +177,7 @@ class CollectionElementService
 
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
-        $updatedElement = Element::get($elementMetadata);
+        $updatedElement = Element::get($elementMetadata, $encodedCollectionPath);
 
         return $updatedElement;
     }
@@ -196,7 +201,7 @@ class CollectionElementService
         }
 
         $standardizedMeta = Metadata::standardize($meta, $path);
-        $element = Element::get($standardizedMeta);
+        $element = Element::get($standardizedMeta, $encodedCollectionPath);
 
         if ($element->shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -211,23 +216,47 @@ class CollectionElementService
      *
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param HeaderBag $requestHeaders
      * @return Response
      */
-    public function getContent(string $encodedElementBasename, string $encodedCollectionPath): Response
-    {
+    public function getContent(
+        string $encodedElementBasename,
+        string $encodedCollectionPath,
+        HeaderBag $requestHeaders
+    ): Response {
         $collectionPath = CollectionPath::decode($encodedCollectionPath);
         $path = $this->getElementPath($encodedElementBasename, $collectionPath);
 
-        $meta = $this->filesystem->getMetadata($path);
-        $standardizedMeta = Metadata::standardize($meta, $path);
+        try {
+            $meta = $this->filesystem->getMetadata($path);
 
-        $content = $this->filesystem->read($path);
+            if (!$meta) {
+                throw new NotFoundHttpException('error.element_not_found');
+            }
 
-        $response = new Response();
-        $response->setContent($content);
-        $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
+            if ($requestHeaders->has('if-modified-since')) {
+                $modified = (new \DateTime($requestHeaders->get('if-modified-since')))->getTimestamp();
+                if ($meta['timestamp'] <= $modified) {
+                    $response = new Response();
+                    $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
 
-        return $response;
+                    return $response;
+                }
+            }
+
+            $standardizedMeta = Metadata::standardize($meta, $path);
+
+            $content = $this->filesystem->read($path);
+
+            $response = new Response();
+            $response->setContent($content);
+            $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
+            $response->setLastModified((new \DateTime())->setTimestamp($standardizedMeta['timestamp']));
+
+            return $response;
+        } catch (FileNotFoundException $e) {
+            throw new NotFoundHttpException();
+        }
     }
 
     /**
@@ -261,9 +290,9 @@ class CollectionElementService
         foreach ($elements as $element) {
             if ($matches($element)) {
                 $elementFile = new ElementFile($element);
-                $path = $collectionPath . '/' . $elementFile->getBasename();
+                $path = $collectionPath.'/'.$elementFile->getBasename();
                 $process($elementFile);
-                $newPath = $collectionPath . '/' . $elementFile->getCleanedBasename();
+                $newPath = $collectionPath.'/'.$elementFile->getCleanedBasename();
 
                 $this->filesystem->rename($path, $newPath);
             }
@@ -289,7 +318,7 @@ class CollectionElementService
         // Throw exception if element type is not supported
         Element::getTypeByPath($basename);
 
-        $path = $collectionPath . '/' . $basename;
+        $path = $collectionPath.'/'.$basename;
 
         return $path;
     }

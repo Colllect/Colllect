@@ -13,15 +13,23 @@ class Metadata
             $meta['path'] = $path;
         }
 
-        // Set timestamp to -1 if needed because some adapters didn't return it in metadata
-        if (!isset($meta['timestamp'])) {
-            $meta['timestamp'] = -1;
+        // Add filename as it is not returned sometimes
+        if (isset($meta['path']) && !isset($meta['filename'])) {
+            $pathParts = explode('/', $path);
+            $meta['basename'] = end($pathParts);
+            if (strpos('.', $meta['basename']) === false) {
+                $meta['filename'] = $meta['basename'];
+            } else {
+                $basenameParts = explode('.', $meta['basename']);
+                $meta['extension'] = array_pop($basenameParts);
+                $meta['filename'] = implode('.', $basenameParts);
+            }
         }
 
         // Add mimetype to files (ignore that for dirs)
         if ($meta['type'] !== 'dir' && !isset($meta['mimetype'])) {
             if (isset($meta['extension']) && in_array('image/' . $meta['extension'], ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE)) {
-                $meta['mimetype'] = 'application/octet-stream';
+                $meta['mimetype'] = 'image/' . $meta['extension'];
             } else {
                 $meta['mimetype'] = 'text/html; charset=UTF-8';
             }

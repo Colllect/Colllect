@@ -79,10 +79,26 @@ abstract class Element
      * @Serializer\Type("string")
      * @Serializer\Expose()
      */
+    private $encodedCollectionPath;
+
+    /**
+     * @var string
+     *
+     * @Serializer\Type("string")
+     * @Serializer\Expose()
+     */
     private $encodedElementBasename;
 
+    /**
+     * @var string
+     *
+     * @Serializer\Accessor(getter="getProxyUrl")
+     * @Serializer\Expose()
+     */
+    private $proxyUrl;
 
-    public function __construct(array $meta)
+
+    public function __construct(array $meta, string $encodedCollectionPath)
     {
         $basename = pathinfo($meta['path'])['basename'];
         $elementMeta = self::parseBasename($basename);
@@ -96,6 +112,7 @@ abstract class Element
         $this->updated = $updated;
         $this->size = $meta['size'];
         $this->extension = $elementMeta['extension'];
+        $this->encodedCollectionPath = $encodedCollectionPath;
         $this->encodedElementBasename = Base64::encode($basename);
     }
 
@@ -200,6 +217,22 @@ abstract class Element
     /**
      * @return string
      */
+    public function getEncodedCollectionPath(): string
+    {
+        return $this->encodedCollectionPath;
+    }
+
+    /**
+     * @param string $encodedCollectionPath
+     */
+    public function setEncodedCollectionPath(string $encodedCollectionPath)
+    {
+        $this->encodedCollectionPath = $encodedCollectionPath;
+    }
+
+    /**
+     * @return string
+     */
     public function getEncodedElementBasename(): string
     {
         return $this->encodedElementBasename;
@@ -211,6 +244,14 @@ abstract class Element
     public function setEncodedElementBasename(string $encodedElementBasename)
     {
         $this->encodedElementBasename = $encodedElementBasename;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProxyUrl()
+    {
+        return '/proxy/' . $this->encodedCollectionPath . '/' . $this->encodedElementBasename;
     }
 
     /**
@@ -236,24 +277,25 @@ abstract class Element
      * Return typed element based on flysystem metadata
      *
      * @param array $elementMetadata
+     * @param string $encodedCollectionPath
      * @return Color|Image|Link|Note
      * @throws NotSupportedElementTypeException
      */
-    public static function get($elementMetadata)
+    public static function get(array $elementMetadata, string $encodedCollectionPath)
     {
         $type = self::getTypeByPath($elementMetadata['path']);
         switch ($type) {
             case self::COLORS_TYPE:
-                return new Color($elementMetadata);
+                return new Color($elementMetadata, $encodedCollectionPath);
                 break;
             case self::IMAGE_TYPE:
-                return new Image($elementMetadata);
+                return new Image($elementMetadata, $encodedCollectionPath);
                 break;
             case self::LINK_TYPE:
-                return new Link($elementMetadata);
+                return new Link($elementMetadata, $encodedCollectionPath);
                 break;
             case self::NOTE_TYPE:
-                return new Note($elementMetadata);
+                return new Note($elementMetadata, $encodedCollectionPath);
                 break;
         }
 

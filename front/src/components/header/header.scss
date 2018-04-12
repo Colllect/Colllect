@@ -2,7 +2,7 @@ $header-height: 70px;
 $header-logo-padding: 20px;
 $header-menu-item-border-width: 3px;
 
-header {
+.c-colllect-header {
   position: relative;
   display: flex;
   height: $header-height;
@@ -18,7 +18,7 @@ header {
   }
 }
 
-.header--logo {
+.c-colllect-header--logo {
   display: flex;
   height: $header-height;
   padding: 0 $header-logo-padding;
@@ -44,7 +44,7 @@ header {
   }
 }
 
-.header--menu {
+.c-colllect-header--menu {
   position: absolute;
   top: 0;
   left: 50%;
@@ -73,11 +73,11 @@ header {
   }
 }
 
-.header--right {
+.c-colllect-header--right {
   display: flex;
 }
 
-.header--right-actions {
+.c-colllect-header--right-actions {
   display: flex;
 
   &-item {
@@ -92,7 +92,7 @@ header {
   }
 }
 
-.header--right-user {
+.c-colllect-header--right-user {
   display: flex;
   padding: 0 100px;
   line-height: $header-height;

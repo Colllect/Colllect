@@ -11,6 +11,7 @@
     "webpack-dev": "cross-env NODE_ENV=development webpack-dev-server --hot"
   },
   "dependencies": {
+    "minigrid": "^3.1.1",
     "normalize.css": "^7.0.0",
     "superagent": "^3.8.2",
     "tiny-cookie": "^2.1.1",

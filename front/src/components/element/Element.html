@@ -1,0 +1,9 @@
+<div class="c-colllect-element" :class="classes" :style="style">
+  <!--
+  {{ name }}
+  <template v-if="tags.length > 0">
+    {{ '#' + tags.join(' #') }}
+  </template>
+  -->
+  <img :src="proxyUrl" alt="" v-if="type == 'image' && showImage" @load="imageLoaded">
+</div>

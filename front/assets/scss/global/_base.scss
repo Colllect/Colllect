@@ -4,3 +4,9 @@ body {
   background-color: $shark;
   font-family: sans-serif;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

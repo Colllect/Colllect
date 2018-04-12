@@ -5,7 +5,9 @@ import ColllectHeader from './components/header/Header'
 
 @WithRender
 @Component({
-  components: {ColllectHeader},
+  components: {
+    ColllectHeader,
+  },
 })
 export default class App extends Vue {
 }

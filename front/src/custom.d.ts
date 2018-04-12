@@ -38,3 +38,18 @@ declare module 'tiny-cookie' {
 
   export function remove(key: string, options?: { domain?: string }): void
 }
+
+declare module 'minigrid' {
+  interface MiniGridOptions {
+    container?: string | Node
+    item?: string | Node
+    gutter?: number
+  }
+
+  class MiniGrid {
+    constructor(params: MiniGridOptions)
+    public mount(): void
+  }
+
+  export default MiniGrid
+}

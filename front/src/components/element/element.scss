@@ -1,0 +1,25 @@
+.c-colllect-element {
+  overflow: hidden;
+  width: calc((100% - #{$grid-gutter * ($grid-columns + 1)}) / #{$grid-columns});
+  min-height: 100px;
+  color: $white;
+  background: $outer-space;
+  border-radius: 4px;
+}
+
+.c-colllect-element__loaded {
+  min-height: 0 !important;
+}
+
+.c-colllect-element img {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  filter: blur(0);
+  transition: opacity 300ms;
+}
+
+.c-colllect-element__loaded img {
+  opacity: 1;
+}
+

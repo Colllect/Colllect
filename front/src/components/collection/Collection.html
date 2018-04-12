@@ -1,0 +1,7 @@
+<div class="c-colllect-collection">
+  <h1>{{ collection.name }}</h1>
+
+  <div class="c-colllect-collection--elements">
+    <colllect-element :element="element" v-for="element in elements" :id="element.encoded_element_basename" @load="updateGrid"></colllect-element>
+  </div>
+</div>

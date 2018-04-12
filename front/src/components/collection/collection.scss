@@ -1,0 +1,9 @@
+.c-colllect-collection {
+  padding: 20px;
+}
+
+.c-colllect-collection--elements {
+  position: relative;
+  width: calc(100% + #{$grid-gutter * 2}) !important;
+  margin: 0 -$grid-gutter;
+}

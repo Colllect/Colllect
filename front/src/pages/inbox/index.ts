@@ -1,24 +1,26 @@
 import {Component, Vue} from 'vue-property-decorator'
 import WithRender from './index.html'
 
+import ColllectCollection from '../../components/collection/Collection'
+
+import {Collection} from '../../api'
+
 import collection from '../../store/modules/collection'
 
-const INBOX_ENCODED_COLLECTION_PATH = encodeURIComponent(btoa('Inbox'))
-
 @WithRender
-@Component
+@Component({
+  components: {
+    ColllectCollection,
+  },
+})
 export default class Inbox extends Vue {
-  get encodedCollectionPath() {
-    return INBOX_ENCODED_COLLECTION_PATH
-  }
+  private static collectionName: string = 'Inbox'
+  private static encodedCollectionPath: string = encodeURIComponent(btoa(Inbox.collectionName))
 
-  get elements() {
-    return this.$store.state.collection.elements
-  }
-
-  private mounted() {
-    Vue.nextTick(() => {
-      collection.dispatchLoadCollection(INBOX_ENCODED_COLLECTION_PATH)
-    })
+  private get collection(): Collection {
+    return {
+      name: Inbox.collectionName,
+      encoded_collection_path: Inbox.encodedCollectionPath,
+    }
   }
 }

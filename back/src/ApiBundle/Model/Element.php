@@ -93,6 +93,7 @@ abstract class Element
      * @var string
      *
      * @Serializer\Accessor(getter="getProxyUrl")
+     * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $proxyUrl;
@@ -285,17 +286,8 @@ abstract class Element
     {
         $type = self::getTypeByPath($elementMetadata['path']);
         switch ($type) {
-            case self::COLORS_TYPE:
-                return new Color($elementMetadata, $encodedCollectionPath);
-                break;
             case self::IMAGE_TYPE:
                 return new Image($elementMetadata, $encodedCollectionPath);
-                break;
-            case self::LINK_TYPE:
-                return new Link($elementMetadata, $encodedCollectionPath);
-                break;
-            case self::NOTE_TYPE:
-                return new Note($elementMetadata, $encodedCollectionPath);
                 break;
         }
 

@@ -31,11 +31,11 @@ class CollectionController extends FOSRestController
      *         "api_key": {}
      *     }},
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when collections are listed",
      *         @SWG\Schema(
      *             type="array",
-     *             @Model(type=Collection::class)
+     *             @SWG\Items(@Model(type=Collection::class))
      *         )
      *     )
      * )
@@ -46,9 +46,9 @@ class CollectionController extends FOSRestController
     {
         /** @var CollectionService $collectionService */
         $collectionService = $this->get('api.service.collection');
-        $elements = $collectionService->list();
+        $collections = $collectionService->list();
 
-        return $elements;
+        return $collections;
     }
 
 
@@ -72,12 +72,12 @@ class CollectionController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="201",
+     *         response=201,
      *         description="Returned when Collection was created",
-     *         @Model(type=Collection::class)
+     *         @SWG\Schema(@Model(type=Collection::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     )
      * )
@@ -114,12 +114,12 @@ class CollectionController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection is found",
-     *         @Model(type=Collection::class)
+     *         @SWG\Schema(@Model(type=Collection::class))
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )
@@ -157,12 +157,12 @@ class CollectionController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection was updated",
-     *         @Model(type=Collection::class)
+     *         @SWG\Schema(@Model(type=Collection::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     )
      * )
@@ -200,11 +200,11 @@ class CollectionController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="204",
+     *         response=204,
      *         description="Returned when Collection file is deleted"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )

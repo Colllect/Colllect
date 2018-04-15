@@ -31,11 +31,11 @@ class CollectionTagController extends FOSRestController
      *         "api_key": {}
      *     }},
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when collection tags are listed",
      *         @SWG\Schema(
      *             type="array",
-     *             @Model(type=Tag::class)
+     *             @SWG\Items(@Model(type=Tag::class))
      *         )
      *     )
      * )
@@ -73,12 +73,12 @@ class CollectionTagController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="201",
+     *         response=201,
      *         description="Returned when Collection tag was created",
-     *         @Model(type=Tag::class)
+     *         @SWG\Schema(@Model(type=Tag::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     )
      * )
@@ -122,12 +122,12 @@ class CollectionTagController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection tag is found",
-     *         @Model(type=Tag::class)
+     *         @SWG\Schema(@Model(type=Tag::class))
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection tag does not exists"
      *     )
      * )
@@ -178,12 +178,12 @@ class CollectionTagController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection tag was updated",
-     *         @Model(type=Tag::class)
+     *         @SWG\Schema(@Model(type=Tag::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     )
      * )
@@ -228,11 +228,11 @@ class CollectionTagController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="204",
+     *         response=204,
      *         description="Returned when Collection file is deleted"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )

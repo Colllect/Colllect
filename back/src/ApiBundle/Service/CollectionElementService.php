@@ -72,6 +72,11 @@ class CollectionElementService
             return [];
         }
 
+        // Keep only files
+        $filesMetadata = array_filter($filesMetadata, function ($fileMetadata) {
+            return $fileMetadata['type'] === 'file';
+        });
+
         if (count($filesMetadata) > 0) {
             // Sort files by last updated date
             uasort(

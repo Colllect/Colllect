@@ -44,12 +44,12 @@ class UserController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="201",
+     *         response=201,
      *         description="Returned when user was created",
-     *         @Model(type=User::class)
+     *         @SWG\Schema(@Model(type=User::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when parameters are invalids"
      *     )
      * )
@@ -111,16 +111,16 @@ class UserController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when user was updated",
-     *         @Model(type=User::class)
+     *         @SWG\Schema(@Model(type=User::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when parameters are invalids"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when user was not found"
      *     )
      * )
@@ -173,16 +173,16 @@ class UserController extends FOSRestController
      *         type="integer"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when user was found",
-     *         @Model(type=User::class)
+     *         @SWG\Schema(@Model(type=User::class))
      *     ),
      *     @SWG\Response(
-     *         response="403",
+     *         response=403,
      *         description="Returned when user is not authorized to get an user"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when user was not found"
      *     )
      * )
@@ -224,15 +224,15 @@ class UserController extends FOSRestController
      *         type="integer"
      *     ),
      *     @SWG\Response(
-     *         response="204",
+     *         response=204,
      *         description="Returned when user was found and deleted"
      *     ),
      *     @SWG\Response(
-     *         response="403",
+     *         response=403,
      *         description="Returned when user is not authorized to delete this user"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when user was not found"
      *     )
      * )

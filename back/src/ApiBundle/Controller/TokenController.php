@@ -44,12 +44,12 @@ class TokenController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="201",
+     *         response=201,
      *         description="Returned when token was created",
-     *         @Model(type=Token::class)
+     *         @SWG\Schema(@Model(type=Token::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when bad credentials"
      *     )
      * )

@@ -38,11 +38,11 @@ class CollectionElementController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when collection files are listed",
      *         @SWG\Schema(
      *             type="array",
-     *             @Model(type=Element::class)
+     *             @SWG\Items(@Model(type=Element::class))
      *         )
      *     )
      * )
@@ -124,12 +124,12 @@ class CollectionElementController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="201",
+     *         response=201,
      *         description="Returned when element was created in Collection",
-     *         @Model(type=Element::class)
+     *         @SWG\Schema(@Model(type=Element::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     )
      * )
@@ -174,12 +174,12 @@ class CollectionElementController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection file is found",
-     *         @Model(type=Element::class)
+     *         @SWG\Schema(@Model(type=Element::class))
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )
@@ -236,16 +236,16 @@ class CollectionElementController extends FOSRestController
      *         @SWG\Items(type="string")
      *     ),
      *     @SWG\Response(
-     *         response="200",
+     *         response=200,
      *         description="Returned when Collection file is updated",
-     *         @Model(type=Element::class)
+     *         @SWG\Schema(@Model(type=Element::class))
      *     ),
      *     @SWG\Response(
-     *         response="400",
+     *         response=400,
      *         description="Returned when form is invalid"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )
@@ -290,11 +290,11 @@ class CollectionElementController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Response(
-     *         response="204",
+     *         response=204,
      *         description="Returned when Collection file is deleted"
      *     ),
      *     @SWG\Response(
-     *         response="404",
+     *         response=404,
      *         description="Returned when Collection file is not found"
      *     )
      * )

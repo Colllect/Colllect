@@ -23,7 +23,7 @@
         "lexik/jwt-authentication-bundle": "^1.7",
         "friendsofsymfony/rest-bundle": "^2.0",
         "jms/serializer-bundle": "^1.1",
-        "nelmio/api-doc-bundle": "dev-jms",
+        "nelmio/api-doc-bundle": "^3.0",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-sftp": "^1.0",

@@ -74,7 +74,7 @@ class CollectionService
             }
         );
 
-        return $collections;
+        return array_values($collections);
     }
 
     /**

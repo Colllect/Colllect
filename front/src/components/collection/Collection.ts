@@ -4,7 +4,7 @@ import WithRender from './Collection.html'
 
 import {Collection, Element} from './../../api'
 
-import collection from '../../store/modules/collection'
+import collectionStore from '../../store/modules/collection'
 
 import ColllectElement from '../element/Element'
 
@@ -16,10 +16,14 @@ import ColllectElement from '../element/Element'
 })
 export default class ColllectCollection extends Vue {
   @Prop({required: true})
-  private collection!: Collection
+  private encodedCollectionPath!: string
 
   private grid!: MiniGrid
   private updateGridHandler!: () => void
+
+  get name(): string {
+    return this.$store.state.collection.name
+  }
 
   get elements(): Element[] {
     return this.$store.state.collection.elements
@@ -28,26 +32,25 @@ export default class ColllectCollection extends Vue {
   @Watch('elements')
   private onElementsChanged(value: Element[], oldValue: Element[]) {
     Vue.nextTick(() => {
+      this.updateGrid(true)
+    })
+  }
+
+  private updateGrid(mustRecreateTheGrid: boolean = false) {
+    if (!this.grid || mustRecreateTheGrid) {
       this.grid = new MiniGrid({
         container: '.c-colllect-collection--elements',
         item: '.c-colllect-element',
         gutter: 20,
       })
-      this.grid.mount()
-
-      setTimeout(() => { this.grid.mount() })
-    })
-  }
-
-  private updateGrid() {
-    if (this.grid) {
-      this.grid.mount()
     }
+
+    this.grid.mount()
   }
 
   private mounted() {
     Vue.nextTick(() => {
-      collection.dispatchLoadCollection(this.collection.encoded_collection_path)
+      collectionStore.dispatchLoadCollection(this.encodedCollectionPath)
     })
 
     this.updateGridHandler = this.updateGrid.bind(this)

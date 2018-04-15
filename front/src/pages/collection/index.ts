@@ -9,7 +9,8 @@ import ColllectCollection from '../../components/collection/Collection'
     ColllectCollection,
   },
 })
-export default class InboxPage extends Vue {
-  private static collectionName: string = 'Inbox'
-  private encodedCollectionPath: string = encodeURIComponent(btoa(InboxPage.collectionName))
+export default class CollectionPage extends Vue {
+  private get encodedCollectionPath(): string {
+    return this.$route.params.encodedCollectionPath
+  }
 }

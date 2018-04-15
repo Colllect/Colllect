@@ -6,4 +6,10 @@
   position: relative;
   width: calc(100% + #{$grid-gutter * 2}) !important;
   margin: 0 -$grid-gutter;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.c-colllect-collection--elements[style] {
+  opacity: 1;
 }

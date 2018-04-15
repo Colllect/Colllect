@@ -11,6 +11,7 @@ export default class ColllectElement extends Vue {
 
   private isLoaded: boolean = false
   private showImage: boolean = false
+  private imageRatio: number = 1
 
   get type(): string {
     return this.element.type
@@ -43,12 +44,13 @@ export default class ColllectElement extends Vue {
   }
 
   get style(): object {
-    if (!this.showImage) {
-      return {}
+    let width = 150
+    if (this.$el) {
+      width = this.$el.getBoundingClientRect().width
     }
 
     return {
-      minHeight: this.$el.getBoundingClientRect().width * this.imageRatio + 'px',
+      minHeight: width * this.imageRatio + 'px',
     }
   }
 
@@ -71,18 +73,6 @@ export default class ColllectElement extends Vue {
     this.showImage = elementBottom > viewportTop && elementTop < viewportBottom
   }
 
-  get imageRatio(): number {
-    if (this.showImage) {
-      let ratio = localStorage.getItem(this.localStorageRatioKey)
-      if (!ratio) {
-        ratio = '1'
-      }
-      return parseFloat(ratio)
-    }
-
-    return 1
-  }
-
   private imageLoaded(e: Event): void {
     this.isLoaded = true
 
@@ -100,6 +90,13 @@ export default class ColllectElement extends Vue {
   }
 
   private mounted(): void {
+    let ratio = localStorage.getItem(this.localStorageRatioKey)
+    if (!ratio) {
+      ratio = '1'
+    }
+
+    this.imageRatio = parseFloat(ratio)
+
     Vue.nextTick(() => {
       this.updateShowImage()
     })

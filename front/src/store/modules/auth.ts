@@ -50,23 +50,23 @@ const actions = {
       Cookies.set(jwtCookieKey, jwt, encodeURIComponent, {expires: jwtCookieExpires})
     }
 
-    auth.commitSetUser(parseJwt(jwt))
+    authStore.commitSetUser(parseJwt(jwt))
   },
   tryLoginFromCookie: () => {
-    auth.jwt = Cookies.get(jwtCookieKey) as string
+    authStore.jwt = Cookies.get(jwtCookieKey) as string
 
-    if (auth.jwt != null && auth.jwt.length > 0) {
-      auth.commitSetUser(parseJwt(auth.jwt))
+    if (authStore.jwt != null && authStore.jwt.length > 0) {
+      authStore.commitSetUser(parseJwt(authStore.jwt))
     }
   },
   logout: () => {
     Cookies.remove(jwtCookieKey)
-    auth.commitResetUser()
-    auth.jwt = ''
+    authStore.commitResetUser()
+    authStore.jwt = ''
   },
 }
 
-const auth = {
+const authStore = {
   jwt: '',
   get state() {
     return authModule.state()
@@ -80,4 +80,4 @@ const auth = {
   dispatchLogout: authModule.dispatch(actions.logout),
 }
 
-export default auth
+export default authStore

@@ -18,6 +18,9 @@ const collectionState: CollectionState = {
 const collectionModule = getStoreBuilder<RootState>().module('collection', collectionState)
 
 const mutations = {
+  setName: (state: CollectionState, payload: string|null) => {
+    state.name = payload
+  },
   setCollection: (state: CollectionState, payload: ApiInterfaces.Collection) => {
     state.name = payload.name
     state.encodedCollectionPath = payload.encoded_collection_path
@@ -29,25 +32,28 @@ const mutations = {
 
 const actions = {
   loadCollection: ({}, encodedCollectionPath: string) => {
-    Promise.all([
-      api.getApiCollectionsByEncodedCollectionPath({encodedCollectionPath}),
-      api.getApiCollectionsByEncodedCollectionPathElements({encodedCollectionPath}),
-    ]).then(([collectionResponse, elementsResponse]) => {
-      collection.commitSetCollection(collectionResponse.body)
-      collection.commitSetElements(elementsResponse.body)
+    collectionStore.commitSetName(null)
+    collectionStore.commitSetElements([])
+
+    api.getApiCollectionsByEncodedCollectionPath({encodedCollectionPath}).then((collectionResponse) => {
+      collectionStore.commitSetCollection(collectionResponse.body)
+    })
+    api.getApiCollectionsByEncodedCollectionPathElements({encodedCollectionPath}).then((elementsResponse) => {
+      collectionStore.commitSetElements(elementsResponse.body)
     })
   },
 }
 
-const collection = {
+const collectionStore = {
   get state() {
     return collectionModule.state()
   },
 
+  commitSetName: collectionModule.commit(mutations.setName),
   commitSetCollection: collectionModule.commit(mutations.setCollection),
   commitSetElements: collectionModule.commit(mutations.setElements),
 
   dispatchLoadCollection: collectionModule.dispatch(actions.loadCollection),
 }
 
-export default collection
+export default collectionStore

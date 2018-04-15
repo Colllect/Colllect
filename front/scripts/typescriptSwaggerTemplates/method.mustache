@@ -48,7 +48,7 @@ public {{&methodName}}(parameters: {
     {{/isQueryParameter}}
 
     {{#isPathParameter}}
-    path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters.{{&camelCaseName}})
+    path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters.{{&camelCaseName}}.toString())
     {{/isPathParameter}}
 
     {{#isHeaderParameter}}

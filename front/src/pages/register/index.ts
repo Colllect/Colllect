@@ -1,37 +1,34 @@
 import {Component, Vue} from 'vue-property-decorator'
 import WithRender from './index.html'
 
-import auth from '../../store/modules/auth'
+import user from '../../store/modules/user'
 
 @WithRender
 @Component
-export default class Login extends Vue {
+export default class Register extends Vue {
   private email: string = ''
   private password: string = ''
-  private stayLoggedIn: boolean = true
+  private nickname: string = ''
   private error: string|null = null
 
   private get isAuthenticated() {
     return this.$store.state.auth.nickname != null
   }
 
-  private login() {
-    auth.dispatchLogin({
+  private register() {
+    user.dispatchRegister({
       email: this.email,
       password: this.password,
-      stayLoggedIn: this.stayLoggedIn,
+      nickname: this.nickname,
     }).then(() => {
       this.email = ''
       this.password = ''
+      this.nickname = ''
       this.error = null
     }).catch((err) => {
       if (err.body) {
         this.error = err.body.message
       }
     })
-  }
-
-  private logout() {
-    auth.dispatchLogout()
   }
 }

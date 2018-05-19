@@ -38,7 +38,7 @@ class UserController extends FOSRestController
      *         type="string"
      *     ),
      *     @SWG\Parameter(
-     *         name="password",
+     *         name="plainPassword",
      *         in="formData",
      *         description="User password",
      *         type="string"

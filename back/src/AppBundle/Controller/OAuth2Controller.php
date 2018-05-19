@@ -55,7 +55,7 @@ class OAuth2Controller extends Controller
         $em->persist($user);
         $em->flush();
 
-        return $this->redirect('/api/doc');
+        return $this->redirect('/');
     }
 
     private function generateState()

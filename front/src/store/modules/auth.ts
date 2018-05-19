@@ -31,7 +31,7 @@ const mutations = {
   },
   resetUser: (state: AuthState) => {
     state.id = 0
-    state.nickname = ''
+    state.nickname = null
     state.roles = []
   },
 }

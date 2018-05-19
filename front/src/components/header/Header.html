@@ -30,7 +30,13 @@
       </li>
     </ul>
     <div class="c-colllect-header--right-user">
-      {{ nickname }}
+      <template v-if="isAuthenticated">
+        {{ nickname }}
+        <button @click.prevent="logout">Logout</button>
+      </template>
+      <template v-else>
+        <router-link :to="{ name: 'login' }">Login</router-link>
+      </template>
     </div>
   </div>
 </header>

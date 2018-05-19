@@ -1,0 +1,22 @@
+<div>
+  <form @submit.prevent="register">
+    <div v-if="error" style="color: red">
+      Error: {{ error }}
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input type="email" v-model="email" id="email" required>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" v-model="password" id="password" required>
+    </div>
+    <div>
+      <label for="nickname">Nickname</label>
+      <input type="nickname" v-model="nickname" id="nickname" required>
+    </div>
+    <div>
+      <button type="submit">Register</button>
+    </div>
+  </form>
+</div>

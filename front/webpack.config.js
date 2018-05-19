@@ -71,7 +71,13 @@ let config = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new UglifyJsPlugin())
+  config.plugins.push(new UglifyJsPlugin({
+    uglifyOptions: {
+      compress: {
+        unused: false
+      }
+    }
+  }))
 } else {
   config.devtool = 'cheap-module-eval-source-map'
   config.plugins.push(new webpack.NamedModulesPlugin())

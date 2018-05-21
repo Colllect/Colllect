@@ -23,9 +23,13 @@ services:
       - ./back:/var/www/colllect
       - ./logs/colllect-back:/var/www/colllect/var/logs
   nginx:
-    build: ./.docker/nginx
+    build:
+      context: ./.docker/nginx
+      args:
+        SERVER_NAME: ${SERVER_NAME}
     ports:
       - 80:80
+      - 443:443
     volumes:
       - ./back:/var/www/colllect
       - ./logs/nginx/:/var/log/nginx

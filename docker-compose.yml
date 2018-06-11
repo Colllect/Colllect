@@ -13,6 +13,7 @@ services:
     volumes:
       - database:/var/lib/mysql
   php:
+    image: colllect/php7-fpm
     build:
       context: ./.docker/php7-fpm
       args:
@@ -23,10 +24,11 @@ services:
       - ./back:/var/www/colllect
       - ./logs/colllect-back:/var/www/colllect/var/logs
   nginx:
-    build:
-      context: ./.docker/nginx
-      args:
-        SERVER_NAME: ${SERVER_NAME}
+    image: colllect/nginx
+    build: ./.docker/nginx
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT}
+      SERVER_NAME: ${SERVER_NAME}
     ports:
       - 80:80
       - 443:443

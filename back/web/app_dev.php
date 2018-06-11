@@ -9,7 +9,7 @@ use Symfony\Component\Debug\Debug;
 umask(0000);
 
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
-if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] !== 'colllect.dev') {
+if (!isset($_SERVER['SERVER_NAME']) || $_SERVER['SERVER_NAME'] !== 'colllect.localhost') {
     header('HTTP/1.0 403 Forbidden');
     exit('You are not allowed to access this file. Check ' . basename(__FILE__) . ' for more information.');
 }

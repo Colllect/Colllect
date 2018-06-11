@@ -43,7 +43,7 @@ let config = {
         use: ExtractTextPlugin.extract({
           fallback: { loader: 'style-loader', options: { sourceMap: isDev } },
           use: [
-            { loader: 'css-loader', options: { sourceMap: isDev } },
+            { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
             { loader: 'postcss-loader', options: { sourceMap: isDev } },
             { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [ path.resolve(__dirname, 'src') ] } }
           ]

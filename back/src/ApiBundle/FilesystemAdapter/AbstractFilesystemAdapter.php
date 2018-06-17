@@ -10,7 +10,7 @@ use ApiBundle\Entity\User;
 
 abstract class AbstractFilesystemAdapter
 {
-    const CACHE_DURATION = 3600 * 24 * 3; // 3 days
+    const CACHE_DURATION = 60 * 3; // 3 minutes
     const CACHE_ROOT = '../var/flysystem_cache/';
 
     /**

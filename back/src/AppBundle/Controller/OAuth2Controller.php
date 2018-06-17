@@ -78,4 +78,3 @@ class OAuth2Controller extends Controller
         return $this->generateUrl('app_oauth2_dropbox_complete', [], UrlGeneratorInterface::ABSOLUTE_URL);
     }
 }
-

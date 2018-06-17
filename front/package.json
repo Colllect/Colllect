@@ -5,7 +5,7 @@
   "author": "Alex-D <contact@alex-d.fr>",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all generate-api-client webpack-dev",
+    "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 npm-run-all generate-api-client webpack-dev",
     "build": "cross-env NODE_ENV=production webpack",
     "generate-api-client": "node ./scripts/generateApiClient.js",
     "webpack-dev": "cross-env NODE_ENV=development webpack-dev-server --hot"
@@ -24,6 +24,7 @@
     "@types/superagent": "^3.5.7",
     "@types/webpack": "^3.8.2",
     "autoprefixer": "^7.2.4",
+    "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.1.3",
     "css-loader": "^0.28.8",
     "cssnano": "^3.10.0",

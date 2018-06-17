@@ -1,10 +1,13 @@
 const path = require('path')
 const webpack = require('webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
+
+require('tls').DEFAULT_ECDH_CURVE = 'auto'
 
 let config = {
   entry: {
@@ -12,7 +15,7 @@ let config = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist',
+    publicPath: '/',
     filename: 'main.js'
   },
   resolve: {
@@ -21,10 +24,21 @@ let config = {
   devServer: {
     noInfo: true,
     overlay: true,
+    open: true,
+    contentBase: path.resolve(__dirname, 'dist'),
+    https: true,
+    allowedHosts: [
+      'colllect.localhost',
+      'localhost'
+    ],
     historyApiFallback: true,
     proxy: [{
       context: ['/api', '/proxy', '/oauth2'],
-      target: 'http://127.0.0.1'
+      target: 'https://127.0.0.1/app_dev.php',
+      bypass: function (req) {
+        req.headers.host = 'colllect.localhost'
+      },
+      secure: false
     }]
   },
   module: {
@@ -60,6 +74,7 @@ let config = {
     ]
   },
   plugins: [
+    new CopyWebpackPlugin(['./index.html']),
     new ExtractTextPlugin({ filename: 'main.css', disable: isDev }),
     new ForkTsCheckerWebpackPlugin(),
     new webpack.DefinePlugin({

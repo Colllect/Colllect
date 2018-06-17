@@ -7,12 +7,14 @@ const generatedFolderPath = 'generated'
 const generatedApiFilePath = `${generatedFolderPath}/api.ts`
 const templatesPath = 'typescriptSwaggerTemplates'
 
-const swaggerUrl = 'http://127.0.0.1/app_dev.php/api/doc.json'
+const swaggerUrl = 'https://127.0.0.1/app_dev.php/api/doc.json'
 const swaggerUrlOptions = {
   headers: {
     host: 'colllect.localhost',
   },
 }
+
+require('tls').DEFAULT_ECDH_CURVE = 'auto'
 
 console.log('Fetching swagger description file from', swaggerUrl)
 needle('get', swaggerUrl, swaggerUrlOptions)

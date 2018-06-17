@@ -18,3 +18,8 @@ const CollectApp = new Vue({
     auth.dispatchTryLoginFromCookie()
   },
 })
+
+// Hack for dev only
+if (window.location.hostname === 'localhost') {
+  window.location.hostname = 'colllect.localhost'
+}

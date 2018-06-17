@@ -89,7 +89,7 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
     {
         return new JsonResponse([
             'code' => 403,
-            'message' => 'error.no_credential',
+            'message' => $authException ? $authException->getMessage() : 'error.no_credentials',
         ], 403);
     }
 }

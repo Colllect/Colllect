@@ -73,7 +73,7 @@ class TokenController extends FOSRestController
             ->isPasswordValid($user, $paramFetcher->get('password'));
 
         if (!$isValid) {
-            throw new BadCredentialsException();
+            throw new BadCredentialsException('error.bad_credentials');
         }
 
         $tokenData = [

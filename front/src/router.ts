@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Collection from './pages/collection'
-import Collections from './pages/collections'
+import Colllection from './pages/colllection'
+import Colllections from './pages/colllections'
 import Inbox from './pages/inbox'
 import Login from './pages/login'
 import Register from './pages/register'
@@ -12,8 +12,8 @@ const routes = [
   {name: 'login', path: '/login', component: Login},
   {name: 'register', path: '/register', component: Register},
   {name: 'inbox', path: '/inbox', component: Inbox},
-  {name: 'collections', path: '/collections', component: Collections},
-  {name: 'collection', path: '/collections/:encodedCollectionPath', component: Collection},
+  {name: 'colllections', path: '/colllections', component: Colllections},
+  {name: 'colllection', path: '/colllections/:encodedColllectionPath', component: Colllection},
 ]
 
 Vue.use(VueRouter)

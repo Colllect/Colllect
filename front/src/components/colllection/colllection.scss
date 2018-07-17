@@ -1,8 +1,8 @@
-.c-colllect-collection {
+.c-colllect-colllection {
   padding: 20px;
 }
 
-.c-colllect-collection--elements {
+.c-colllect-colllection--elements {
   position: relative;
   width: calc(100% + #{$grid-gutter * 2}) !important;
   margin: 0 -$grid-gutter;
@@ -10,6 +10,6 @@
   transition: opacity 300ms;
 }
 
-.c-colllect-collection--elements[style] {
+.c-colllect-colllection--elements[style] {
   opacity: 1;
 }

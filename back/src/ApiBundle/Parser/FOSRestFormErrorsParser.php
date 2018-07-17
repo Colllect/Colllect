@@ -85,7 +85,7 @@ class FOSRestFormErrorsParser implements ParserInterface, PostParserInterface
             'children' => [
                 'errors' => [
                     'dataType' => 'errors',
-                    'actualType' => DataTypes::COLLECTION,
+                    'actualType' => DataTypes::COLLLECTION,
                     'subType' => 'string',
                     'required' => false,
                     'description' => 'List of field error messages',
@@ -94,10 +94,10 @@ class FOSRestFormErrorsParser implements ParserInterface, PostParserInterface
             ]
         ];
 
-        if ($parameter['actualType'] == DataTypes::COLLECTION) {
+        if ($parameter['actualType'] == DataTypes::COLLLECTION) {
             $data['children']['children'] = [
                 'dataType' => 'List of embedded forms fields',
-                'actualType' => DataTypes::COLLECTION,
+                'actualType' => DataTypes::COLLLECTION,
                 'subType' => sprintf('%s.FormErrors', $parameter['subType']),
                 'required' => true,
                 'description' => 'Validation error messages',

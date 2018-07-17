@@ -1,9 +1,9 @@
 import {AuthState} from './modules/auth'
-import {CollectionState} from './modules/collection'
-import {CollectionsState} from './modules/collections'
+import {ColllectionState} from './modules/colllection'
+import {ColllectionsState} from './modules/colllections'
 
 export interface RootState {
   auth: AuthState,
-  collection: CollectionState,
-  collections: CollectionsState,
+  colllection: ColllectionState,
+  colllections: ColllectionsState,
 }

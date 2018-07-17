@@ -7,11 +7,11 @@ use ApiBundle\Exception\FilesystemCannotWriteException;
 use ApiBundle\Exception\TagAlreadyExistsException;
 use ApiBundle\FilesystemAdapter\FilesystemAdapterManager;
 use ApiBundle\Model\Tag;
-use ApiBundle\Util\CollectionPath;
+use ApiBundle\Util\ColllectionPath;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-class CollectionTagFileService
+class ColllectionTagFileService
 {
     const TAGS_FILE = '.tags.collect';
 
@@ -35,22 +35,22 @@ class CollectionTagFileService
 
 
     /**
-     * Get all collection tags
+     * Get all colllection tags
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @return Tag[]
      */
-    public function getAll(string $encodedCollectionPath): array
+    public function getAll(string $encodedColllectionPath): array
     {
-        if (array_key_exists($encodedCollectionPath, $this->tagsFilesCache)) {
-            return $this->tagsFilesCache[$encodedCollectionPath];
+        if (array_key_exists($encodedColllectionPath, $this->tagsFilesCache)) {
+            return $this->tagsFilesCache[$encodedColllectionPath];
         }
 
-        $tagsFilePath = $this->getTagsFilePath($encodedCollectionPath);
+        $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
 
         // If tags file does not exists, return an empty array
         if (!$this->filesystem->has($tagsFilePath)) {
-            $this->tagsFilesCache[$encodedCollectionPath] = [];
+            $this->tagsFilesCache[$encodedColllectionPath] = [];
             return [];
         }
 
@@ -67,21 +67,21 @@ class CollectionTagFileService
             $tags[] = new Tag($flatTag);
         }
 
-        $this->tagsFilesCache[$encodedCollectionPath] = $tags;
+        $this->tagsFilesCache[$encodedColllectionPath] = $tags;
 
         return $tags;
     }
 
     /**
-     * Get a collection tag
+     * Get a colllection tag
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $tagName The searched tag name
      * @return Tag
      */
-    public function get(string $encodedCollectionPath, string $tagName): Tag
+    public function get(string $encodedColllectionPath, string $tagName): Tag
     {
-        $tags = $this->getAll($encodedCollectionPath);
+        $tags = $this->getAll($encodedColllectionPath);
 
         $filteredTags = array_filter($tags, function (Tag $tag) use ($tagName) {
             return $tag->getName() === $tagName;
@@ -98,36 +98,36 @@ class CollectionTagFileService
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      * @param Tag $tag
      * @throws TagAlreadyExistsException
      */
-    public function add(string $encodedCollectionPath, Tag $tag)
+    public function add(string $encodedColllectionPath, Tag $tag)
     {
         // Check if tag does not already exists
-        if ($this->has($encodedCollectionPath, $tag)) {
+        if ($this->has($encodedColllectionPath, $tag)) {
             throw new TagAlreadyExistsException();
         }
 
         // Add the tag to tag list
-        $this->tagsFilesCache[$encodedCollectionPath][] = $tag;
+        $this->tagsFilesCache[$encodedColllectionPath][] = $tag;
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      * @param Tag $tag
      * @throws TagAlreadyExistsException
      */
-    public function remove(string $encodedCollectionPath, Tag $tag)
+    public function remove(string $encodedColllectionPath, Tag $tag)
     {
         // Check if tag does not already exists
-        if (!$this->has($encodedCollectionPath, $tag)) {
+        if (!$this->has($encodedColllectionPath, $tag)) {
             throw new NotFoundHttpException('error.tag_not_found');
         }
 
         // remove the tag from the list
-        $this->tagsFilesCache[$encodedCollectionPath] = array_filter(
-            $this->tagsFilesCache[$encodedCollectionPath],
+        $this->tagsFilesCache[$encodedColllectionPath] = array_filter(
+            $this->tagsFilesCache[$encodedColllectionPath],
             function (Tag $existingTag) use ($tag) {
                 return $existingTag->getName() !== $tag->getName();
             }
@@ -135,37 +135,37 @@ class CollectionTagFileService
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      * @throws FilesystemCannotWriteException
      */
-    public function save(string $encodedCollectionPath)
+    public function save(string $encodedColllectionPath)
     {
         // Remap tag objects to flat array
         $flatTags = array_map(function (Tag $tag) {
             return [
                 'name' => $tag->getName(),
             ];
-        }, $this->getall($encodedCollectionPath));
+        }, $this->getall($encodedColllectionPath));
         $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
 
-        $tagsFilePath = $this->getTagsFilePath($encodedCollectionPath);
+        $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
 
-        // Put new tag list info Collection tags file
+        // Put new tag list info Colllection tags file
         if (!$this->filesystem->put($tagsFilePath, $tagsFileContent)) {
             throw new FilesystemCannotWriteException();
         }
     }
 
     /**
-     * Collection has tagName
+     * Colllection has tagName
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @param Tag $tag Collection tag to find
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
+     * @param Tag $tag Colllection tag to find
      * @return bool
      */
-    public function has(string $encodedCollectionPath, Tag $tag): bool
+    public function has(string $encodedColllectionPath, Tag $tag): bool
     {
-        $tags = $this->getAll($encodedCollectionPath);
+        $tags = $this->getAll($encodedColllectionPath);
 
         $existingTagNames = array_map(function (Tag $tag) {
             return $tag->getName();
@@ -177,15 +177,15 @@ class CollectionTagFileService
     }
 
     /**
-     * Get tags file path from a collection
+     * Get tags file path from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
-     * @return string Collection tags file path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
+     * @return string Colllection tags file path
      */
-    private function getTagsFilePath(string $encodedCollectionPath): string
+    private function getTagsFilePath(string $encodedColllectionPath): string
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $tagsFilePath = $collectionPath . '/' . self::TAGS_FILE;
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
+        $tagsFilePath = $colllectionPath . '/' . self::TAGS_FILE;
 
         return $tagsFilePath;
     }

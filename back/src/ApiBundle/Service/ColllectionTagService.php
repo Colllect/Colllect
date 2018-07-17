@@ -14,17 +14,17 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class CollectionTagService
+class ColllectionTagService
 {
     /**
-     * @var CollectionElementService
+     * @var ColllectionElementService
      */
-    private $collectionElementService;
+    private $colllectionElementService;
 
     /**
-     * @var CollectionTagFileService
+     * @var ColllectionTagFileService
      */
-    private $collectionTagFileService;
+    private $colllectionTagFileService;
 
     /**
      * @var FormFactory
@@ -33,35 +33,35 @@ class CollectionTagService
 
 
     public function __construct(
-        CollectionElementService $collectionElementService,
-        CollectionTagFileService $collectionTagFileService,
+        ColllectionElementService $colllectionElementService,
+        ColllectionTagFileService $colllectionTagFileService,
         FormFactory $formFactory
     )
     {
-        $this->collectionElementService = $collectionElementService;
-        $this->collectionTagFileService = $collectionTagFileService;
+        $this->colllectionElementService = $colllectionElementService;
+        $this->colllectionTagFileService = $colllectionTagFileService;
         $this->formFactory = $formFactory;
     }
 
     /**
-     * Get an array of tags from a collection
+     * Get an array of tags from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @return Tag[]
      */
-    public function list(string $encodedCollectionPath): array
+    public function list(string $encodedColllectionPath): array
     {
-        return $this->collectionTagFileService->getAll($encodedCollectionPath);
+        return $this->colllectionTagFileService->getAll($encodedColllectionPath);
     }
 
     /**
-     * Add a tag to a collection
+     * Add a tag to a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      * @return Tag|FormInterface
      */
-    public function create(string $encodedCollectionPath, Request $request)
+    public function create(string $encodedColllectionPath, Request $request)
     {
         $tag = new Tag();
         $form = $this->formFactory->create(TagType::class, $tag);
@@ -72,42 +72,42 @@ class CollectionTagService
             return $form;
         }
 
-        $this->collectionTagFileService->add($encodedCollectionPath, $tag);
-        $this->collectionTagFileService->save($encodedCollectionPath);
+        $this->colllectionTagFileService->add($encodedColllectionPath, $tag);
+        $this->colllectionTagFileService->save($encodedColllectionPath);
 
         return $tag;
     }
 
     /**
-     * Get a tag from a collection
+     * Get a tag from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName Base 64 encoded tag name
      * @return Tag
      */
-    public function get(string $encodedCollectionPath, string $encodedTagName): Tag
+    public function get(string $encodedColllectionPath, string $encodedTagName): Tag
     {
         if (!Base64::isValidBase64($encodedTagName)) {
             throw new BadRequestHttpException('request.badly_encoded_tag_name');
         }
         $tagName = Base64::decode($encodedTagName);
 
-        $tag = $this->collectionTagFileService->get($encodedCollectionPath, $tagName);
+        $tag = $this->colllectionTagFileService->get($encodedColllectionPath, $tagName);
 
         return $tag;
     }
 
     /**
-     * Update a tag from a collection
+     * Update a tag from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName Base 64 encoded tag name
      * @param Request $request
      * @return Tag|FormInterface
      */
-    public function update(string $encodedCollectionPath, string $encodedTagName, Request $request)
+    public function update(string $encodedColllectionPath, string $encodedTagName, Request $request)
     {
-        $tag = $this->get($encodedCollectionPath, $encodedTagName);
+        $tag = $this->get($encodedColllectionPath, $encodedTagName);
         $oldTag = clone $tag;
 
         $form = $this->formFactory->create(TagType::class, $tag);
@@ -124,11 +124,11 @@ class CollectionTagService
         }
 
         // Add the new tag (throws if tag name already exists)
-        $this->collectionTagFileService->add($encodedCollectionPath, $tag);
+        $this->colllectionTagFileService->add($encodedColllectionPath, $tag);
 
         // Rename all elements which has this tag
-        $this->collectionElementService->batchRename(
-            $encodedCollectionPath,
+        $this->colllectionElementService->batchRename(
+            $encodedColllectionPath,
             function (Element $element) use ($oldTag) {
                 return in_array($oldTag->getName(), $element->getTags());
             },
@@ -140,28 +140,28 @@ class CollectionTagService
         );
 
         // Remove the old one and save the tag file
-        $this->collectionTagFileService->remove($encodedCollectionPath, $oldTag);
-        $this->collectionTagFileService->save($encodedCollectionPath);
+        $this->colllectionTagFileService->remove($encodedColllectionPath, $oldTag);
+        $this->colllectionTagFileService->save($encodedColllectionPath);
 
         return $tag;
     }
 
     /**
-     * Delete a tag from a collection
+     * Delete a tag from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName Base 64 encoded tag name
      */
-    public function delete(string $encodedCollectionPath, string $encodedTagName)
+    public function delete(string $encodedColllectionPath, string $encodedTagName)
     {
-        $tag = $this->get($encodedCollectionPath, $encodedTagName);
+        $tag = $this->get($encodedColllectionPath, $encodedTagName);
 
         // Add the new tag (throws if tag name already exists)
-        $this->collectionTagFileService->remove($encodedCollectionPath, $tag);
+        $this->colllectionTagFileService->remove($encodedColllectionPath, $tag);
 
         // Rename all elements which has this tag
-        $this->collectionElementService->batchRename(
-            $encodedCollectionPath,
+        $this->colllectionElementService->batchRename(
+            $encodedColllectionPath,
             function (Element $element) use ($tag) {
                 return in_array($tag->getName(), $element->getTags());
             },
@@ -171,6 +171,6 @@ class CollectionTagService
         );
 
         // Save the tag file
-        $this->collectionTagFileService->save($encodedCollectionPath);
+        $this->colllectionTagFileService->save($encodedColllectionPath);
     }
 }

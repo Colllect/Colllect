@@ -7,5 +7,5 @@ app_oauth2_dropbox_complete:
     defaults: { _controller: AppBundle:OAuth2:dropboxComplete }
 
 app_proxy_inbox_element:
-    path:     /proxy/{encodedCollectionPath}/{encodedElementBasename}
+    path:     /proxy/{encodedColllectionPath}/{encodedElementBasename}
     defaults: { _controller: AppBundle:Proxy:element }

@@ -11,7 +11,7 @@ use ApiBundle\Form\Type\ElementType;
 use ApiBundle\Model\Element;
 use ApiBundle\Model\ElementFile;
 use ApiBundle\Util\Base64;
-use ApiBundle\Util\CollectionPath;
+use ApiBundle\Util\ColllectionPath;
 use ApiBundle\Util\Metadata;
 use Closure;
 use League\Flysystem\FileNotFoundException;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-class CollectionElementService
+class ColllectionElementService
 {
     /**
      * @var EnhancedFilesystemInterface
@@ -56,16 +56,16 @@ class CollectionElementService
     }
 
     /**
-     * Get an array of typed elements from a collection
+     * Get an array of typed elements from a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @return Element[]
      */
-    public function list(string $encodedCollectionPath): array
+    public function list(string $encodedColllectionPath): array
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         try {
-            $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $collectionPath);
+            $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $colllectionPath);
         } catch (\Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
@@ -99,7 +99,7 @@ class CollectionElementService
         foreach ($filesMetadata as $fileMetadata) {
             try {
                 $fileMetadata = Metadata::standardize($fileMetadata);
-                $elements[] = Element::get($fileMetadata, $encodedCollectionPath);
+                $elements[] = Element::get($fileMetadata, $encodedColllectionPath);
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
             }
@@ -109,14 +109,14 @@ class CollectionElementService
     }
 
     /**
-     * Add an element to a collection
+     * Add an element to a colllection
      *
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      * @return Element|FormInterface
      * @throws FilesystemCannotWriteException
      */
-    public function create(string $encodedCollectionPath, Request $request)
+    public function create(string $encodedColllectionPath, Request $request)
     {
         $elementFile = new ElementFile();
         $form = $this->handleRequest($request, $elementFile);
@@ -127,35 +127,35 @@ class CollectionElementService
 
         $this->elementFileHandler->handleFileElement($elementFile);
 
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $collectionPath.'/'.$elementFile->getCleanedBasename();
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
+        $path = $colllectionPath.'/'.$elementFile->getCleanedBasename();
         if (!$this->filesystem->write($path, $elementFile->getContent())) {
             throw new FilesystemCannotWriteException();
         }
 
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata, $encodedCollectionPath);
+        $element = Element::get($elementMetadata, $encodedColllectionPath);
 
         return $element;
     }
 
     /**
-     * Update an element from a collection
+     * Update an element from a colllection
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      * @return Element|FormInterface
      * @throws FilesystemCannotRenameException
      * @throws FilesystemCannotWriteException
      */
-    public function update(string $encodedElementBasename, string $encodedCollectionPath, Request $request)
+    public function update(string $encodedElementBasename, string $encodedColllectionPath, Request $request)
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
-        $path = $this->getElementPath($encodedElementBasename, $collectionPath);
+        $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata, $encodedCollectionPath);
+        $element = Element::get($elementMetadata, $encodedColllectionPath);
 
         $elementFile = new ElementFile($element);
         $form = $this->handleRequest($request, $elementFile);
@@ -164,7 +164,7 @@ class CollectionElementService
             return $form;
         }
 
-        $newPath = $collectionPath.'/'.$elementFile->getCleanedBasename();
+        $newPath = $colllectionPath.'/'.$elementFile->getCleanedBasename();
 
         // Rename if necessary
         if ($path !== $newPath) {
@@ -182,22 +182,22 @@ class CollectionElementService
 
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
-        $updatedElement = Element::get($elementMetadata, $encodedCollectionPath);
+        $updatedElement = Element::get($elementMetadata, $encodedColllectionPath);
 
         return $updatedElement;
     }
 
     /**
-     * Get an element from a collection based on base 64 encoded basename
+     * Get an element from a colllection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @return Element
      */
-    public function get(string $encodedElementBasename, string $encodedCollectionPath): Element
+    public function get(string $encodedElementBasename, string $encodedColllectionPath): Element
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $this->getElementPath($encodedElementBasename, $collectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
+        $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
 
@@ -206,7 +206,7 @@ class CollectionElementService
         }
 
         $standardizedMeta = Metadata::standardize($meta, $path);
-        $element = Element::get($standardizedMeta, $encodedCollectionPath);
+        $element = Element::get($standardizedMeta, $encodedColllectionPath);
 
         if ($element->shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -217,20 +217,20 @@ class CollectionElementService
     }
 
     /**
-     * Get content of an element from a collection based on base 64 encoded basename
+     * Get content of an element from a colllection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param HeaderBag $requestHeaders
      * @return Response
      */
     public function getContent(
         string $encodedElementBasename,
-        string $encodedCollectionPath,
+        string $encodedColllectionPath,
         HeaderBag $requestHeaders
     ): Response {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $this->getElementPath($encodedElementBasename, $collectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
+        $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
         try {
             $meta = $this->filesystem->getMetadata($path);
@@ -265,15 +265,15 @@ class CollectionElementService
     }
 
     /**
-     * Delete an element from a collection based on base 64 encoded basename
+     * Delete an element from a colllection based on base 64 encoded basename
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $encodedCollectionPath Base 64 encoded collection path
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      */
-    public function delete(string $encodedElementBasename, string $encodedCollectionPath)
+    public function delete(string $encodedElementBasename, string $encodedColllectionPath)
     {
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
-        $path = $this->getElementPath($encodedElementBasename, $collectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
+        $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
         try {
             $this->filesystem->delete($path);
@@ -283,21 +283,21 @@ class CollectionElementService
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      * @param Closure $matches Should return true if the element need to be process
      * @param Closure $process The process applied to element file
      */
-    public function batchRename(string $encodedCollectionPath, Closure $matches, Closure $process)
+    public function batchRename(string $encodedColllectionPath, Closure $matches, Closure $process)
     {
         /** @var Element[] $elements */
-        $elements = $this->list($encodedCollectionPath);
-        $collectionPath = CollectionPath::decode($encodedCollectionPath);
+        $elements = $this->list($encodedColllectionPath);
+        $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         foreach ($elements as $element) {
             if ($matches($element)) {
                 $elementFile = new ElementFile($element);
-                $path = $collectionPath.'/'.$elementFile->getBasename();
+                $path = $colllectionPath.'/'.$elementFile->getBasename();
                 $process($elementFile);
-                $newPath = $collectionPath.'/'.$elementFile->getCleanedBasename();
+                $newPath = $colllectionPath.'/'.$elementFile->getCleanedBasename();
 
                 $this->filesystem->rename($path, $newPath);
             }
@@ -308,10 +308,10 @@ class CollectionElementService
      * Return file path by check and decode elementName
      *
      * @param string $encodedElementBasename Base 64 encoded basename
-     * @param string $collectionPath Collection path
+     * @param string $colllectionPath Colllection path
      * @return string
      */
-    private function getElementPath(string $encodedElementBasename, string $collectionPath): string
+    private function getElementPath(string $encodedElementBasename, string $colllectionPath): string
     {
         if (!Base64::isValidBase64($encodedElementBasename)) {
             throw new BadRequestHttpException('request.badly_encoded_element_name');
@@ -323,7 +323,7 @@ class CollectionElementService
         // Throw exception if element type is not supported
         Element::getTypeByPath($basename);
 
-        $path = $collectionPath.'/'.$basename;
+        $path = $colllectionPath.'/'.$basename;
 
         return $path;
     }

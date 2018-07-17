@@ -21,17 +21,17 @@ api.users:
     resource: ApiBundle\Controller\UserController
     prefix: /api
 
-api.collections:
+api.colllections:
     type: rest
-    resource: ApiBundle\Controller\CollectionController
+    resource: ApiBundle\Controller\ColllectionController
     prefix: /api
 
-api.collection_elements:
+api.colllection_elements:
     type: rest
-    resource: ApiBundle\Controller\CollectionElementController
+    resource: ApiBundle\Controller\ColllectionElementController
     prefix: /api
 
-api.collection_tags:
+api.colllection_tags:
     type: rest
-    resource: ApiBundle\Controller\CollectionTagController
+    resource: ApiBundle\Controller\ColllectionTagController
     prefix: /api

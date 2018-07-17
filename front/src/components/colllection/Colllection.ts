@@ -1,10 +1,10 @@
 import MiniGrid from 'minigrid'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
-import WithRender from './Collection.html'
+import WithRender from './Colllection.html'
 
-import {Collection, Element} from './../../api'
+import {Colllection, Element} from './../../api'
 
-import collectionStore from '../../store/modules/collection'
+import colllectionStore from '../../store/modules/colllection'
 
 import ColllectElement from '../element/Element'
 
@@ -14,19 +14,19 @@ import ColllectElement from '../element/Element'
     ColllectElement,
   },
 })
-export default class ColllectCollection extends Vue {
+export default class ColllectColllection extends Vue {
   @Prop({required: true})
-  private encodedCollectionPath!: string
+  private encodedColllectionPath!: string
 
   private grid!: MiniGrid
   private updateGridHandler!: () => void
 
   get name(): string {
-    return this.$store.state.collection.name
+    return this.$store.state.colllection.name
   }
 
   get elements(): Element[] {
-    return this.$store.state.collection.elements
+    return this.$store.state.colllection.elements
   }
 
   @Watch('elements')
@@ -39,7 +39,7 @@ export default class ColllectCollection extends Vue {
   private updateGrid(mustRecreateTheGrid: boolean = false) {
     if (!this.grid || mustRecreateTheGrid) {
       this.grid = new MiniGrid({
-        container: '.c-colllect-collection--elements',
+        container: '.c-colllect-colllection--elements',
         item: '.c-colllect-element',
         gutter: 20,
       })
@@ -50,7 +50,7 @@ export default class ColllectCollection extends Vue {
 
   private mounted() {
     Vue.nextTick(() => {
-      collectionStore.dispatchLoadCollection(this.encodedCollectionPath)
+      colllectionStore.dispatchLoadColllection(this.encodedColllectionPath)
     })
 
     this.updateGridHandler = this.updateGrid.bind(this)

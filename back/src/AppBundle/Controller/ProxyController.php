@@ -2,21 +2,21 @@
 
 namespace AppBundle\Controller;
 
-use ApiBundle\Service\CollectionElementService;
+use ApiBundle\Service\ColllectionElementService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProxyController extends Controller
 {
-    public function elementAction(Request $request, string $encodedCollectionPath, string $encodedElementBasename)
+    public function elementAction(Request $request, string $encodedColllectionPath, string $encodedElementBasename)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        /** @var CollectionElementService $collectionElementService */
-        $collectionElementService = $this->get('api.service.collection_element');
-        $response = $collectionElementService->getContent(
+        /** @var ColllectionElementService $colllectionElementService */
+        $colllectionElementService = $this->get('api.service.colllection_element');
+        $response = $colllectionElementService->getContent(
             $encodedElementBasename,
-            $encodedCollectionPath,
+            $encodedColllectionPath,
             $request->headers
         );
 

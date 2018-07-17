@@ -1,0 +1,11 @@
+<div class="c-colllect-colllections">
+  <h1>Colllections</h1>
+
+  <ul>
+    <li v-for="colllection in colllections">
+      <router-link :to="{ name: 'colllection', params: { encodedColllectionPath: colllection.encoded_colllection_path } }">
+        {{ colllection.name }}
+      </router-link>
+    </li>
+  </ul>
+</div>

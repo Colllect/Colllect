@@ -79,7 +79,7 @@ abstract class Element
      * @Serializer\Type("string")
      * @Serializer\Expose()
      */
-    private $encodedCollectionPath;
+    private $encodedColllectionPath;
 
     /**
      * @var string
@@ -99,7 +99,7 @@ abstract class Element
     private $proxyUrl;
 
 
-    public function __construct(array $meta, string $encodedCollectionPath)
+    public function __construct(array $meta, string $encodedColllectionPath)
     {
         $basename = pathinfo($meta['path'])['basename'];
         $elementMeta = self::parseBasename($basename);
@@ -113,7 +113,7 @@ abstract class Element
         $this->updated = $updated;
         $this->size = $meta['size'];
         $this->extension = $elementMeta['extension'];
-        $this->encodedCollectionPath = $encodedCollectionPath;
+        $this->encodedColllectionPath = $encodedColllectionPath;
         $this->encodedElementBasename = Base64::encode($basename);
     }
 
@@ -218,17 +218,17 @@ abstract class Element
     /**
      * @return string
      */
-    public function getEncodedCollectionPath(): string
+    public function getEncodedColllectionPath(): string
     {
-        return $this->encodedCollectionPath;
+        return $this->encodedColllectionPath;
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      */
-    public function setEncodedCollectionPath(string $encodedCollectionPath)
+    public function setEncodedColllectionPath(string $encodedColllectionPath)
     {
-        $this->encodedCollectionPath = $encodedCollectionPath;
+        $this->encodedColllectionPath = $encodedColllectionPath;
     }
 
     /**
@@ -252,7 +252,7 @@ abstract class Element
      */
     public function getProxyUrl()
     {
-        return '/proxy/' . $this->encodedCollectionPath . '/' . $this->encodedElementBasename;
+        return '/proxy/' . $this->encodedColllectionPath . '/' . $this->encodedElementBasename;
     }
 
     /**
@@ -278,16 +278,16 @@ abstract class Element
      * Return typed element based on flysystem metadata
      *
      * @param array $elementMetadata
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      * @return Color|Image|Link|Note
      * @throws NotSupportedElementTypeException
      */
-    public static function get(array $elementMetadata, string $encodedCollectionPath)
+    public static function get(array $elementMetadata, string $encodedColllectionPath)
     {
         $type = self::getTypeByPath($elementMetadata['path']);
         switch ($type) {
             case self::IMAGE_TYPE:
-                return new Image($elementMetadata, $encodedCollectionPath);
+                return new Image($elementMetadata, $encodedColllectionPath);
                 break;
         }
 

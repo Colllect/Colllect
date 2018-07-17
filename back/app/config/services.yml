@@ -61,16 +61,16 @@ services:
         tags:
             - { name: api.filesystem_adapter, alias: sftp }
 
-    api.service.collection:
-        class: ApiBundle\Service\CollectionService
+    api.service.colllection:
+        class: ApiBundle\Service\ColllectionService
         autowire: true
 
-    api.service.collection_element:
-        class: ApiBundle\Service\CollectionElementService
+    api.service.colllection_element:
+        class: ApiBundle\Service\ColllectionElementService
         autowire: true
 
-    api.service.collection_tag:
-        class: ApiBundle\Service\CollectionTagService
+    api.service.colllection_tag:
+        class: ApiBundle\Service\ColllectionTagService
         autowire: true
 
     api.service.element_file_handler:

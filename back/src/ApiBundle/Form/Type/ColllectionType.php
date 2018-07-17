@@ -2,13 +2,13 @@
 
 namespace ApiBundle\Form\Type;
 
-use ApiBundle\Model\Collection;
+use ApiBundle\Model\Colllection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CollectionType extends AbstractType
+class ColllectionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -27,7 +27,7 @@ class CollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Collection::class
+            'data_class' => Colllection::class
         ));
     }
 }

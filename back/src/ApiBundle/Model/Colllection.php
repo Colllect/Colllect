@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * @Serializer\ExclusionPolicy("all")
  */
-class Collection
+class Colllection
 {
     /**
      * @var string
@@ -24,18 +24,18 @@ class Collection
      * @Serializer\Type("string")
      * @Serializer\Expose()
      */
-    private $encodedCollectionPath;
+    private $encodedColllectionPath;
 
 
     /**
-     * Collection constructor.
-     * @param array $collectionMetadata
+     * Colllection constructor.
+     * @param array $colllectionMetadata
      */
-    public function __construct(array $collectionMetadata = [])
+    public function __construct(array $colllectionMetadata = [])
     {
-        if (count($collectionMetadata) > 0) {
-            $this->setName($collectionMetadata['filename']);
-            $this->setEncodedCollectionPath(Base64::encode($collectionMetadata['path']));
+        if (count($colllectionMetadata) > 0) {
+            $this->setName($colllectionMetadata['filename']);
+            $this->setEncodedColllectionPath(Base64::encode($colllectionMetadata['path']));
         }
     }
 
@@ -59,16 +59,16 @@ class Collection
     /**
      * @return string
      */
-    public function getEncodedCollectionPath(): string
+    public function getEncodedColllectionPath(): string
     {
-        return $this->encodedCollectionPath;
+        return $this->encodedColllectionPath;
     }
 
     /**
-     * @param string $encodedCollectionPath
+     * @param string $encodedColllectionPath
      */
-    public function setEncodedCollectionPath(string $encodedCollectionPath)
+    public function setEncodedColllectionPath(string $encodedColllectionPath)
     {
-        $this->encodedCollectionPath = $encodedCollectionPath;
+        $this->encodedColllectionPath = $encodedColllectionPath;
     }
 }

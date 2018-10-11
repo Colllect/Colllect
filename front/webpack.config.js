@@ -10,6 +10,10 @@ const isDev = process.env.NODE_ENV === 'development'
 require('tls').DEFAULT_ECDH_CURVE = 'auto'
 
 let config = {
+  mode: process.env.NODE_ENV,
+  // watchOptions: {
+  //   poll: true
+  // },
   entry: {
     main: [ './assets/scss/main.scss', './src/main.ts' ]
   },

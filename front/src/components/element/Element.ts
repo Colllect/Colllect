@@ -67,6 +67,10 @@ export default class ColllectElement extends Vue {
     const elementTop = elementClientRect.top
     const elementBottom = elementTop + elementClientRect.height
 
+    if (!document.documentElement) {
+      return
+    }
+
     const viewportTop = document.documentElement.scrollTop
     const viewportBottom = viewportTop + window.innerHeight
 

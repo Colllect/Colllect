@@ -4,6 +4,9 @@ namespace ApiBundle\EnhancedFlysystemAdapter;
 
 use League\Flysystem\FilesystemInterface;
 
+/**
+ * @method array listWith(array $keys = [], string $directory = '', bool $recursive = false) List with plugin adapter
+ */
 interface EnhancedFilesystemInterface extends FilesystemInterface
 {
     /**

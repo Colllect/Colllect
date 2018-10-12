@@ -138,6 +138,9 @@ class ColllectionElementController extends FOSRestController
      * @param string $encodedColllectionPath
      * @return Element|FormInterface
      * @throws \ApiBundle\Exception\FilesystemCannotWriteException
+     * @throws \ApiBundle\Exception\NotSupportedElementTypeException
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function postColllectionElementAction(Request $request, string $encodedColllectionPath)
     {
@@ -187,6 +190,8 @@ class ColllectionElementController extends FOSRestController
      * @param string $encodedColllectionPath
      * @param string $encodedElementBasename
      * @return Element
+     * @throws \ApiBundle\Exception\NotSupportedElementTypeException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function getColllectionElementAction(string $encodedColllectionPath, string $encodedElementBasename)
     {
@@ -254,6 +259,11 @@ class ColllectionElementController extends FOSRestController
      * @param string $encodedColllectionPath
      * @param string $encodedElementBasename
      * @return Element
+     * @throws \ApiBundle\Exception\FilesystemCannotRenameException
+     * @throws \ApiBundle\Exception\FilesystemCannotWriteException
+     * @throws \ApiBundle\Exception\NotSupportedElementTypeException
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function putColllectionElementAction(Request $request, string $encodedColllectionPath, string $encodedElementBasename)
     {
@@ -301,6 +311,7 @@ class ColllectionElementController extends FOSRestController
      *
      * @param string $encodedColllectionPath
      * @param string $encodedElementBasename
+     * @throws \ApiBundle\Exception\NotSupportedElementTypeException
      */
     public function deleteColllectionElementAction(string $encodedColllectionPath, string $encodedElementBasename)
     {

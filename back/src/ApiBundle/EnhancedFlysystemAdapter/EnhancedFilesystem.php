@@ -13,6 +13,8 @@ class EnhancedFilesystem extends Filesystem implements EnhancedFilesystemInterfa
      * @param string $newPath
      *
      * @return bool
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function renameDir(string $path, string $newPath): bool
     {

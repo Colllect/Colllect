@@ -126,6 +126,7 @@ class ColllectionController extends FOSRestController
      *
      * @param string $encodedColllectionPath
      * @return Colllection
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function getColllectionAction(string $encodedColllectionPath)
     {
@@ -170,6 +171,7 @@ class ColllectionController extends FOSRestController
      * @param Request $request
      * @param string $encodedColllectionPath
      * @return Colllection|FormInterface
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function putColllectionAction(Request $request, string $encodedColllectionPath)
     {

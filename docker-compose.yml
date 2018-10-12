@@ -8,6 +8,7 @@ services:
       MYSQL_DATABASE: ${MARIADB_DATABASE}
       MYSQL_USER: ${MARIADB_USER}
       MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    command: ['--skip-name-resolve']
     ports:
       - 3306:3306
     volumes:

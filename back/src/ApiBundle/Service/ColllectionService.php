@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionService
 {
@@ -27,13 +28,19 @@ class ColllectionService
      */
     private $formFactory;
 
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
 
-    public function __construct(TokenStorage $tokenStorage, FilesystemAdapterManager $flysystemAdapters, FormFactory $formFactory)
+
+    public function __construct(TokenStorage $tokenStorage, FilesystemAdapterManager $flysystemAdapters, FormFactory $formFactory, Stopwatch $stopwatch = null)
     {
         $user = $tokenStorage->getToken()->getUser();
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->formFactory = $formFactory;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -43,15 +50,27 @@ class ColllectionService
      */
     public function list(): array
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_list');
+        }
+
         try {
             $colllectionsMetadata = $this->filesystem->listContents(ColllectionPath::COLLLECTIONS_FOLDER);
         } catch (\Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_list');
+            }
+
             return [];
         }
 
         if (count($colllectionsMetadata) === 0) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_list');
+            }
+
             return [];
         }
 
@@ -74,7 +93,13 @@ class ColllectionService
             }
         );
 
-        return array_values($colllections);
+        $colllectionList = array_values($colllections);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_list');
+        }
+
+        return $colllectionList;
     }
 
     /**
@@ -85,16 +110,28 @@ class ColllectionService
      */
     public function create(Request $request)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_create');
+        }
+
         $colllection = new Colllection();
         $form = $this->formFactory->create(ColllectionType::class, $colllection);
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_create');
+            }
+
             return $form;
         }
 
         $path = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $colllection->getName();
         $this->filesystem->createDir($path);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_create');
+        }
 
         return $colllection;
     }
@@ -108,17 +145,29 @@ class ColllectionService
      */
     public function get(string $encodedColllectionPath): Colllection
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_get');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
         $meta = $this->filesystem->getMetadata($colllectionPath);
 
         if (!$meta) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_get');
+            }
+
             throw new NotFoundHttpException('error.colllection_not_found');
         }
 
         $standardizedMeta = Metadata::standardize($meta, $colllectionPath);
 
         $colllection = new Colllection($standardizedMeta);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_get');
+        }
 
         return $colllection;
     }
@@ -133,6 +182,10 @@ class ColllectionService
      */
     public function update(string $encodedColllectionPath, Request $request)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_update');
+        }
+
         $colllection = $this->get($encodedColllectionPath);
 
         $renamedColllection = new Colllection();
@@ -140,12 +193,20 @@ class ColllectionService
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_update');
+            }
+
             return $form;
         }
 
         $path = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $colllection->getName();
         $renamedPath = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $renamedColllection->getName();
         $this->filesystem->renameDir($path, $renamedPath);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_update');
+        }
 
         return $renamedColllection;
     }
@@ -157,12 +218,20 @@ class ColllectionService
      */
     public function delete(string $encodedColllectionPath)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_delete');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
         try {
             $this->filesystem->deleteDir($colllectionPath);
         } catch (FileNotFoundException $e) {
             // If file does not exists or was already deleted, it's OK
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_delete');
         }
     }
 }

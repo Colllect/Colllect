@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionElementService
 {
@@ -41,18 +42,25 @@ class ColllectionElementService
      */
     private $elementFileHandler;
 
+    /**
+     * @var Stopwatch
+     */
+    private $stopwatch;
+
 
     public function __construct(
         TokenStorage $tokenStorage,
         FilesystemAdapterManager $flysystemAdapters,
         FormFactory $formFactory,
-        ElementFileHandler $elementFileHandler
+        ElementFileHandler $elementFileHandler,
+        Stopwatch $stopwatch
     ) {
         $user = $tokenStorage->getToken()->getUser();
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->formFactory = $formFactory;
         $this->elementFileHandler = $elementFileHandler;
+        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -63,12 +71,20 @@ class ColllectionElementService
      */
     public function list(string $encodedColllectionPath): array
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_list');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         try {
             $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $colllectionPath);
         } catch (\Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_list');
+            }
+
             return [];
         }
 
@@ -105,6 +121,10 @@ class ColllectionElementService
             }
         }
 
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_list');
+        }
+
         return $elements;
     }
 
@@ -114,14 +134,26 @@ class ColllectionElementService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      * @return Element|FormInterface
+     * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
+     * @throws NotSupportedElementTypeException
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \Exception TODO: make a typed exception
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_create');
+        }
+
         $elementFile = new ElementFile();
         $form = $this->handleRequest($request, $elementFile);
 
         if (!$form->isValid()) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_create');
+            }
+
             return $form;
         }
 
@@ -136,6 +168,10 @@ class ColllectionElementService
         $elementMetadata = $this->filesystem->getMetadata($path);
         $element = Element::get($elementMetadata, $encodedColllectionPath);
 
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_create');
+        }
+
         return $element;
     }
 
@@ -146,11 +182,18 @@ class ColllectionElementService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      * @return Element|FormInterface
+     * @throws FileNotFoundException
      * @throws FilesystemCannotRenameException
      * @throws FilesystemCannotWriteException
+     * @throws NotSupportedElementTypeException
+     * @throws \League\Flysystem\FileExistsException
      */
     public function update(string $encodedElementBasename, string $encodedColllectionPath, Request $request)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_update');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
@@ -161,6 +204,10 @@ class ColllectionElementService
         $form = $this->handleRequest($request, $elementFile);
 
         if (!$form->isValid()) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_update');
+            }
+
             return $form;
         }
 
@@ -169,6 +216,10 @@ class ColllectionElementService
         // Rename if necessary
         if ($path !== $newPath) {
             if (!$this->filesystem->rename($path, $newPath)) {
+                if ($this->stopwatch) {
+                    $this->stopwatch->stop('colllection_element_update');
+                }
+
                 throw new FilesystemCannotRenameException();
             }
         }
@@ -176,6 +227,10 @@ class ColllectionElementService
         // Update content if necessary
         if ($element->shouldLoadContent() && !!$elementFile->getContent()) {
             if (!$this->filesystem->update($newPath, $elementFile->getContent())) {
+                if ($this->stopwatch) {
+                    $this->stopwatch->stop('colllection_element_update');
+                }
+
                 throw new FilesystemCannotWriteException();
             }
         }
@@ -183,6 +238,10 @@ class ColllectionElementService
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
         $updatedElement = Element::get($elementMetadata, $encodedColllectionPath);
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_update');
+        }
 
         return $updatedElement;
     }
@@ -193,15 +252,25 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @return Element
+     * @throws FileNotFoundException
+     * @throws NotSupportedElementTypeException
      */
     public function get(string $encodedElementBasename, string $encodedColllectionPath): Element
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_get');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
         $meta = $this->filesystem->getMetadata($path);
 
         if (!$meta) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_get');
+            }
+
             throw new NotFoundHttpException('error.element_not_found');
         }
 
@@ -211,6 +280,10 @@ class ColllectionElementService
         if ($element->shouldLoadContent()) {
             $content = $this->filesystem->read($path);
             $element->setContent($content);
+        }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_get');
         }
 
         return $element;
@@ -223,12 +296,17 @@ class ColllectionElementService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param HeaderBag $requestHeaders
      * @return Response
+     * @throws NotSupportedElementTypeException
      */
     public function getContent(
         string $encodedElementBasename,
         string $encodedColllectionPath,
         HeaderBag $requestHeaders
     ): Response {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_get_content');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
@@ -236,6 +314,10 @@ class ColllectionElementService
             $meta = $this->filesystem->getMetadata($path);
 
             if (!$meta) {
+                if ($this->stopwatch) {
+                    $this->stopwatch->stop('colllection_element_get_content');
+                }
+
                 throw new NotFoundHttpException('error.element_not_found');
             }
 
@@ -244,6 +326,10 @@ class ColllectionElementService
                 if ($meta['timestamp'] <= $modified) {
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
+
+                    if ($this->stopwatch) {
+                        $this->stopwatch->stop('colllection_element_get_content');
+                    }
 
                     return $response;
                 }
@@ -258,8 +344,16 @@ class ColllectionElementService
             $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
             $response->setLastModified((new \DateTime())->setTimestamp($standardizedMeta['timestamp']));
 
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_get_content');
+            }
+
             return $response;
         } catch (FileNotFoundException $e) {
+            if ($this->stopwatch) {
+                $this->stopwatch->stop('colllection_element_get_content');
+            }
+
             throw new NotFoundHttpException();
         }
     }
@@ -269,9 +363,14 @@ class ColllectionElementService
      *
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
+     * @throws NotSupportedElementTypeException
      */
     public function delete(string $encodedElementBasename, string $encodedColllectionPath)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_delete');
+        }
+
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
@@ -280,15 +379,25 @@ class ColllectionElementService
         } catch (FileNotFoundException $e) {
             // If file does not exists or was already deleted, it's OK
         }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_delete');
+        }
     }
 
     /**
      * @param string $encodedColllectionPath
      * @param Closure $matches Should return true if the element need to be process
      * @param Closure $process The process applied to element file
+     * @throws FileNotFoundException
+     * @throws \League\Flysystem\FileExistsException
      */
     public function batchRename(string $encodedColllectionPath, Closure $matches, Closure $process)
     {
+        if ($this->stopwatch) {
+            $this->stopwatch->start('colllection_element_batch_rename');
+        }
+
         /** @var Element[] $elements */
         $elements = $this->list($encodedColllectionPath);
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
@@ -302,6 +411,10 @@ class ColllectionElementService
                 $this->filesystem->rename($path, $newPath);
             }
         }
+
+        if ($this->stopwatch) {
+            $this->stopwatch->stop('colllection_element_batch_rename');
+        }
     }
 
     /**
@@ -310,6 +423,7 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $colllectionPath Colllection path
      * @return string
+     * @throws NotSupportedElementTypeException
      */
     private function getElementPath(string $encodedElementBasename, string $colllectionPath): string
     {

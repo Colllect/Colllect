@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 set -ex
 
-if [ "$ENVIRONMENT" = "production" ]
+if [[ "$ENVIRONMENT" = "production" ]]
 then
     rm /etc/nginx/ssl/*.pem /etc/nginx/ssl/*.key
 fi

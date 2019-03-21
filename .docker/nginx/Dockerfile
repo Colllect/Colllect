@@ -1,29 +1,29 @@
-FROM nginx:1.15.0
+FROM nginx:1.15.9-alpine
 
 MAINTAINER Alexandre DEMDOE <contact@alex-d.fr>
 
-# Let's Encrypt
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# OpenSSL
+RUN apk add --no-cache \
     openssl \
-    && rm -rf /var/lib/apt/lists/*
+    shadow
 
 # SSL for localhost development
 COPY openssl.cnf /etc/nginx/ssl/
 RUN mkdir -p /etc/nginx/ssl \
     && openssl rand 48 > /etc/nginx/ssl/ticket.key \
-    && openssl dhparam -out /etc/nginx/ssl/dhparam4.pem 4096 \
+    && openssl dhparam -out /etc/nginx/ssl/dhparam4.pem 2048 \
     && openssl req -x509 -out /etc/nginx/ssl/fullchain.pem -keyout /etc/nginx/ssl/privkey.pem \
          -newkey rsa:2048 -nodes -sha256 \
          -subj '/CN=localhost' -extensions EXT -config /etc/nginx/ssl/openssl.cnf
 
 # nginx
 COPY nginx.conf /etc/nginx/
-COPY colllect.conf /etc/nginx/sites-available/
-COPY colllect-ssl.conf /etc/nginx/sites-available/
+COPY colllect.conf colllect-ssl.conf /etc/nginx/sites-available/
 RUN mkdir -p /etc/nginx/sites-enabled
 RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
-RUN usermod -u 1000 www-data
+RUN addgroup -g 82 -S www-data && \
+    adduser -u 82 -D -S -G www-data www-data
 
 EXPOSE 80
 EXPOSE 443

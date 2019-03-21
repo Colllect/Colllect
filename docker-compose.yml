@@ -2,7 +2,7 @@ version: '3'
 
 services:
   database:
-    image: mariadb
+    image: mariadb:10.4
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MARIADB_DATABASE}
@@ -21,9 +21,10 @@ services:
         TIMEZONE: ${TIMEZONE}
         DOCKER_HOST_IP: ${DOCKER_HOST_IP}
         IDE_KEY: ${IDE_KEY}
+    user: "www-data:www-data"
     volumes:
       - ./back:/var/www/colllect
-      - ./logs/colllect-back:/var/www/colllect/var/logs
+      - ./logs/colllect-back:/var/www/colllect/var/log
   nginx:
     image: colllect/nginx
     build: ./.docker/nginx
@@ -34,7 +35,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./back:/var/www/colllect
+      - ./back:/var/www/colllect:ro
       - ./logs/nginx/:/var/log/nginx
 
 volumes:

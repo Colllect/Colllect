@@ -1,0 +1,33 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Colllect
+            description: 'Your visual bookmark manager'
+            version: 1.0.0
+        securityDefinitions:
+            OAuth2Password:
+                type: oauth2
+                flow: password
+                tokenUrl: '/api/oauth/token'
+                name: Authorization
+                scopes:
+                    superadmin: 'Grants all access'
+        security:
+            - OAuth2Password: []
+        definitions:
+            Token:
+                type: object
+                properties:
+                    token_type:
+                        type: string
+                    expires_in:
+                        type: integer
+                    access_token:
+                        type: string
+                        description: 'JWT'
+                    refresh_token:
+                        type: string
+
+    areas:
+        path_patterns:
+            - ^/api(?!/doc(.json)?$) # Accepts routes under /api except /api/doc

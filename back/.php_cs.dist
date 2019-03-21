@@ -1,0 +1,22 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PHP71Migration' => true,
+        '@PHP71Migration:risky' => true,
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'compact_nullable_typehint' => true,
+        'concat_space' => ['spacing' => 'one'],
+        'strict_comparison' => true,
+        'strict_param' => true,
+        'yoda_style' => [
+            'always_move_variable' => false,
+            'equal' => false,
+            'identical' => false,
+            'less_and_greater' => false,
+        ],
+    ])
+    ->setRiskyAllowed(true)
+;

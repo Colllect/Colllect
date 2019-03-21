@@ -1,25 +1,13 @@
-/app/config/parameters.yml
-/build/
-/app/behat.db.cache
-/app/behat.db.cache.bak
-/var/*
-!/var/cache
-/var/cache/*
-!var/cache/.gitkeep
-!/var/jwt
-/var/jwt/*
-!var/jwt/.gitkeep
-!/var/logs
-/var/logs/*
-!var/logs/.gitkeep
-!/var/sessions
-/var/sessions/*
-!var/sessions/.gitkeep
-!var/SymfonyRequirements.php
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
 /vendor/
-/web/bundles/
-/web/uploads/
-/web/css/
-/web/js/
-/src/*/Entity/*~
-/uploads/*
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/back/.php_cs.dist
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###

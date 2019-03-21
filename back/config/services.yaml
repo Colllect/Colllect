@@ -1,0 +1,103 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'en'
+    env(FS_DEFAULT_ADAPTER): 'local'
+    env(FS_CACHE_ROOT): '%kernel.cache_dir%/colllect/'
+    env(FS_CACHE_DURATION_IN_SECONDS): 180
+    env(FS_LOCAL_ROOT_PATH): '%kernel.project_dir%/uploads/'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    App\EventListener\HashPasswordListener:
+        tags: ['doctrine.event_subscriber']
+
+    App\EventListener\UserResolveListener:
+        arguments:
+            - '@security.user.provider.concrete.app_user_provider'
+            - '@security.password_encoder'
+        tags:
+            - { name: 'kernel.event_listener', event: 'trikoder.oauth2.user_resolve', method: 'onUserResolve' }
+
+    # Filesystems
+    App\FilesystemAdapter\FilesystemAdapterManager:
+        arguments:
+            $defaultFilesystemAdapterName: '%env(FS_DEFAULT_ADAPTER)%'
+
+    app.filesystem_adapter:
+        public: true
+        alias: App\FilesystemAdapter\FilesystemAdapterManager
+
+    App\FilesystemAdapter\Local:
+        public: false
+        arguments:
+            $rootPath: '%env(resolve:FS_LOCAL_ROOT_PATH)%'
+        tags:
+            - { name: app.filesystem_adapter, alias: local }
+
+    App\FilesystemAdapter\AwsS3:
+        public: false
+        arguments:
+            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
+            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
+            $key: '%env(FS_AWS_S3_KEY)%'
+            $secret: '%env(FS_AWS_S3_SECRET)%'
+            $region: '%env(FS_AWS_S3_REGION)%'
+            $bucket: '%env(FS_AWS_S3_BUCKET)%'
+        tags:
+            - { name: app.filesystem_adapter, alias: aws_s3 }
+
+    App\FilesystemAdapter\Dropbox:
+        public: false
+        arguments:
+            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
+            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
+        tags:
+            - { name: app.filesystem_adapter, alias: dropbox }
+
+    App\FilesystemAdapter\Ftp:
+        public: false
+        arguments:
+            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
+            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
+            $host: '%env(FS_FTP_HOST)%'
+            $port: '%env(int:FS_FTP_PORT)%'
+            $username: '%env(FS_FTP_USERNAME)%'
+            $password: '%env(FS_FTP_PASSWORD)%'
+            $root: '%env(FS_FTP_ROOT)%'
+        tags:
+            - { name: app.filesystem_adapter, alias: ftp }
+
+    App\FilesystemAdapter\Sftp:
+        public: false
+        arguments:
+            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
+            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
+            $host: '%env(FS_SFTP_HOST)%'
+            $port: '%env(int:FS_SFTP_PORT)%'
+            $username: '%env(FS_SFTP_USERNAME)%'
+            $password: '%env(FS_SFTP_PASSWORD)%'
+            $root: '%env(FS_SFTP_ROOT)%'
+        tags:
+            - { name: app.filesystem_adapter, alias: sftp }

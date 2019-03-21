@@ -1,0 +1,34 @@
+api.oauth:
+    resource: '../../src/Controller/OAuthServerController.php'
+    type: annotation
+    prefix: /api/oauth
+    name_prefix: 'api_oauth_'
+    trailing_slash_on_root: false
+
+api.users:
+    resource: '../../src/Controller/UserController.php'
+    type: annotation
+    prefix: /api/users
+    name_prefix: 'api_users_'
+    trailing_slash_on_root: false
+
+api.colllections:
+    resource: '../../src/Controller/ColllectionController.php'
+    type: annotation
+    prefix: /api/colllections
+    name_prefix: 'api_colllections_'
+    trailing_slash_on_root: false
+
+api.colllection_elements:
+    resource: '../../src/Controller/ColllectionElementController.php'
+    type: annotation
+    prefix: /api/colllections/{encodedColllectionPath}/elements
+    name_prefix: 'api_colllection_elements'
+    trailing_slash_on_root: false
+
+api.colllection_tags:
+    resource: '../../src/Controller/ColllectionTagController.php'
+    type: annotation
+    prefix: /api/colllections/{encodedColllectionPath}/tags
+    name_prefix: 'api_colllection_tags'
+    trailing_slash_on_root: false

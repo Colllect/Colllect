@@ -7,14 +7,12 @@ const generatedFolderPath = 'generated'
 const generatedApiFilePath = `${generatedFolderPath}/api.ts`
 const templatesPath = 'typescriptSwaggerTemplates'
 
-const swaggerUrl = 'https://127.0.0.1/app_dev.php/api/doc.json'
+const swaggerUrl = 'https://127.0.0.1/api/doc.json'
 const swaggerUrlOptions = {
   headers: {
     host: 'colllect.localhost',
   },
 }
-
-require('tls').DEFAULT_ECDH_CURVE = 'auto'
 
 console.log('Fetching swagger description file from', swaggerUrl)
 needle('get', swaggerUrl, swaggerUrlOptions)
@@ -27,21 +25,26 @@ needle('get', swaggerUrl, swaggerUrlOptions)
     process.exit(1)
   })
 
+function getTemplate(templateName) {
+  return fs.readFileSync(path.join(__dirname, templatesPath, `${templateName}.mustache`), 'utf-8')
+}
+
 function swaggerCodeGen (swagger) {
   console.log('Generating TypeScript code...')
   const tsSourceCode = CodeGen.getTypescriptCode({
     className: 'Api',
     swagger,
     template: {
-      class: fs.readFileSync(path.join(__dirname, templatesPath, 'class.mustache'), 'utf-8'),
-      method: fs.readFileSync(path.join(__dirname, templatesPath, 'method.mustache'), 'utf-8'),
-      type: fs.readFileSync(path.join(__dirname, templatesPath, 'type.mustache'), 'utf-8'),
+      class: getTemplate('class'),
+      method: getTemplate('method'),
+      type: getTemplate('type'),
     },
     beautify: true,
     beautifyOptions: {
       indent_size: 2,
     },
   }).replace(/\r\n/g, '\n')
+    .replace(/"/g, '\'')
     .replace(/\s\?\s:/g, '?:')
     .replace(/Promise < request\.Response >/g, 'Promise<request.Response>')
     .replace(/(\/\*\*\n)(\s+)(\*[^\n]+)([^*]+)\*\n\s+\*/g, (match, commentStart, indentSpaces, firstLine, otherLines) => {

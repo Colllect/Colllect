@@ -1,11 +1,7 @@
-import * as Cookies from 'tiny-cookie'
 import {getStoreBuilder} from 'vuex-typex'
 
 import api, * as ApiInterfaces from '../../api'
 import {RootState} from '../state'
-
-const jwtCookieKey = 'access_token'
-const jwtCookieExpires = '1Y'
 
 export interface AuthState {
   id: number|null,
@@ -38,29 +34,17 @@ const mutations = {
 
 const actions = {
   login: async ({}, form: { email: string, password: string, stayLoggedIn: boolean }) => {
-    const response = await api.postApiTokens({
-      email: form.email,
-      password: form.password,
-    })
-
-    const body: ApiInterfaces.Token = response.body
-    const jwt = body.token
-
-    if (form.stayLoggedIn) {
-      Cookies.set(jwtCookieKey, jwt, encodeURIComponent, {expires: jwtCookieExpires})
-    }
-
-    authStore.commitSetUser(parseJwt(jwt))
+    authStore.commitSetUser({id: 0, nickname: 'test', roles: []})
   },
   tryLoginFromCookie: () => {
-    authStore.jwt = Cookies.get(jwtCookieKey) as string
+    // authStore.jwt = Cookies.get(jwtCookieKey) as string
 
     if (authStore.jwt != null && authStore.jwt.length > 0) {
       authStore.commitSetUser(parseJwt(authStore.jwt))
     }
   },
   logout: () => {
-    Cookies.remove(jwtCookieKey)
+    // Cookies.remove(jwtCookieKey)
     authStore.commitResetUser()
     authStore.jwt = ''
   },

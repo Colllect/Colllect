@@ -1,21 +1,19 @@
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserJSPlugin = require('terser-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
-require('tls').DEFAULT_ECDH_CURVE = 'auto'
-
 let config = {
   mode: process.env.NODE_ENV,
-  // watchOptions: {
-  //   poll: true
-  // },
+  watchOptions: {
+    poll: true
+  },
   entry: {
-    main: [ './assets/scss/main.scss', './src/main.ts' ]
+    main: ['./assets/scss/main.scss', './src/main.ts']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -23,7 +21,7 @@ let config = {
     filename: 'main.js'
   },
   resolve: {
-    extensions: [ '.js', '.ts' ]
+    extensions: ['.js', '.ts']
   },
   devServer: {
     noInfo: true,
@@ -38,13 +36,23 @@ let config = {
     historyApiFallback: true,
     proxy: [{
       context: ['/api', '/proxy', '/oauth2'],
-      target: 'https://127.0.0.1/app_dev.php',
+      target: 'https://127.0.0.1/',
       bypass: function (req) {
         req.headers.host = 'colllect.localhost'
       },
       secure: false
     }]
   },
+  plugins: [
+    new CopyWebpackPlugin(['./index.html']),
+    new MiniCssExtractPlugin({ filename: 'main.css' }),
+    new ForkTsCheckerWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
+    })
+  ],
   module: {
     rules: [
       {
@@ -58,14 +66,14 @@ let config = {
       },
       {
         test: /\.scss/,
-        use: ExtractTextPlugin.extract({
-          fallback: { loader: 'style-loader', options: { sourceMap: isDev } },
-          use: [
-            { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
-            { loader: 'postcss-loader', options: { sourceMap: isDev } },
-            { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [ path.resolve(__dirname, 'src') ] } }
-          ]
-        })
+        use: [
+          isDev
+            ? { loader: 'style-loader', options: { sourceMap: isDev } }
+            : { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
+          { loader: 'postcss-loader', options: { sourceMap: isDev } },
+          { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [path.resolve(__dirname, 'src')] } }
+        ]
       },
       {
         test: /\.html$/,
@@ -77,20 +85,11 @@ let config = {
       }
     ]
   },
-  plugins: [
-    new CopyWebpackPlugin(['./index.html']),
-    new ExtractTextPlugin({ filename: 'main.css', disable: isDev }),
-    new ForkTsCheckerWebpackPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-      }
-    })
-  ]
+  optimization: {}
 }
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new UglifyJsPlugin({
+  config.optimization.push(new TerserJSPlugin({
     uglifyOptions: {
       compress: {
         unused: false
@@ -99,7 +98,6 @@ if (process.env.NODE_ENV === 'production') {
   }))
 } else {
   config.devtool = 'cheap-module-eval-source-map'
-  config.plugins.push(new webpack.NamedModulesPlugin())
 }
 
 module.exports = config

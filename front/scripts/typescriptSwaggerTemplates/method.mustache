@@ -4,7 +4,7 @@
 * @method {{&method}}
 * @name {{&className}}#{{&methodName}}
 {{#parameters}}
-{{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> parameters.{{&camelCaseName}} - {{&description}}{{/isSingleton}}
+{{^isSingleton}} * @param parameters.{{&camelCaseName}} - {{&description}}{{/isSingleton}}
 {{/parameters}}
 */
 public {{&methodName}}(parameters: {

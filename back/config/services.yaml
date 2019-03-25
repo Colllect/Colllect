@@ -40,6 +40,13 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'trikoder.oauth2.user_resolve', method: 'onUserResolve' }
 
+    # override resource server with custom CookieOrBearerTokenValidator
+    League\OAuth2\Server\ResourceServer:
+        arguments:
+            $accessTokenRepository: 'trikoder.oauth2.league.repository.access_token_repository'
+            $publicKey: null # dynamically set in TrikoderOAuth2Extension::configureResourceServer()
+            $authorizationValidator: App\Security\CookieOrBearerTokenValidator
+
     # Filesystems
     App\FilesystemAdapter\FilesystemAdapterManager:
         arguments:

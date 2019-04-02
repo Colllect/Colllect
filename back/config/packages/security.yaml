@@ -5,7 +5,7 @@ security:
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
+        # used to reload user (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
@@ -17,6 +17,14 @@ security:
         api_public:
             pattern: ^/api/(doc(.json)?|oauth/token|users/?)$
             security: false
+        app:
+            pattern: ^/(login|logout)
+            anonymous: ~
+            stateless: true
+            oauth2: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
         api:
             pattern: ^/api
             security: true
@@ -25,4 +33,4 @@ security:
 
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login/account, roles: ROLE_USER }

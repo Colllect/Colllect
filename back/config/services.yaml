@@ -40,21 +40,26 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'trikoder.oauth2.user_resolve', method: 'onUserResolve' }
 
-    # override resource server with custom CookieOrBearerTokenValidator
-    League\OAuth2\Server\ResourceServer:
+    # allow DI of CryptKey into CookieAccessTokenProvider
+    League\OAuth2\Server\CryptKey:
         arguments:
-            $accessTokenRepository: 'trikoder.oauth2.league.repository.access_token_repository'
-            $publicKey: null # dynamically set in TrikoderOAuth2Extension::configureResourceServer()
-            $authorizationValidator: App\Security\CookieOrBearerTokenValidator
+            $keyPath: '%env(resolve:OAUTH_PRIVATE_KEY_PATH)%'
+            $keyPermissionsCheck: false
+
+    # injected in ResourceServer (see Kernel)
+    App\Security\CookieOrBearerTokenValidator:
+        arguments:
+            $accessTokenRepository: '@trikoder.oauth2.league.repository.access_token_repository'
+
+    trikoder.oauth2.security.firewall.oauth2_listener:
+        class: App\Security\OAuth2Listener
 
     # Filesystems
-    App\FilesystemAdapter\FilesystemAdapterManager:
+    app.filesystem_adapter_manager:
+        class: App\FilesystemAdapter\FilesystemAdapterManager
+        public: true
         arguments:
             $defaultFilesystemAdapterName: '%env(FS_DEFAULT_ADAPTER)%'
-
-    app.filesystem_adapter:
-        public: true
-        alias: App\FilesystemAdapter\FilesystemAdapterManager
 
     App\FilesystemAdapter\Local:
         public: false
@@ -108,3 +113,9 @@ services:
             $root: '%env(FS_SFTP_ROOT)%'
         tags:
             - { name: app.filesystem_adapter, alias: sftp }
+
+    # aliases
+    App\FilesystemAdapter\FilesystemAdapterManager: '@app.filesystem_adapter_manager'
+    League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@trikoder.oauth2.league.repository.access_token_repository'
+    League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@trikoder.oauth2.league.repository.client_repository'
+    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface: '@sensio_framework_extra.psr7.http_message_factory'

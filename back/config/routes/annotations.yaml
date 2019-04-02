@@ -1,9 +1,16 @@
+app.security:
+    resource: '../../src/Controller/SecurityController.php'
+    type: annotation
+    name_prefix: 'app_security_'
+
 api.oauth:
     resource: '../../src/Controller/OAuthServerController.php'
     type: annotation
     prefix: /api/oauth
     name_prefix: 'api_oauth_'
     trailing_slash_on_root: false
+    defaults:
+        _format: json
 
 api.users:
     resource: '../../src/Controller/UserController.php'

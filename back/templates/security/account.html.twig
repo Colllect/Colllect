@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Account{% endblock %}
+
+{% block body %}
+    <form method="post" action="/logout">
+        Logged in as {{ app.user.username }} <br>
+
+        <button class="btn btn-lg btn-primary" type="submit">
+            Log out
+        </button>
+    </form>
+{% endblock %}

@@ -20,7 +20,7 @@ class FilesystemAdapterManager
      */
     private $filesystemAdapters;
 
-    public function __construct($defaultFilesystemAdapterName)
+    public function __construct(string $defaultFilesystemAdapterName)
     {
         $this->defaultFilesystemAdapterName = $defaultFilesystemAdapterName;
         $this->filesystemAdapters = [];
@@ -40,9 +40,7 @@ class FilesystemAdapterManager
     {
         $adapter = $this->filesystemAdapters[$this->defaultFilesystemAdapterName];
 
-        if ($user->getDropboxToken() !== null) {
-            $adapter = $this->filesystemAdapters['dropbox'];
-        }
+        // TODO: retrieve the right filesystem for the given user
 
         $filesystem = $adapter->getFilesystem($user);
         $filesystem->addPlugin(new ListWith());

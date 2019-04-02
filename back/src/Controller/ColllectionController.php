@@ -46,7 +46,7 @@ class ColllectionController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listColllectionsAction(): JsonResponse
+    public function listColllections(): JsonResponse
     {
         $colllections = $this->colllectionService->list();
 
@@ -82,7 +82,7 @@ class ColllectionController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function createColllectionAction(Request $request): JsonResponse
+    public function createColllection(Request $request): JsonResponse
     {
         $response = $this->colllectionService->create($request);
 
@@ -123,7 +123,7 @@ class ColllectionController extends AbstractController
      *
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function getColllectionAction(string $encodedColllectionPath)
+    public function getColllection(string $encodedColllectionPath)
     {
         $colllection = $this->colllectionService->get($encodedColllectionPath);
 
@@ -160,7 +160,7 @@ class ColllectionController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function updateColllectionAction(Request $request, string $encodedColllectionPath): JsonResponse
+    public function updateColllection(Request $request, string $encodedColllectionPath): JsonResponse
     {
         try {
             $response = $this->colllectionService->update($encodedColllectionPath, $request);
@@ -194,7 +194,7 @@ class ColllectionController extends AbstractController
      *
      * @return Response
      */
-    public function deleteColllectionAction(string $encodedColllectionPath): Response
+    public function deleteColllection(string $encodedColllectionPath): Response
     {
         $this->colllectionService->delete($encodedColllectionPath);
 

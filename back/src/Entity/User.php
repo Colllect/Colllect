@@ -73,11 +73,6 @@ class User implements UserInterface
     private $plainPassword;
 
     /**
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
-     */
-    private $lastLogin;
-
-    /**
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
@@ -106,17 +101,12 @@ class User implements UserInterface
 
     /**
      * Username used to authenticate the user.
-     *
-     * @see UserInterface
      */
     public function getUsername(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -133,9 +123,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): string
     {
         return (string) $this->password;
@@ -173,32 +160,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getSalt()
     {
         return null; // Not needed since we are using Argon2id algorithm
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
-    }
-
-    public function getLastLogin(): ?\DateTimeInterface
-    {
-        return $this->lastLogin;
-    }
-
-    public function setLastLogin(?\DateTimeInterface $lastLogin): self
-    {
-        $this->lastLogin = $lastLogin;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

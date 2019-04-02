@@ -105,7 +105,7 @@ class ColllectionElementController extends AbstractController
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function createColllectionElementAction(Request $request, string $encodedColllectionPath): JsonResponse
+    public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
     {
         $element = $this->colllectionElementService->create($encodedColllectionPath, $request);
 
@@ -139,7 +139,7 @@ class ColllectionElementController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function listColllectionElementsAction(string $encodedColllectionPath): JsonResponse
+    public function listColllectionElements(string $encodedColllectionPath): JsonResponse
     {
         $elements = $this->colllectionElementService->list($encodedColllectionPath);
 
@@ -184,7 +184,7 @@ class ColllectionElementController extends AbstractController
      * @throws \App\Exception\NotSupportedElementTypeException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function getColllectionElementAction(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
+    public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
         $element = $this->colllectionElementService->get($encodedElementBasename, $encodedColllectionPath);
 
@@ -250,7 +250,7 @@ class ColllectionElementController extends AbstractController
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function updateColllectionElementAction(Request $request, string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
+    public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
         $element = $this->colllectionElementService->update($encodedElementBasename, $encodedColllectionPath, $request);
 
@@ -293,7 +293,7 @@ class ColllectionElementController extends AbstractController
      *
      * @throws \App\Exception\NotSupportedElementTypeException
      */
-    public function deleteColllectionElementAction(string $encodedColllectionPath, string $encodedElementBasename): Response
+    public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): Response
     {
         $this->colllectionElementService->delete($encodedElementBasename, $encodedColllectionPath);
 

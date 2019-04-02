@@ -7,4 +7,3 @@ framework:
     templating:
         engines:
             - twig
-

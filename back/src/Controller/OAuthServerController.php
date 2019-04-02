@@ -98,7 +98,7 @@ class OAuthServerController
      *
      * @return ResponseInterface
      */
-    public function tokenAction(ServerRequestInterface $serverRequest): ResponseInterface
+    public function token(ServerRequestInterface $serverRequest): ResponseInterface
     {
         $serverResponse = new Response();
 

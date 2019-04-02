@@ -88,7 +88,7 @@ class CookieOrBearerTokenValidator extends BearerTokenValidator
     private function isAuthorizedRequest(ServerRequestInterface $request): bool
     {
         return $request->hasHeader('authorization')
-            && \array_key_exists(self::OAUTH_COOKIE_NAME, $request->getCookieParams());
+            || \array_key_exists(self::OAUTH_COOKIE_NAME, $request->getCookieParams());
     }
 
     private function retrieveJwtFromRequest(ServerRequestInterface $request): string

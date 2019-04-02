@@ -65,7 +65,7 @@ class UserController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function createUsersAction(Request $request): JsonResponse
+    public function createUser(Request $request): JsonResponse
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -114,7 +114,7 @@ class UserController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function readUserAction(int $userId): JsonResponse
+    public function readUser(int $userId): JsonResponse
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository(User::class)
@@ -182,7 +182,7 @@ class UserController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function updateUsersAction(Request $request, int $userId): JsonResponse
+    public function updateUser(Request $request, int $userId): JsonResponse
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository(User::class)
@@ -238,7 +238,7 @@ class UserController extends AbstractController
      *
      * @return Response
      */
-    public function deleteUserAction(int $userId): Response
+    public function deleteUser(int $userId): Response
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository(User::class)

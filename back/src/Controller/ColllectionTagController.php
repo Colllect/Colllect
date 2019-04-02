@@ -66,7 +66,7 @@ class ColllectionTagController extends AbstractController
      * @throws \App\Exception\FilesystemCannotWriteException
      * @throws \App\Exception\TagAlreadyExistsException
      */
-    public function createColllectionTagAction(Request $request, string $encodedColllectionPath): JsonResponse
+    public function createColllectionTag(Request $request, string $encodedColllectionPath): JsonResponse
     {
         $response = $this->colllectionTagService->create($encodedColllectionPath, $request);
 
@@ -102,7 +102,7 @@ class ColllectionTagController extends AbstractController
      *
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function listColllectionTagsAction(string $encodedColllectionPath): JsonResponse
+    public function listColllectionTags(string $encodedColllectionPath): JsonResponse
     {
         $elements = $this->colllectionTagService->list($encodedColllectionPath);
 
@@ -144,7 +144,7 @@ class ColllectionTagController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function getColllectionTagAction(string $encodedColllectionPath, string $encodedTagName): JsonResponse
+    public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
         $tag = $this->colllectionTagService->get($encodedColllectionPath, $encodedTagName);
 
@@ -200,7 +200,7 @@ class ColllectionTagController extends AbstractController
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function updateColllectionTagAction(Request $request, string $encodedColllectionPath, string $encodedTagName): JsonResponse
+    public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
         $response = $this->colllectionTagService->update($encodedColllectionPath, $encodedTagName, $request);
 
@@ -246,7 +246,7 @@ class ColllectionTagController extends AbstractController
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function deleteColllectionAction(string $encodedColllectionPath, string $encodedTagName): Response
+    public function deleteColllection(string $encodedColllectionPath, string $encodedTagName): Response
     {
         $this->colllectionTagService->delete($encodedColllectionPath, $encodedTagName);
 

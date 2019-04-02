@@ -13,26 +13,17 @@ use JMS\Serializer\Annotation as Serializer;
 class Colllection
 {
     /**
-     * @var string
-     *
      * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $name;
 
     /**
-     * @var string
-     *
      * @Serializer\Type("string")
      * @Serializer\Expose()
      */
     private $encodedColllectionPath;
 
-    /**
-     * Colllection constructor.
-     *
-     * @param array $colllectionMetadata
-     */
     public function __construct(array $colllectionMetadata = [])
     {
         if (\count($colllectionMetadata) > 0) {
@@ -41,7 +32,7 @@ class Colllection
         }
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -53,7 +44,7 @@ class Colllection
         return $this;
     }
 
-    public function getEncodedColllectionPath(): string
+    public function getEncodedColllectionPath(): ?string
     {
         return $this->encodedColllectionPath;
     }

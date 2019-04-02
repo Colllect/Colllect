@@ -52,10 +52,12 @@ class Kernel extends BaseKernel implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('app.filesystem_adapter_manager')) {
-            return;
-        }
+        $this->loadFilesystemAdapters($container);
+        $this->overrideOAuthResourceServerAuthorizationValidator($container);
+    }
 
+    private function loadFilesystemAdapters(ContainerBuilder $container): void
+    {
         $definition = $container->findDefinition('app.filesystem_adapter_manager');
         $taggedServices = $container->findTaggedServiceIds('app.filesystem_adapter');
 
@@ -64,5 +66,12 @@ class Kernel extends BaseKernel implements CompilerPassInterface
                 $definition->addMethodCall('addFilesystemAdapter', [new Reference($id), $attributes['alias']]);
             }
         }
+    }
+
+    private function overrideOAuthResourceServerAuthorizationValidator(ContainerBuilder $container): void
+    {
+        $resourceServerDefinition = $container->findDefinition('league.oauth2.server.resource_server');
+        $cookieOrBearerTokenValidatorDefinition = $container->findDefinition('App\Security\CookieOrBearerTokenValidator');
+        $resourceServerDefinition->setArgument('$authorizationValidator', $cookieOrBearerTokenValidatorDefinition);
     }
 }

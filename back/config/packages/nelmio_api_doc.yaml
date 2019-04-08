@@ -9,7 +9,6 @@ nelmio_api_doc:
                 type: oauth2
                 flow: password
                 tokenUrl: '/api/oauth/token'
-                name: Authorization
                 scopes:
                     superadmin: 'Grants all access'
         security:
@@ -27,7 +26,21 @@ nelmio_api_doc:
                         description: 'JWT'
                     refresh_token:
                         type: string
+        produces:
+            - application/json
+
+    models:
+        names:
+            - alias: User
+              type: App\Entity\User
+              groups: ['public']
+            - alias: CurrentUser
+              type: App\Entity\User
+              groups: ['public', 'current']
 
     areas:
-        path_patterns:
-            - ^/api(?!/doc(.json)?$) # Accepts routes under /api except /api/doc
+        default: # Public
+            with_annotation: true
+        admin:
+            path_patterns:
+              - ^/api(?!/doc(/.*)?(.json)?$) # Accepts routes under /api except /api/doc

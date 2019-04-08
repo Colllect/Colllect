@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\FilesystemCannotWriteException;
+use App\Exception\TagAlreadyExistsException;
 use App\Model\Tag;
 use App\Service\ColllectionTagService;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +36,9 @@ class ColllectionTagController extends AbstractController
      * @Route("/", name="create", methods={"POST"})
      *
      * @SWG\Tag(name="Colllection Tags")
+     * @ApiDoc\Operation(
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="encodedColllectionPath",
@@ -63,8 +70,8 @@ class ColllectionTagController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
      */
     public function createColllectionTag(Request $request, string $encodedColllectionPath): JsonResponse
     {
@@ -91,8 +98,12 @@ class ColllectionTagController extends AbstractController
      *     response=200,
      *     description="Returned when colllection tags are listed",
      *     @SWG\Schema(
-     *         type="array",
-     *         @SWG\Items(ref=@ApiDoc\Model(type=Tag::class))
+     *         type="object",
+     *         @SWG\Property(
+     *             property="itemListElement",
+     *             type="array",
+     *             @SWG\Items(ref=@ApiDoc\Model(type=Tag::class))
+     *         )
      *     )
      * )
      *
@@ -100,13 +111,17 @@ class ColllectionTagController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function listColllectionTags(string $encodedColllectionPath): JsonResponse
     {
-        $elements = $this->colllectionTagService->list($encodedColllectionPath);
+        $tags = $this->colllectionTagService->list($encodedColllectionPath);
 
-        return $this->json($elements);
+        return $this->json(
+            [
+                'itemListElement' => $tags,
+            ]
+        );
     }
 
     /**
@@ -157,6 +172,9 @@ class ColllectionTagController extends AbstractController
      * @Route("/{encodedTagName}", name="update", methods={"PUT"})
      *
      * @SWG\Tag(name="Colllection Tags")
+     * @ApiDoc\Operation(
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="encodedColllectionPath",
@@ -195,10 +213,10 @@ class ColllectionTagController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
@@ -241,10 +259,10 @@ class ColllectionTagController extends AbstractController
      *
      * @return Response
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function deleteColllection(string $encodedColllectionPath, string $encodedTagName): Response
     {

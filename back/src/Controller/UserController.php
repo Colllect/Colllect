@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,20 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    private $serializer;
-
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
     /**
      * Create a new user account.
+     *
+     * TODO: remove this from API, move register into RegisterController
      *
      * @Route("", name="create", methods={"POST"})
      *
      * @SWG\Tag(name="Users")
-     * @ApiDoc\Operation(security={})
+     * @ApiDoc\Operation(
+     *     security={},
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="email",
@@ -53,7 +50,7 @@ class UserController extends AbstractController
      * @SWG\Response(
      *     response=201,
      *     description="Returned when user was created",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=User::class))
+     *     @SWG\Schema(ref="#/definitions/User")
      * )
      *
      * @SWG\Response(
@@ -85,7 +82,9 @@ class UserController extends AbstractController
     /**
      * Get an user.
      *
-     * @Route("/{userId}", name="read", methods={"GET"})
+     * @Route("/{userId}", name="read", methods={"GET"}, requirements={"userId"="\d+"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Users")
      *
@@ -99,8 +98,9 @@ class UserController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when user was found",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=User::class))
+     *     @SWG\Schema(ref="#/definitions/User")
      * )
+     *
      * @SWG\Response(
      *     response=403,
      *     description="Returned when user is not authorized to get an user"
@@ -125,7 +125,40 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
-        return $this->json($user);
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => ['public']]);
+    }
+
+    /**
+     * Get current user.
+     *
+     * @Route("/current", name="current", methods={"GET"})
+     *
+     * @ApiDoc\Areas({"default"})
+     *
+     * @SWG\Tag(name="Users")
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returned when user was found",
+     *     @SWG\Schema(ref="#/definitions/CurrentUser")
+     * )
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Returned when user is not authorized to get an user"
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="Returned when user was not found"
+     * )
+     *
+     * @return JsonResponse
+     */
+    public function currentUser(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        return $this->json($user, Response::HTTP_OK, [], ['groups' => ['public', 'private']]);
     }
 
     /**
@@ -134,8 +167,10 @@ class UserController extends AbstractController
      * @Route("/{userId}", name="update", methods={"PUT"})
      *
      * @SWG\Tag(name="Users")
-     * @ApiDoc\Operation(security={"OAuth2Password": {"superadmin"}})
-     * TODO: fix security w/ Swagger UI
+     * @ApiDoc\Operation(
+     *     security={{"OAuth2Password": {"superadmin"}}},
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="userId",
@@ -166,7 +201,7 @@ class UserController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when user was updated",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=User::class))
+     *     @SWG\Schema(ref="#/definitions/CurrentUser")
      * )
      * @SWG\Response(
      *     response=400,

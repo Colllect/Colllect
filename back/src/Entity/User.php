@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation as Serializer;
+use Swagger\Annotations as SWG;
 
 /**
  * @ORM\Table(name="colllect_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("email", message="already_used")
- * @Serializer\ExclusionPolicy("all")
  */
 class User implements UserInterface
 {
@@ -23,8 +25,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Serializer\Type("int")
-     * @Serializer\Expose()
+     * @SWG\Property(type="integer", readOnly=true)
      */
     private $id;
 
@@ -33,10 +34,9 @@ class User implements UserInterface
      *
      * @Assert\Email(message="not_a_valid_email")
      * @Assert\NotBlank(message="cannot_be_blank")
-     * @Assert\Length(max="255", maxMessage="too_long")
+     * @Assert\Length(max=255, maxMessage="too_long")
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string", format="email")
      */
     private $email;
 
@@ -44,19 +44,19 @@ class User implements UserInterface
      * @ORM\Column(name="nickname", type="string", length=255)
      *
      * @Assert\NotBlank(message="cannot_be_blank")
-     * @Assert\Length(max="255", maxMessage="too_long")
+     * @Assert\Length(max=255, maxMessage="too_long")
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $nickname;
 
     /**
      * @ORM\Column(name="roles", type="json_array")
      *
-     * @Serializer\Type("array<string>")
-     * @Serializer\Accessor(getter="getRoles", setter="setRoles")
-     * @Serializer\Expose()
+     * @SWG\Property(
+     *     type="array",
+     *     @SWG\Items(type="string")
+     * )
      */
     private $roles = [];
 
@@ -74,19 +74,27 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @SWG\Property(type="string", format="date-time")
      */
     private $createdAt;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
+    /**
+     * @Serializer\Groups({"public"})
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @Serializer\Groups({"current"})
+     */
     public function getEmail(): ?string
     {
         return $this->email;
@@ -107,6 +115,9 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
+    /**
+     * @Serializer\Groups({"current"})
+     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -148,6 +159,9 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @Serializer\Groups({"public"})
+     */
     public function getNickname(): ?string
     {
         return $this->nickname;
@@ -160,7 +174,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return null; // Not needed since we are using Argon2id algorithm
     }
@@ -170,12 +184,15 @@ class User implements UserInterface
         $this->plainPassword = null;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * @Serializer\Groups({"public"})
+     */
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

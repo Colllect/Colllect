@@ -31,7 +31,10 @@ class OAuthServerController
      * @Route("/token", name="token", methods={"POST"})
      *
      * @SWG\Tag(name="OAuth")
-     * @ApiDoc\Operation(security={})
+     * @ApiDoc\Operation(
+     *     security={},
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="grant_type",

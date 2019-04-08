@@ -5,26 +5,21 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Util\Base64;
-use JMS\Serializer\Annotation as Serializer;
+use Swagger\Annotations as SWG;
 
-/**
- * @Serializer\ExclusionPolicy("all")
- */
 class Tag
 {
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $name;
 
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $encodedName;
 

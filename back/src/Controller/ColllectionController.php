@@ -39,8 +39,12 @@ class ColllectionController extends AbstractController
      *     response=200,
      *     description="Returned when Colllections are listed",
      *     @SWG\Schema(
-     *         type="array",
-     *         @SWG\Items(ref=@ApiDoc\Model(type=Colllection::class))
+     *         type="object",
+     *         @SWG\Property(
+     *             property="itemListElement",
+     *             type="array",
+     *             @SWG\Items(ref=@ApiDoc\Model(type=Colllection::class))
+     *         )
      *     )
      * )
      *
@@ -50,7 +54,11 @@ class ColllectionController extends AbstractController
     {
         $colllections = $this->colllectionService->list();
 
-        return $this->json($colllections);
+        return $this->json(
+            [
+                'itemListElement' => $colllections,
+            ]
+        );
     }
 
     /**
@@ -59,6 +67,9 @@ class ColllectionController extends AbstractController
      * @Route("/", name="create", methods={"POST"})
      *
      * @SWG\Tag(name="Colllections")
+     * @ApiDoc\Operation(
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="name",
@@ -121,7 +132,7 @@ class ColllectionController extends AbstractController
      *
      * @return Colllection
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function getColllection(string $encodedColllectionPath)
     {
@@ -136,6 +147,9 @@ class ColllectionController extends AbstractController
      * @Route("/{encodedColllectionPath}", name="update", methods={"PUT"})
      *
      * @SWG\Tag(name="Colllections")
+     * @ApiDoc\Operation(
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="name",

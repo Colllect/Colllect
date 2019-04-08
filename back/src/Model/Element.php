@@ -7,11 +7,8 @@ namespace App\Model;
 use App\Exception\NotSupportedElementTypeException;
 use App\Util\Base64;
 use DateTime;
-use JMS\Serializer\Annotation as Serializer;
+use Swagger\Annotations as SWG;
 
-/**
- * @Serializer\ExclusionPolicy("all")
- */
 abstract class Element
 {
     const IMAGE_TYPE = 'image';
@@ -29,73 +26,66 @@ abstract class Element
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $type;
 
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $name;
 
     /**
      * @var array
      *
-     * @Serializer\Type("array<string>")
-     * @Serializer\Expose()
+     * @SWG\Property(
+     *     type="array",
+     *     @SWG\Items(type="string")
+     * )
      */
     private $tags;
 
     /**
      * @var DateTime
      *
-     * @Serializer\Type("DateTime")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string", format="date-time")
      */
     private $updated;
 
     /**
      * @var int
      *
-     * @Serializer\Type("integer")
-     * @Serializer\Expose()
+     * @SWG\Property(type="integer")
      */
     private $size;
 
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $extension;
 
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $encodedColllectionPath;
 
     /**
      * @var string
      *
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $encodedElementBasename;
 
     /**
      * @var string
      *
-     * @Serializer\Accessor(getter="getProxyUrl")
-     * @Serializer\Type("string")
-     * @Serializer\Expose()
+     * @SWG\Property(type="string")
      */
     private $proxyUrl;
 

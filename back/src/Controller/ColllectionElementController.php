@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\FilesystemCannotRenameException;
+use App\Exception\FilesystemCannotWriteException;
+use App\Exception\NotSupportedElementTypeException;
 use App\Model\Element;
 use App\Service\ColllectionElementService;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +44,9 @@ class ColllectionElementController extends AbstractController
      * @Route("/", name="create", methods={"POST"})
      *
      * @SWG\Tag(name="Colllection Elements")
+     * @ApiDoc\Operation(
+     *     consumes={"multipart/form-data"}
+     * )
      *
      * @SWG\Parameter(
      *     name="encodedColllectionPath",
@@ -100,10 +108,10 @@ class ColllectionElementController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\NotSupportedElementTypeException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws NotSupportedElementTypeException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
     {
@@ -130,8 +138,12 @@ class ColllectionElementController extends AbstractController
      *     response=200,
      *     description="Returned when colllection files are listed",
      *     @SWG\Schema(
-     *         type="array",
-     *         @SWG\Items(ref=@ApiDoc\Model(type=Element::class))
+     *         type="object",
+     *         @SWG\Property(
+     *             property="itemListElement",
+     *             type="array",
+     *             @SWG\Items(ref=@ApiDoc\Model(type=Element::class))
+     *         )
      *     )
      * )
      *
@@ -143,7 +155,11 @@ class ColllectionElementController extends AbstractController
     {
         $elements = $this->colllectionElementService->list($encodedColllectionPath);
 
-        return $this->json($elements);
+        return $this->json(
+            [
+                'itemListElement' => $elements,
+            ]
+        );
     }
 
     /**
@@ -181,8 +197,8 @@ class ColllectionElementController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \App\Exception\NotSupportedElementTypeException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws NotSupportedElementTypeException
+     * @throws FileNotFoundException
      */
     public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
@@ -197,6 +213,9 @@ class ColllectionElementController extends AbstractController
      * @Route("/{encodedElementBasename}", name="update", methods={"PUT"})
      *
      * @SWG\Tag(name="Colllection Elements")
+     * @ApiDoc\Operation(
+     *     consumes={"application/x-www-form-urlencoded"}
+     * )
      *
      * @SWG\Parameter(
      *     name="encodedColllectionPath",
@@ -244,11 +263,11 @@ class ColllectionElementController extends AbstractController
      *
      * @return JsonResponse
      *
-     * @throws \App\Exception\FilesystemCannotRenameException
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\NotSupportedElementTypeException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotRenameException
+     * @throws FilesystemCannotWriteException
+     * @throws NotSupportedElementTypeException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
@@ -289,9 +308,9 @@ class ColllectionElementController extends AbstractController
      * @param string $encodedColllectionPath
      * @param string $encodedElementBasename
      *
-     * @return JsonResponse
+     * @return Response
      *
-     * @throws \App\Exception\NotSupportedElementTypeException
+     * @throws NotSupportedElementTypeException
      */
     public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): Response
     {

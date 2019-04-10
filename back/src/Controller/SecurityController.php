@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Security\CookieOrBearerTokenValidator;
 use App\Security\LoginFormAuthenticator;
+use Exception;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -33,7 +34,7 @@ class SecurityController extends AbstractController
      *
      * @return Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function login(Request $request): Response
     {

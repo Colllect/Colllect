@@ -36,8 +36,10 @@ abstract class AbstractCachedFilesystemAdapter
      *
      * @return EnhancedFlysystemAdapterInterface
      */
-    public function cacheAdapter(EnhancedFlysystemAdapterInterface $adapter, User $user): EnhancedFlysystemAdapterInterface
-    {
+    public function cacheAdapter(
+        EnhancedFlysystemAdapterInterface $adapter,
+        User $user
+    ): EnhancedFlysystemAdapterInterface {
         $adapter = new EnhancedCachedAdapter(
             $adapter,
             new EnhancedCachedStorageAdapter(

@@ -11,6 +11,7 @@ use App\Form\ColllectionType;
 use App\Model\Colllection;
 use App\Util\ColllectionPath;
 use App\Util\Metadata;
+use Exception;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -44,7 +45,7 @@ class ColllectionService
      * @param FormFactoryInterface     $formFactory
      * @param Stopwatch|null           $stopwatch
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         Security $security,
@@ -55,7 +56,7 @@ class ColllectionService
         $user = $security->getUser();
 
         if (!$user instanceof User) {
-            throw new \Exception('$user must be instance of ' . User::class);
+            throw new Exception('$user must be instance of ' . User::class);
         }
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
@@ -76,7 +77,7 @@ class ColllectionService
 
         try {
             $colllectionsMetadata = $this->filesystem->listContents(ColllectionPath::COLLLECTIONS_FOLDER);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             if ($this->stopwatch) {

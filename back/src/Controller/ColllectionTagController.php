@@ -218,8 +218,11 @@ class ColllectionTagController extends AbstractController
      * @throws FileExistsException
      * @throws FileNotFoundException
      */
-    public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName): JsonResponse
-    {
+    public function updateColllectionTag(
+        Request $request,
+        string $encodedColllectionPath,
+        string $encodedTagName
+    ): JsonResponse {
         $response = $this->colllectionTagService->update($encodedColllectionPath, $encodedTagName, $request);
 
         return $this->json($response);

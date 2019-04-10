@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exception\FilesystemCannotWriteException;
+use App\Exception\TagAlreadyExistsException;
 use App\Form\TagType;
 use App\Model\Element;
 use App\Model\ElementFile;
 use App\Model\Tag;
 use App\Util\Base64;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +52,7 @@ class ColllectionTagService
      *
      * @return Tag[]
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function list(string $encodedColllectionPath): array
     {
@@ -63,8 +67,8 @@ class ColllectionTagService
      *
      * @return Tag|FormInterface
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
@@ -112,10 +116,10 @@ class ColllectionTagService
      *
      * @return Tag|FormInterface
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function update(string $encodedColllectionPath, string $encodedTagName, Request $request)
     {
@@ -147,7 +151,8 @@ class ColllectionTagService
             function (ElementFile $elementFile) use ($oldTag, $tag): void {
                 $elementFile
                     ->removeTag($oldTag->getName())
-                    ->addTag($tag->getName());
+                    ->addTag($tag->getName())
+                ;
             }
         );
 
@@ -164,10 +169,10 @@ class ColllectionTagService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName         Base 64 encoded tag name
      *
-     * @throws \App\Exception\FilesystemCannotWriteException
-     * @throws \App\Exception\TagAlreadyExistsException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function delete(string $encodedColllectionPath, string $encodedTagName): void
     {

@@ -17,6 +17,9 @@ use App\Util\Base64;
 use App\Util\ColllectionPath;
 use App\Util\Metadata;
 use Closure;
+use DateTime;
+use Exception;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -59,7 +62,7 @@ class ColllectionElementService
      * @param ElementFileHandler       $elementFileHandler
      * @param Stopwatch                $stopwatch
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         Security $security,
@@ -71,7 +74,7 @@ class ColllectionElementService
         $user = $security->getUser();
 
         if (!$user instanceof User) {
-            throw new \Exception('$user must be instance of ' . User::class);
+            throw new Exception('$user must be instance of ' . User::class);
         }
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
@@ -96,7 +99,7 @@ class ColllectionElementService
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         try {
             $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $colllectionPath);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             if ($this->stopwatch) {
@@ -107,9 +110,12 @@ class ColllectionElementService
         }
 
         // Keep only files
-        $filesMetadata = array_filter($filesMetadata, function ($fileMetadata) {
-            return $fileMetadata['type'] === 'file';
-        });
+        $filesMetadata = array_filter(
+            $filesMetadata,
+            function ($fileMetadata) {
+                return $fileMetadata['type'] === 'file';
+            }
+        );
 
         if (\count($filesMetadata) > 0) {
             // Sort files by last updated date
@@ -157,8 +163,8 @@ class ColllectionElementService
      * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
      * @throws NotSupportedElementTypeException
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \Exception                            TODO: make a typed exception
+     * @throws FileExistsException
+     * @throws Exception                        TODO: make a typed exception
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
@@ -208,7 +214,7 @@ class ColllectionElementService
      * @throws FilesystemCannotRenameException
      * @throws FilesystemCannotWriteException
      * @throws NotSupportedElementTypeException
-     * @throws \League\Flysystem\FileExistsException
+     * @throws FileExistsException
      */
     public function update(string $encodedElementBasename, string $encodedColllectionPath, Request $request)
     {
@@ -348,7 +354,7 @@ class ColllectionElementService
             }
 
             if ($requestHeaders->has('if-modified-since')) {
-                $modified = (new \DateTime($requestHeaders->get('if-modified-since')))->getTimestamp();
+                $modified = (new DateTime($requestHeaders->get('if-modified-since')))->getTimestamp();
                 if ($meta['timestamp'] <= $modified) {
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
@@ -368,7 +374,7 @@ class ColllectionElementService
             $response = new Response();
             $response->setContent($content);
             $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
-            $response->setLastModified((new \DateTime())->setTimestamp($standardizedMeta['timestamp']));
+            $response->setLastModified((new DateTime())->setTimestamp($standardizedMeta['timestamp']));
 
             if ($this->stopwatch) {
                 $this->stopwatch->stop('colllection_element_get_content');
@@ -418,7 +424,7 @@ class ColllectionElementService
      * @param Closure $process                The process applied to element file
      *
      * @throws FileNotFoundException
-     * @throws \League\Flysystem\FileExistsException
+     * @throws FileExistsException
      */
     public function batchRename(string $encodedColllectionPath, Closure $matches, Closure $process): void
     {

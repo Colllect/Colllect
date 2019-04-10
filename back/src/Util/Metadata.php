@@ -30,7 +30,11 @@ class Metadata
 
         // Add mimetype to files (ignore that for dirs)
         if ($meta['type'] !== 'dir' && !isset($meta['mimetype'])) {
-            if (isset($meta['extension']) && \in_array('image/' . $meta['extension'], ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE, true)) {
+            if (isset($meta['extension']) && \in_array(
+                    'image/' . $meta['extension'],
+                    ElementFileHandler::ALLOWED_IMAGE_CONTENT_TYPE,
+                    true
+                )) {
                 $meta['mimetype'] = 'image/' . $meta['extension'];
             } else {
                 $meta['mimetype'] = 'text/html; charset=UTF-8';

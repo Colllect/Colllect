@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Exception\NotSupportedElementTypeException;
 use App\Util\Base64;
+use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -142,7 +144,7 @@ class ElementFile
      *
      * @return ElementFile $this
      *
-     * @throws \App\Exception\NotSupportedElementTypeException
+     * @throws NotSupportedElementTypeException
      */
     public function setBasename(string $basename): self
     {
@@ -169,9 +171,15 @@ class ElementFile
             return null;
         }
 
-        $concatTags = implode('', array_map(function ($tag) {
-            return ' #' . str_replace(' ', '_', $tag);
-        }, $this->tags));
+        $concatTags = implode(
+            '',
+            array_map(
+                function ($tag) {
+                    return ' #' . str_replace(' ', '_', $tag);
+                },
+                $this->tags
+            )
+        );
 
         return $this->name . $concatTags . '.' . $this->extension;
     }
@@ -239,9 +247,12 @@ class ElementFile
      */
     public function removeTag(string $tag): self
     {
-        $this->tags = array_filter($this->tags, function (string $existingTagName) use ($tag) {
-            return $tag !== $existingTagName;
-        });
+        $this->tags = array_filter(
+            $this->tags,
+            function (string $existingTagName) use ($tag) {
+                return $tag !== $existingTagName;
+            }
+        );
 
         return $this;
     }
@@ -279,12 +290,12 @@ class ElementFile
      *
      * @return ElementFile $this
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setType(string $type)
     {
         if (!\in_array($type, array_keys(Element::EXTENSIONS_BY_TYPE), true)) {
-            throw new \Exception('error.invalid_type');
+            throw new Exception('error.invalid_type');
         }
 
         $this->type = $type;

@@ -9,6 +9,7 @@ return PhpCsFixer\Config::create()
         'array_syntax' => ['syntax' => 'short'],
         'compact_nullable_typehint' => true,
         'concat_space' => ['spacing' => 'one'],
+        'fully_qualified_strict_types' => true,
         'strict_comparison' => true,
         'strict_param' => true,
         'yoda_style' => [

@@ -7,6 +7,9 @@ namespace App\Security;
 use App\Entity\User;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,9 +106,9 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
      *
      * @return Response
      *
-     * @throws \League\OAuth2\Server\Exception\OAuthServerException
-     * @throws \League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException
-     * @throws \Exception
+     * @throws OAuthServerException
+     * @throws UniqueTokenIdentifierConstraintViolationException
+     * @throws Exception
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): Response
     {

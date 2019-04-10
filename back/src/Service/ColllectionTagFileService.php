@@ -11,6 +11,8 @@ use App\Exception\TagAlreadyExistsException;
 use App\FilesystemAdapter\FilesystemAdapterManager;
 use App\Model\Tag;
 use App\Util\ColllectionPath;
+use Exception;
+use League\Flysystem\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Security;
 
@@ -34,14 +36,14 @@ class ColllectionTagFileService
      * @param Security                 $security
      * @param FilesystemAdapterManager $flysystemAdapters
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(Security $security, FilesystemAdapterManager $flysystemAdapters)
     {
         $user = $security->getUser();
 
         if (!$user instanceof User) {
-            throw new \Exception('$user must be instance of ' . User::class);
+            throw new Exception('$user must be instance of ' . User::class);
         }
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
@@ -54,7 +56,7 @@ class ColllectionTagFileService
      *
      * @return Tag[]
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function getAll(string $encodedColllectionPath): array
     {
@@ -75,7 +77,7 @@ class ColllectionTagFileService
 
         try {
             $flatTags = \GuzzleHttp\json_decode($tagsFileContent, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
         }
 
@@ -101,9 +103,12 @@ class ColllectionTagFileService
     {
         $tags = $this->getAll($encodedColllectionPath);
 
-        $filteredTags = array_filter($tags, function (Tag $tag) use ($tagName) {
-            return $tag->getName() === $tagName;
-        });
+        $filteredTags = array_filter(
+            $tags,
+            function (Tag $tag) use ($tagName) {
+                return $tag->getName() === $tagName;
+            }
+        );
 
         if (\count($filteredTags) === 0) {
             throw new NotFoundHttpException('error.tag_not_found');
@@ -162,11 +167,14 @@ class ColllectionTagFileService
     public function save(string $encodedColllectionPath): void
     {
         // Remap tag objects to flat array
-        $flatTags = array_map(function (Tag $tag) {
-            return [
-                'name' => $tag->getName(),
-            ];
-        }, $this->getall($encodedColllectionPath));
+        $flatTags = array_map(
+            function (Tag $tag) {
+                return [
+                    'name' => $tag->getName(),
+                ];
+            },
+            $this->getall($encodedColllectionPath)
+        );
         $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
 
         $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
@@ -189,9 +197,12 @@ class ColllectionTagFileService
     {
         $tags = $this->getAll($encodedColllectionPath);
 
-        $existingTagNames = array_map(function (Tag $tag) {
-            return $tag->getName();
-        }, $tags);
+        $existingTagNames = array_map(
+            function (Tag $tag) {
+                return $tag->getName();
+            },
+            $tags
+        );
 
         $hasTag = \in_array($tag->getName(), $existingTagNames, true);
 

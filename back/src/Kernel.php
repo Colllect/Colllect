@@ -71,7 +71,9 @@ class Kernel extends BaseKernel implements CompilerPassInterface
     private function overrideOAuthResourceServerAuthorizationValidator(ContainerBuilder $container): void
     {
         $resourceServerDefinition = $container->findDefinition('league.oauth2.server.resource_server');
-        $cookieOrBearerTokenValidatorDefinition = $container->findDefinition('App\Security\CookieOrBearerTokenValidator');
+        $cookieOrBearerTokenValidatorDefinition = $container->findDefinition(
+            'App\Security\CookieOrBearerTokenValidator'
+        );
         $resourceServerDefinition->setArgument('$authorizationValidator', $cookieOrBearerTokenValidatorDefinition);
     }
 }

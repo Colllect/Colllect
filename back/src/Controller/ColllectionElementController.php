@@ -269,8 +269,11 @@ class ColllectionElementController extends AbstractController
      * @throws FileExistsException
      * @throws FileNotFoundException
      */
-    public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
-    {
+    public function updateColllectionElement(
+        Request $request,
+        string $encodedColllectionPath,
+        string $encodedElementBasename
+    ): JsonResponse {
         $element = $this->colllectionElementService->update($encodedElementBasename, $encodedColllectionPath, $request);
 
         return $this->json($element);

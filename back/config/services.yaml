@@ -56,19 +56,19 @@ services:
 
     # Filesystems
     app.filesystem_adapter_manager:
-        class: App\FilesystemAdapter\FilesystemAdapterManager
+        class: App\Service\FilesystemAdapter\FilesystemAdapterManager
         public: true
         arguments:
             $defaultFilesystemAdapterName: '%env(FS_DEFAULT_ADAPTER)%'
 
-    App\FilesystemAdapter\Local:
+    App\Service\FilesystemAdapter\Local:
         public: false
         arguments:
             $rootPath: '%env(resolve:FS_LOCAL_ROOT_PATH)%'
         tags:
             - { name: app.filesystem_adapter, alias: local }
 
-    App\FilesystemAdapter\AwsS3:
+    App\Service\FilesystemAdapter\AwsS3:
         public: false
         arguments:
             $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
@@ -80,7 +80,7 @@ services:
         tags:
             - { name: app.filesystem_adapter, alias: aws_s3 }
 
-    App\FilesystemAdapter\Dropbox:
+    App\Service\FilesystemAdapter\Dropbox:
         public: false
         arguments:
             $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
@@ -88,7 +88,7 @@ services:
         tags:
             - { name: app.filesystem_adapter, alias: dropbox }
 
-    App\FilesystemAdapter\Ftp:
+    App\Service\FilesystemAdapter\Ftp:
         public: false
         arguments:
             $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
@@ -101,7 +101,7 @@ services:
         tags:
             - { name: app.filesystem_adapter, alias: ftp }
 
-    App\FilesystemAdapter\Sftp:
+    App\Service\FilesystemAdapter\Sftp:
         public: false
         arguments:
             $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
@@ -115,7 +115,7 @@ services:
             - { name: app.filesystem_adapter, alias: sftp }
 
     # aliases
-    App\FilesystemAdapter\FilesystemAdapterManager: '@app.filesystem_adapter_manager'
+    App\Service\FilesystemAdapter\FilesystemAdapterManager: '@app.filesystem_adapter_manager'
     League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@trikoder.oauth2.league.repository.access_token_repository'
     League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@trikoder.oauth2.league.repository.client_repository'
     Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface: '@sensio_framework_extra.psr7.http_message_factory'

@@ -31,6 +31,8 @@ nelmio_api_doc:
 
     models:
         names:
+            - alias: Element
+              type: App\Model\Element\AbstractElement
             - alias: User
               type: App\Entity\User
               groups: ['public']

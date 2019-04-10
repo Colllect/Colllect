@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 use App\Entity\User;
 use League\Flysystem\FilesystemInterface;
 

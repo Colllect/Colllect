@@ -124,11 +124,11 @@ class ColllectionController extends AbstractController
      *
      * @throws FileNotFoundException
      */
-    public function getColllection(string $encodedColllectionPath): Colllection
+    public function getColllection(string $encodedColllectionPath): JsonResponse
     {
         $colllection = $this->colllectionService->get($encodedColllectionPath);
 
-        return $colllection;
+        return $this->json($colllection);
     }
 
     /**

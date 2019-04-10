@@ -67,6 +67,7 @@ class ColllectionTagController extends AbstractController
      *
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
+     * @throws FileNotFoundException
      */
     public function createColllectionTag(Request $request, string $encodedColllectionPath): JsonResponse
     {
@@ -238,7 +239,6 @@ class ColllectionTagController extends AbstractController
      * )
      *
      * @throws FilesystemCannotWriteException
-     * @throws TagAlreadyExistsException
      * @throws FileExistsException
      * @throws FileNotFoundException
      */

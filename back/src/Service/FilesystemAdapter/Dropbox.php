@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
-use App\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
 use League\Flysystem\Config;
@@ -14,7 +14,7 @@ use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    const CACHE_NAME = 'dropbox';
+    private const CACHE_NAME = 'dropbox';
 
     /**
      * @var FilesystemInterface
@@ -37,6 +37,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
     public function getFilesystem(User $user): FilesystemInterface
     {
         if (!$this->filesystem) {
+            // TODO: Dropbox token storage
             $token = $user->getDropboxToken();
 
             if (!$token) {

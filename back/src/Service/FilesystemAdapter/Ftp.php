@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\EnhancedFlysystemAdapter\EnhancedSftpAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFtpAdapter;
 use App\Entity\User;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemInterface;
 
-class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
+class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    const CACHE_NAME = 'sftp';
+    private const CACHE_NAME = 'ftp';
 
     /**
      * @var string
@@ -77,7 +77,7 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     {
         if (!$this->filesystem) {
             $adapter = $this->cacheAdapter(
-                new EnhancedSftpAdapter(
+                new EnhancedFtpAdapter(
                     [
                         'host' => $this->host,
                         'port' => $this->port,

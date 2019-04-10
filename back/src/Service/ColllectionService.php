@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
-use App\FilesystemAdapter\FilesystemAdapterManager;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Form\ColllectionType;
 use App\Model\Colllection;
 use App\Util\ColllectionPath;
@@ -243,11 +243,7 @@ class ColllectionService
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
-        try {
-            $this->filesystem->deleteDir($colllectionPath);
-        } catch (FileNotFoundException $e) {
-            // If file does not exists or was already deleted, it's OK
-        }
+        $this->filesystem->deleteDir($colllectionPath);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_delete');

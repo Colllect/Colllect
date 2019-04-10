@@ -2,12 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Model\Element;
 
 use Swagger\Annotations as SWG;
 
-class Link extends Element
+class LinkElement extends AbstractElement
 {
+    private const TYPE_NAME = 'link';
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getElementType(): string
+    {
+        return self::TYPE_NAME;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSupportedExtensions(): array
+    {
+        return [
+            'link',
+        ];
+    }
+
     /**
      * @var string
      *

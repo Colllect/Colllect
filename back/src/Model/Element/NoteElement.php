@@ -2,12 +2,33 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Model\Element;
 
 use Swagger\Annotations as SWG;
 
-class Note extends Element
+class NoteElement extends AbstractElement
 {
+    private const TYPE_NAME = 'note';
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getElementType(): string
+    {
+        return self::TYPE_NAME;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSupportedExtensions(): array
+    {
+        return [
+            'txt',
+            'md',
+        ];
+    }
+
     /**
      * @var string
      *

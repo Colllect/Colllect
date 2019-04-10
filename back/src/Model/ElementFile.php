@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Exception\NotSupportedElementTypeException;
+use App\Model\Element\ElementInterface;
 use App\Util\Base64;
+use App\Util\ElementBasenameParser;
+use App\Util\ElementRegistry;
 use Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -59,7 +62,7 @@ class ElementFile
      */
     private $basename;
 
-    public function __construct(Element $element = null)
+    public function __construct(ElementInterface $element = null)
     {
         $this->tags = [];
 
@@ -74,7 +77,7 @@ class ElementFile
     /**
      * @return UploadedFile
      */
-    public function getFile()
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
@@ -125,7 +128,7 @@ class ElementFile
         // Remove illegal chars
         $basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
 
-        $elementMeta = Element::parseBasename($basename);
+        $elementMeta = ElementBasenameParser::parse($basename);
 
         $this->name = $elementMeta['name'];
         $this->tags = $elementMeta['tags'];
@@ -168,7 +171,7 @@ class ElementFile
     /**
      * @return string[]
      */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -232,7 +235,7 @@ class ElementFile
      */
     public function setType(string $type): self
     {
-        if (!\in_array($type, array_keys(Element::EXTENSIONS_BY_TYPE), true)) {
+        if (!ElementRegistry::isValidType($type)) {
             throw new Exception('error.invalid_type');
         }
 

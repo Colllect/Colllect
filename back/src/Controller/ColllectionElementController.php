@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Exception\FilesystemCannotRenameException;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\NotSupportedElementTypeException;
-use App\Model\Element;
+use App\Model\Element\AbstractElement;
 use App\Service\ColllectionElementService;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
@@ -96,7 +96,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=201,
      *     description="Returned when element was created in Colllection",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=Element::class))
+     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
      * )
      * @SWG\Response(
      *     response=400,
@@ -137,7 +137,7 @@ class ColllectionElementController extends AbstractController
      *         @SWG\Property(
      *             property="itemListElement",
      *             type="array",
-     *             @SWG\Items(ref=@ApiDoc\Model(type=Element::class))
+     *             @SWG\Items(ref=@ApiDoc\Model(type=AbstractElement::class))
      *         )
      *     )
      * )
@@ -176,7 +176,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllection file is found",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=Element::class))
+     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
      * )
      * @SWG\Response(
      *     response=404,
@@ -232,7 +232,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllection file is updated",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=Element::class))
+     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
      * )
      * @SWG\Response(
      *     response=400,

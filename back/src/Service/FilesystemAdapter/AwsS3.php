@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedAwsS3Adapter;
-use App\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedAwsS3Adapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Entity\User;
 use Aws\S3\S3Client;
 use League\Flysystem\Config;
@@ -13,7 +13,7 @@ use League\Flysystem\FilesystemInterface;
 
 class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    const CACHE_NAME = 'aws_s3';
+    private const CACHE_NAME = 'aws_s3';
 
     /**
      * @var string

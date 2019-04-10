@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EnhancedFlysystemAdapter;
+namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Cached\Storage\Adapter;
@@ -34,5 +34,7 @@ class EnhancedCachedStorageAdapter extends Adapter implements EnhancedCacheInter
                 $this->autosave();
             }
         }
+
+        return true;
     }
 }

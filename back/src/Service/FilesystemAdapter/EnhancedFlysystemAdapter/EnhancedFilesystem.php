@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EnhancedFlysystemAdapter;
+namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;

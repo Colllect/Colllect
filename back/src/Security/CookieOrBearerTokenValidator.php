@@ -100,7 +100,7 @@ class CookieOrBearerTokenValidator extends BearerTokenValidator
             return $jwt;
         }
 
-        $jwt = $request->getCookieParams()[self::OAUTH_COOKIE_NAME];
+        $jwt = (string) $request->getCookieParams()[self::OAUTH_COOKIE_NAME];
 
         return $jwt;
     }

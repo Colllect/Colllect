@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Exception\NotSupportedElementTypeException;
-use App\Model\Element;
+use App\Model\Element\ColorsElement;
+use App\Model\Element\ImageElement;
+use App\Model\Element\LinkElement;
+use App\Model\Element\NoteElement;
 use App\Model\ElementFile;
+use App\Util\ElementBasenameParser;
+use App\Util\ElementRegistry;
 use Exception;
 
 class ElementFileHandler
@@ -86,7 +91,7 @@ class ElementFileHandler
 
         // As we know the type, adjust some attributes
         switch ($elementFile->getType()) {
-            case Element::LINK_TYPE:
+            case LinkElement::getElementType():
                 $elementFile->setContent($elementFile->getUrl());
                 if (\strlen($mediaContent) > 0) {
                     $oneLinedPage = trim(preg_replace('/\s+/', ' ', $mediaContent));
@@ -99,9 +104,9 @@ class ElementFileHandler
                     }
                 }
                 break;
-            case Element::IMAGE_TYPE:
-            case Element::NOTE_TYPE:
-            case Element::COLORS_TYPE:
+            case ImageElement::getElementType():
+            case NoteElement::getElementType():
+            case ColorsElement::getElementType():
                 $elementFile->setContent($mediaContent);
                 break;
             default:
@@ -109,7 +114,7 @@ class ElementFileHandler
         }
 
         // Add default extension to typed file
-        $typeExtensions = Element::EXTENSIONS_BY_TYPE[$elementFile->getType()];
+        $typeExtensions = ElementRegistry::getExtensionsByType()[$elementFile->getType()];
         if (!$elementFile->getExtension() || !\in_array($elementFile->getExtension(), $typeExtensions, true)) {
             $elementFile->setExtension($typeExtensions[0]);
         }
@@ -142,7 +147,7 @@ class ElementFileHandler
                     if (!isset($elementFileExtension) || (isset($elementFileExtension) && $elementFileExtension !== $extension)) {
                         $elementFile->setExtension($extension);
                     }
-                    $elementFile->setType(Element::IMAGE_TYPE);
+                    $elementFile->setType(ImageElement::getElementType());
 
                     return $elementFile;
                 }
@@ -150,7 +155,7 @@ class ElementFileHandler
         }
 
         try {
-            $elementFile->setType(Element::getTypeByPath($elementFile->getCleanedBasename()));
+            $elementFile->setType(ElementBasenameParser::getTypeByPath($elementFile->getCleanedBasename()));
 
             return $elementFile;
         } catch (Exception $e) {
@@ -158,7 +163,7 @@ class ElementFileHandler
 
         // URL works but that is not an image and extension does not allow us to guess another type
         if ($elementFile->getUrl()) {
-            $elementFile->setType(Element::LINK_TYPE);
+            $elementFile->setType(LinkElement::getElementType());
 
             return $elementFile;
         }

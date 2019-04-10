@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedCachedAdapter;
-use App\EnhancedFlysystemAdapter\EnhancedCachedStorageAdapter;
-use App\EnhancedFlysystemAdapter\EnhancedFlysystemAdapterInterface;
-use App\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedCachedAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedCachedStorageAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFlysystemAdapterInterface;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 use App\Entity\User;
 
 abstract class AbstractCachedFilesystemAdapter

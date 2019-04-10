@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
 use App\Exception\FilesystemCannotRenameException;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\NotSupportedElementTypeException;
-use App\FilesystemAdapter\FilesystemAdapterManager;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Form\ElementType;
-use App\Model\Element;
+use App\Model\Element\AbstractElement;
+use App\Model\Element\ElementInterface;
 use App\Model\ElementFile;
 use App\Util\Base64;
 use App\Util\ColllectionPath;
+use App\Util\ElementBasenameParser;
 use App\Util\Metadata;
 use Closure;
 use DateTime;
@@ -82,7 +84,7 @@ class ColllectionElementService
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @return Element[]
+     * @return ElementInterface[]
      */
     public function list(string $encodedColllectionPath): array
     {
@@ -133,7 +135,7 @@ class ColllectionElementService
         foreach ($filesMetadata as $fileMetadata) {
             try {
                 $fileMetadata = Metadata::standardize($fileMetadata);
-                $elements[] = Element::get($fileMetadata, $encodedColllectionPath);
+                $elements[] = AbstractElement::get($fileMetadata, $encodedColllectionPath);
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
             }
@@ -152,7 +154,7 @@ class ColllectionElementService
      * @param string  $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      *
-     * @return Element|FormInterface
+     * @return ElementInterface|FormInterface
      *
      * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
@@ -186,7 +188,7 @@ class ColllectionElementService
         }
 
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata, $encodedColllectionPath);
+        $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_create');
@@ -202,7 +204,7 @@ class ColllectionElementService
      * @param string  $encodedColllectionPath Base 64 encoded colllection path
      * @param Request $request
      *
-     * @return Element|FormInterface
+     * @return ElementInterface|FormInterface
      *
      * @throws FileNotFoundException
      * @throws FilesystemCannotRenameException
@@ -220,7 +222,7 @@ class ColllectionElementService
 
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
         $elementMetadata = $this->filesystem->getMetadata($path);
-        $element = Element::get($elementMetadata, $encodedColllectionPath);
+        $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         $elementFile = new ElementFile($element);
         $form = $this->handleRequest($request, $elementFile);
@@ -259,7 +261,7 @@ class ColllectionElementService
 
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
-        $updatedElement = Element::get($elementMetadata, $encodedColllectionPath);
+        $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_update');
@@ -274,12 +276,12 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @return Element
+     * @return ElementInterface
      *
      * @throws FileNotFoundException
      * @throws NotSupportedElementTypeException
      */
-    public function get(string $encodedElementBasename, string $encodedColllectionPath): Element
+    public function get(string $encodedElementBasename, string $encodedColllectionPath): ElementInterface
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('colllection_element_get');
@@ -299,7 +301,7 @@ class ColllectionElementService
         }
 
         $standardizedMeta = Metadata::standardize($meta, $path);
-        $element = Element::get($standardizedMeta, $encodedColllectionPath);
+        $element = AbstractElement::get($standardizedMeta, $encodedColllectionPath);
 
         if ($element::shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -426,7 +428,7 @@ class ColllectionElementService
             $this->stopwatch->start('colllection_element_batch_rename');
         }
 
-        /** @var Element[] $elements */
+        /** @var ElementInterface[] $elements */
         $elements = $this->list($encodedColllectionPath);
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         foreach ($elements as $element) {
@@ -465,7 +467,7 @@ class ColllectionElementService
 
         // Check if file type is supported before call filesystem
         // Throw exception if element type is not supported
-        Element::getTypeByPath($basename);
+        ElementBasenameParser::getTypeByPath($basename);
 
         $path = $colllectionPath . '/' . $basename;
 

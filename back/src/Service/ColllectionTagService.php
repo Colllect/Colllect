@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\TagAlreadyExistsException;
 use App\Form\TagType;
-use App\Model\Element;
+use App\Model\Element\AbstractElement;
 use App\Model\ElementFile;
 use App\Model\Tag;
 use App\Util\Base64;
@@ -148,7 +148,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            function (Element $element) use ($oldTag) {
+            function (AbstractElement $element) use ($oldTag) {
                 return \in_array($oldTag->getName(), $element->getTags(), true);
             },
             function (ElementFile $elementFile) use ($oldTag, $tag): void {
@@ -186,7 +186,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            function (Element $element) use ($tag) {
+            function (AbstractElement $element) use ($tag) {
                 return \in_array($tag->getName(), $element->getTags(), true);
             },
             function (ElementFile $elementFile) use ($tag): void {

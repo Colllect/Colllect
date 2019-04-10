@@ -2,10 +2,33 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Model\Element;
 
-class Image extends Element
+class ImageElement extends AbstractElement
 {
+    private const TYPE_NAME = 'image';
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getElementType(): string
+    {
+        return self::TYPE_NAME;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSupportedExtensions(): array
+    {
+        return [
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */

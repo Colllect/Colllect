@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\TagAlreadyExistsException;
-use App\FilesystemAdapter\FilesystemAdapterManager;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Model\Tag;
 use App\Util\ColllectionPath;
 use Exception;
@@ -124,6 +124,7 @@ class ColllectionTagFileService
      * @param Tag    $tag
      *
      * @throws TagAlreadyExistsException
+     * @throws FileNotFoundException
      */
     public function add(string $encodedColllectionPath, Tag $tag): void
     {

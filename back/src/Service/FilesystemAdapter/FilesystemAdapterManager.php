@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\FilesystemAdapter;
+namespace App\Service\FilesystemAdapter;
 
-use App\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
 use League\Flysystem\Plugin\ListWith;
 

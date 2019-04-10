@@ -56,12 +56,6 @@ class ColllectionElementService
     /**
      * ColllectionElementService constructor.
      *
-     * @param Security                 $security
-     * @param FilesystemAdapterManager $flysystemAdapters
-     * @param FormFactoryInterface     $formFactory
-     * @param ElementFileHandler       $elementFileHandler
-     * @param Stopwatch                $stopwatch
-     *
      * @throws Exception
      */
     public function __construct(
@@ -480,11 +474,6 @@ class ColllectionElementService
 
     /**
      * Update element file with request data.
-     *
-     * @param Request     $request
-     * @param ElementFile $elementFile
-     *
-     * @return FormInterface
      */
     private function handleRequest(Request $request, ElementFile $elementFile): FormInterface
     {

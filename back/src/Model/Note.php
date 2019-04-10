@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use JMS\Serializer\Annotation as Serializer;
+use Swagger\Annotations as SWG;
 
 class Note extends Element
 {
     /**
      * @var string
-     * @Serializer\Expose()
+     *
+     * @SWG\Property(type="string")
      */
     private $content;
 
@@ -31,14 +32,10 @@ class Note extends Element
     }
 
     /**
-     * @param string $content
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setContent($content): Element
+    public function setContent($content): void
     {
         $this->content = $content;
-
-        return $this;
     }
 }

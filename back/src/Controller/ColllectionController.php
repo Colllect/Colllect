@@ -47,8 +47,6 @@ class ColllectionController extends AbstractController
      *         )
      *     )
      * )
-     *
-     * @return JsonResponse
      */
     public function listColllections(): JsonResponse
     {
@@ -88,10 +86,6 @@ class ColllectionController extends AbstractController
      *     response=400,
      *     description="Returned when form is invalid"
      * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function createColllection(Request $request): JsonResponse
     {
@@ -128,13 +122,9 @@ class ColllectionController extends AbstractController
      *     description="Returned when Colllection file is not found"
      * )
      *
-     * @param string $encodedColllectionPath
-     *
-     * @return Colllection
-     *
      * @throws FileNotFoundException
      */
-    public function getColllection(string $encodedColllectionPath)
+    public function getColllection(string $encodedColllectionPath): Colllection
     {
         $colllection = $this->colllectionService->get($encodedColllectionPath);
 
@@ -168,11 +158,6 @@ class ColllectionController extends AbstractController
      *     response=400,
      *     description="Returned when form is invalid"
      * )
-     *
-     * @param Request $request
-     * @param string  $encodedColllectionPath
-     *
-     * @return JsonResponse
      */
     public function updateColllection(Request $request, string $encodedColllectionPath): JsonResponse
     {
@@ -203,10 +188,6 @@ class ColllectionController extends AbstractController
      *     response=204,
      *     description="Returned when Colllection file is deleted"
      * )
-     *
-     * @param string $encodedColllectionPath
-     *
-     * @return Response
      */
     public function deleteColllection(string $encodedColllectionPath): Response
     {

@@ -96,10 +96,6 @@ class OAuthServerController
      *     response=400,
      *     description="Returned when bad credentials"
      * )
-     *
-     * @param ServerRequestInterface $serverRequest
-     *
-     * @return ResponseInterface
      */
     public function token(ServerRequestInterface $serverRequest): ResponseInterface
     {

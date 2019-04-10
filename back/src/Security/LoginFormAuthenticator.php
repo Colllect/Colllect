@@ -48,18 +48,27 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         $this->cookieAccessTokenProvider = $cookieAccessTokenProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports(Request $request)
     {
         return $request->attributes->get('_route') === self::LOGIN_ROUTE
             && $request->isMethod('POST');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsRememberMe(): bool
     {
         // Custom remember me management, so... nope!
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCredentials(Request $request): array
     {
         $credentials = [
@@ -72,6 +81,9 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         return $credentials;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
     {
         if ($credentials['form_csrf_token'] !== $credentials['cookie_csrf_token']) {
@@ -89,22 +101,24 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         return $user;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function checkCredentials($credentials, UserInterface $user): bool
     {
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return null;
     }
 
     /**
-     * @param Request        $request
-     * @param TokenInterface $token
-     * @param string         $providerKey
-     *
-     * @return Response
+     * {@inheritdoc}
      *
      * @throws OAuthServerException
      * @throws UniqueTokenIdentifierConstraintViolationException
@@ -146,13 +160,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Control what happens when the user hits a secure page
-     * but isn't logged in yet.
-     *
-     * @param Request                      $request
-     * @param AuthenticationException|null $authException
-     *
-     * @return RedirectResponse
+     * {@inheritdoc}
      */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {

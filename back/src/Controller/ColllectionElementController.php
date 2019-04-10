@@ -103,11 +103,6 @@ class ColllectionElementController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      *
-     * @param Request $request
-     * @param string  $encodedColllectionPath
-     *
-     * @return JsonResponse
-     *
      * @throws FilesystemCannotWriteException
      * @throws NotSupportedElementTypeException
      * @throws FileExistsException
@@ -146,10 +141,6 @@ class ColllectionElementController extends AbstractController
      *         )
      *     )
      * )
-     *
-     * @param string $encodedColllectionPath
-     *
-     * @return JsonResponse
      */
     public function listColllectionElements(string $encodedColllectionPath): JsonResponse
     {
@@ -191,11 +182,6 @@ class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
-     * @param string $encodedColllectionPath
-     * @param string $encodedElementBasename
-     *
-     * @return JsonResponse
      *
      * @throws NotSupportedElementTypeException
      * @throws FileNotFoundException
@@ -257,12 +243,6 @@ class ColllectionElementController extends AbstractController
      *     description="Returned when Colllection file is not found"
      * )
      *
-     * @param Request $request
-     * @param string  $encodedColllectionPath
-     * @param string  $encodedElementBasename
-     *
-     * @return JsonResponse
-     *
      * @throws FilesystemCannotRenameException
      * @throws FilesystemCannotWriteException
      * @throws NotSupportedElementTypeException
@@ -307,11 +287,6 @@ class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
-     * @param string $encodedColllectionPath
-     * @param string $encodedElementBasename
-     *
-     * @return Response
      *
      * @throws NotSupportedElementTypeException
      */

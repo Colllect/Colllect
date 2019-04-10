@@ -79,71 +79,43 @@ class ElementFile
         return $this->file;
     }
 
-    /**
-     * @param UploadedFile $file
-     *
-     * @return ElementFile $this
-     */
-    public function setFile(UploadedFile $file)
+    public function setFile(UploadedFile $file): self
     {
         $this->file = $file;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return ElementFile $this
-     */
-    public function setUrl(string $url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return ElementFile $this
-     */
-    public function setContent(string $content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBasename()
+    public function getBasename(): ?string
     {
         return $this->basename;
     }
 
     /**
-     * @param string $basename
-     *
-     * @return ElementFile $this
-     *
      * @throws NotSupportedElementTypeException
      */
     public function setBasename(string $basename): self
@@ -162,10 +134,7 @@ class ElementFile
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCleanedBasename()
+    public function getCleanedBasename(): ?string
     {
         if (!$this->name || !$this->extension) {
             return null;
@@ -184,19 +153,11 @@ class ElementFile
         return $this->name . $concatTags . '.' . $this->extension;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ElementFile $this
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -215,7 +176,7 @@ class ElementFile
     /**
      * @param string[] $tags
      *
-     * @return ElementFile $this
+     * @return ElementFile
      */
     public function setTags(array $tags): self
     {
@@ -226,10 +187,6 @@ class ElementFile
 
     /**
      * Add a tag to element file.
-     *
-     * @param string $tag
-     *
-     * @return ElementFile $this
      */
     public function addTag(string $tag): self
     {
@@ -240,10 +197,6 @@ class ElementFile
 
     /**
      * Remove a tag from element file.
-     *
-     * @param string $tag
-     *
-     * @return ElementFile $this
      */
     public function removeTag(string $tag): self
     {
@@ -257,19 +210,11 @@ class ElementFile
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExtension()
+    public function getExtension(): ?string
     {
         return $this->extension;
     }
 
-    /**
-     * @param string $extension
-     *
-     * @return ElementFile $this
-     */
     public function setExtension(string $extension): self
     {
         $this->extension = $extension;
@@ -277,22 +222,15 @@ class ElementFile
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type
-     *
-     * @return ElementFile $this
-     *
      * @throws Exception
      */
-    public function setType(string $type)
+    public function setType(string $type): self
     {
         if (!\in_array($type, array_keys(Element::EXTENSIONS_BY_TYPE), true)) {
             throw new Exception('error.invalid_type');

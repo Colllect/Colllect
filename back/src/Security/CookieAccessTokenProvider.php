@@ -58,11 +58,6 @@ class CookieAccessTokenProvider
     }
 
     /**
-     * @param string       $username
-     * @param DateInterval $accessTokenTTL
-     *
-     * @return string
-     *
      * @throws OAuthServerException
      * @throws UniqueTokenIdentifierConstraintViolationException
      */

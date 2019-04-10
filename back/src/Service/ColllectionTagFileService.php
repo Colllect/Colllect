@@ -33,9 +33,6 @@ class ColllectionTagFileService
     /**
      * ColllectionTagFileService constructor.
      *
-     * @param Security                 $security
-     * @param FilesystemAdapterManager $flysystemAdapters
-     *
      * @throws Exception
      */
     public function __construct(Security $security, FilesystemAdapterManager $flysystemAdapters)
@@ -98,6 +95,8 @@ class ColllectionTagFileService
      * @param string $tagName                The searched tag name
      *
      * @return Tag
+     *
+     * @throws FileNotFoundException
      */
     public function get(string $encodedColllectionPath, string $tagName): Tag
     {
@@ -137,12 +136,6 @@ class ColllectionTagFileService
         $this->tagsFilesCache[$encodedColllectionPath][] = $tag;
     }
 
-    /**
-     * @param string $encodedColllectionPath
-     * @param Tag    $tag
-     *
-     * @throws TagAlreadyExistsException
-     */
     public function remove(string $encodedColllectionPath, Tag $tag): void
     {
         // Check if tag does not already exists
@@ -160,9 +153,8 @@ class ColllectionTagFileService
     }
 
     /**
-     * @param string $encodedColllectionPath
-     *
      * @throws FilesystemCannotWriteException
+     * @throws FileNotFoundException
      */
     public function save(string $encodedColllectionPath): void
     {
@@ -192,6 +184,8 @@ class ColllectionTagFileService
      * @param Tag    $tag                    Colllection tag to find
      *
      * @return bool
+     *
+     * @throws FileNotFoundException
      */
     public function has(string $encodedColllectionPath, Tag $tag): bool
     {

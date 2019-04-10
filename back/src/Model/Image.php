@@ -17,9 +17,9 @@ class Image extends Element
     /**
      * {@inheritdoc}
      */
-    public function setContent($content): Element
+    public function setContent($content): void
     {
-        return $this;
+        // Nothing to do here since shouldLoadContent returns false
     }
 
     /**
@@ -27,6 +27,7 @@ class Image extends Element
      */
     public function getContent(): ?string
     {
+        // Nothing to return here since shouldLoadContent returns false
         return null;
     }
 }

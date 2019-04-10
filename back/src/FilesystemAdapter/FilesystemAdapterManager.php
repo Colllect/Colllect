@@ -31,11 +31,6 @@ class FilesystemAdapterManager
         $this->filesystemAdapters[$alias] = $filesystemAdapter;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return EnhancedFilesystemInterface
-     */
     public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
         $adapter = $this->filesystemAdapters[$this->defaultFilesystemAdapterName];

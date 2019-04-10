@@ -69,6 +69,7 @@ class ColllectionTagService
      *
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
+     * @throws FileNotFoundException
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
@@ -94,6 +95,8 @@ class ColllectionTagService
      * @param string $encodedTagName         Base 64 encoded tag name
      *
      * @return Tag
+     *
+     * @throws FileNotFoundException
      */
     public function get(string $encodedColllectionPath, string $encodedTagName): Tag
     {
@@ -170,7 +173,6 @@ class ColllectionTagService
      * @param string $encodedTagName         Base 64 encoded tag name
      *
      * @throws FilesystemCannotWriteException
-     * @throws TagAlreadyExistsException
      * @throws FileExistsException
      * @throws FileNotFoundException
      */

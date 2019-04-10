@@ -17,31 +17,27 @@ class ElementFileHandler
     /**
      * Automatic fill some elementFile fields depending on the source.
      *
-     * @param ElementFile $elementFile
-     *
-     * @return bool
-     *
      * @throws Exception
      */
-    public function handleFileElement(ElementFile $elementFile)
+    public function handleFileElement(ElementFile $elementFile): void
     {
         // If there is an UploadedFile, consider it first
         if ($elementFile->getFile()) {
             $this->handleElementFileByFile($elementFile);
 
-            return true;
+            return;
         }
 
         // If there is an URL, check his content and try to parse URL to get basename if needed
         if ($elementFile->getUrl()) {
             $this->handleElementFileByUrl($elementFile);
 
-            return true;
+            return;
         }
 
         // If there is directly content, use it
         if ($elementFile->getContent()) {
-            return true;
+            return;
         }
 
         throw new Exception('error.empty_file');
@@ -49,8 +45,6 @@ class ElementFileHandler
 
     /**
      * Use UploadedFile as source of ElementFile.
-     *
-     * @param ElementFile $elementFile
      *
      * @throws NotSupportedElementTypeException
      * @throws Exception
@@ -67,8 +61,6 @@ class ElementFileHandler
 
     /**
      * Use file targeted by URL as source of ElementFile.
-     *
-     * @param ElementFile $elementFile
      *
      * @throws Exception
      */
@@ -128,10 +120,6 @@ class ElementFileHandler
 
     /**
      * Set elementFile type by trying multiple methods.
-     *
-     * @param ElementFile $elementFile
-     *
-     * @return ElementFile
      *
      * @throws Exception
      */

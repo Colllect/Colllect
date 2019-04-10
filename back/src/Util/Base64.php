@@ -8,10 +8,6 @@ class Base64
 {
     /**
      * Check if string is valid base 64 encoded one.
-     *
-     * @param string $string
-     *
-     * @return bool
      */
     public static function isValidBase64(string $string): bool
     {
@@ -36,10 +32,6 @@ class Base64
 
     /**
      * Decode a base64 encoded string.
-     *
-     * @param string $encodedString
-     *
-     * @return string
      */
     public static function decode(string $encodedString): string
     {
@@ -50,10 +42,6 @@ class Base64
 
     /**
      * Encode a string in base64.
-     *
-     * @param string $string
-     *
-     * @return string
      */
     public static function encode(string $string): string
     {

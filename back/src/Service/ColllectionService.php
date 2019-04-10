@@ -40,11 +40,6 @@ class ColllectionService
     /**
      * ColllectionService constructor.
      *
-     * @param Security                 $security
-     * @param FilesystemAdapterManager $flysystemAdapters
-     * @param FormFactoryInterface     $formFactory
-     * @param Stopwatch|null           $stopwatch
-     *
      * @throws Exception
      */
     public function __construct(
@@ -125,8 +120,6 @@ class ColllectionService
 
     /**
      * Create a colllection.
-     *
-     * @param Request $request
      *
      * @return Colllection|FormInterface
      */

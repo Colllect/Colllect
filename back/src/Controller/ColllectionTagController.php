@@ -65,11 +65,6 @@ class ColllectionTagController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      *
-     * @param Request $request
-     * @param string  $encodedColllectionPath
-     *
-     * @return JsonResponse
-     *
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
      */
@@ -106,10 +101,6 @@ class ColllectionTagController extends AbstractController
      *         )
      *     )
      * )
-     *
-     * @param string $encodedColllectionPath
-     *
-     * @return JsonResponse
      *
      * @throws FileNotFoundException
      */
@@ -153,11 +144,6 @@ class ColllectionTagController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection tag does not exists"
      * )
-     *
-     * @param string $encodedColllectionPath
-     * @param string $encodedTagName
-     *
-     * @return JsonResponse
      */
     public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
@@ -207,12 +193,6 @@ class ColllectionTagController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      *
-     * @param Request $request
-     * @param string  $encodedColllectionPath
-     * @param string  $encodedTagName
-     *
-     * @return JsonResponse
-     *
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
      * @throws FileExistsException
@@ -256,11 +236,6 @@ class ColllectionTagController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
-     * @param string $encodedColllectionPath
-     * @param string $encodedTagName
-     *
-     * @return Response
      *
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException

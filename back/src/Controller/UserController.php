@@ -57,10 +57,6 @@ class UserController extends AbstractController
      *     response=400,
      *     description="Returned when parameters are invalid"
      * )
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function createUser(Request $request): JsonResponse
     {
@@ -109,10 +105,6 @@ class UserController extends AbstractController
      *     response=404,
      *     description="Returned when user was not found"
      * )
-     *
-     * @param int $userId
-     *
-     * @return JsonResponse
      */
     public function readUser(int $userId): JsonResponse
     {
@@ -151,8 +143,6 @@ class UserController extends AbstractController
      *     response=404,
      *     description="Returned when user was not found"
      * )
-     *
-     * @return JsonResponse
      */
     public function currentUser(): JsonResponse
     {
@@ -211,11 +201,6 @@ class UserController extends AbstractController
      *     response=404,
      *     description="Returned when user was not found"
      * )
-     *
-     * @param Request $request
-     * @param int     $userId
-     *
-     * @return JsonResponse
      */
     public function updateUser(Request $request, int $userId): JsonResponse
     {
@@ -268,10 +253,6 @@ class UserController extends AbstractController
      *     response=404,
      *     description="Returned when user was not found"
      * )
-     *
-     * @param int $userId
-     *
-     * @return Response
      */
     public function deleteUser(int $userId): Response
     {

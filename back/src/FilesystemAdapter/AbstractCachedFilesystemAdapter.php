@@ -30,11 +30,6 @@ abstract class AbstractCachedFilesystemAdapter
 
     /**
      * Decorate an adapter with a local cached adapter.
-     *
-     * @param EnhancedFlysystemAdapterInterface $adapter
-     * @param User                              $user
-     *
-     * @return EnhancedFlysystemAdapterInterface
      */
     public function cacheAdapter(
         EnhancedFlysystemAdapterInterface $adapter,
@@ -56,8 +51,6 @@ abstract class AbstractCachedFilesystemAdapter
 
     /**
      * Get cache folder name.
-     *
-     * @return string
      */
     abstract protected static function getCacheName(): string;
 }

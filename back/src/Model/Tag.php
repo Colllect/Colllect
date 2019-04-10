@@ -35,19 +35,11 @@ class Tag
         }
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Tag
-     */
     public function setName(string $name): self
     {
         $this->name = $name;

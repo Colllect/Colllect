@@ -89,6 +89,13 @@ abstract class Element
      */
     private $proxyUrl;
 
+    /**
+     * Element constructor.
+     *
+     * @param string[] $meta
+     *
+     * @throws NotSupportedElementTypeException
+     */
     public function __construct(array $meta, string $encodedColllectionPath)
     {
         $basename = pathinfo($meta['path'])['basename'];
@@ -109,33 +116,23 @@ abstract class Element
 
     /**
      * Determinate if this type of element should have his content loaded in response object.
-     *
-     * @return bool
      */
     abstract public static function shouldLoadContent(): bool;
 
     /**
      * Get content of the file from the element object
      * It can be handled differently by each element typed class.
-     *
-     * @return string|null
      */
     abstract public function getContent(): ?string;
 
     /**
      * Set content of the file in the element object
      * It can be handled differently by each element typed class.
-     *
-     * @param $content
-     *
-     * @return $this
      */
-    abstract public function setContent($content): self;
+    abstract public function setContent(string $content): void;
 
     /**
      * Get element type.
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -144,8 +141,6 @@ abstract class Element
 
     /**
      * Get element name.
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -154,16 +149,10 @@ abstract class Element
 
     /**
      * Set element name.
-     *
-     * @param string $name
-     *
-     * @return Element
      */
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -178,8 +167,6 @@ abstract class Element
 
     /**
      * Get element last updated date.
-     *
-     * @return DateTime
      */
     public function getUpdated(): DateTime
     {
@@ -188,8 +175,6 @@ abstract class Element
 
     /**
      * Get element size.
-     *
-     * @return int
      */
     public function getSize(): int
     {
@@ -198,8 +183,6 @@ abstract class Element
 
     /**
      * Get element extension.
-     *
-     * @return string
      */
     public function getExtension(): string
     {
@@ -208,8 +191,6 @@ abstract class Element
 
     /**
      * Get element's Colllection encoded path.
-     *
-     * @return string
      */
     public function getEncodedColllectionPath(): string
     {
@@ -218,8 +199,6 @@ abstract class Element
 
     /**
      * Set element's Colllection encoded path.
-     *
-     * @param string $encodedColllectionPath
      */
     public function setEncodedColllectionPath(string $encodedColllectionPath): void
     {
@@ -231,11 +210,9 @@ abstract class Element
         return $this->encodedElementBasename;
     }
 
-    public function setEncodedElementBasename(string $encodedElementBasename): self
+    public function setEncodedElementBasename(string $encodedElementBasename): void
     {
         $this->encodedElementBasename = $encodedElementBasename;
-
-        return $this;
     }
 
     public function getProxyUrl(): string
@@ -244,10 +221,6 @@ abstract class Element
     }
 
     /**
-     * @param string $elementFilePath
-     *
-     * @return string
-     *
      * @throws NotSupportedElementTypeException
      */
     public static function getTypeByPath(string $elementFilePath): string
@@ -267,8 +240,7 @@ abstract class Element
     /**
      * Return typed element based on flysystem metadata.
      *
-     * @param array  $elementMetadata
-     * @param string $encodedColllectionPath
+     * @param string[] $elementMetadata
      *
      * @return Color|Image|Link|Note
      *
@@ -288,10 +260,6 @@ abstract class Element
 
     /**
      * Parse basename to get type, name, tags and extension.
-     *
-     * @param string $basename
-     *
-     * @return array
      *
      * @throws NotSupportedElementTypeException
      */

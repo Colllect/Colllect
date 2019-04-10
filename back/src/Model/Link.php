@@ -4,30 +4,23 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use JMS\Serializer\Annotation as Serializer;
+use Swagger\Annotations as SWG;
 
 class Link extends Element
 {
     /**
      * @var string
-     * @Serializer\Expose()
+     *
+     * @SWG\Property(type="string")
      */
     private $url;
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return $this
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
 
@@ -43,15 +36,11 @@ class Link extends Element
     }
 
     /**
-     * @param string $content
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setContent($content): Element
+    public function setContent(string $content): void
     {
         $this->url = $content;
-
-        return $this;
     }
 
     /**

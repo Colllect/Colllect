@@ -13,11 +13,6 @@ class EnhancedFilesystem extends Filesystem implements EnhancedFilesystemInterfa
     /**
      * Rename a directory.
      *
-     * @param string $path
-     * @param string $newPath
-     *
-     * @return bool
-     *
      * @throws FileExistsException
      * @throws FileNotFoundException
      */

@@ -30,10 +30,6 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="login", methods={"GET", "POST"})
      *
-     * @param Request $request
-     *
-     * @return Response
-     *
      * @throws Exception
      */
     public function login(Request $request): Response
@@ -82,8 +78,6 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/login/account", name="account", methods={"GET"})
-     *
-     * @return Response
      */
     public function account(): Response
     {
@@ -92,8 +86,6 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/logout", name="logout", methods={"POST"})
-     *
-     * @return Response
      */
     public function logout(): Response
     {

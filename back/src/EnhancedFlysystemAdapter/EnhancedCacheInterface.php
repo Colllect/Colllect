@@ -10,9 +10,6 @@ interface EnhancedCacheInterface extends CacheInterface
 {
     /**
      * Rename a directory.
-     *
-     * @param string $path
-     * @param string $newPath
      */
-    public function renameDir(string $path, string $newPath);
+    public function renameDir(string $path, string $newPath): bool;
 }

@@ -35,6 +35,8 @@ class ColllectionTagController extends AbstractController
      *
      * @Route("/", name="create", methods={"POST"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllection Tags")
      * @ApiDoc\Operation(
      *     consumes={"application/x-www-form-urlencoded"}
@@ -81,6 +83,8 @@ class ColllectionTagController extends AbstractController
      *
      * @Route("/", name="list", methods={"GET"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllection Tags")
      *
      * @SWG\Parameter(
@@ -121,6 +125,8 @@ class ColllectionTagController extends AbstractController
      *
      * @Route("/{encodedTagName}", name="get", methods={"GET"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllection Tags")
      *
      * @SWG\Parameter(
@@ -157,6 +163,8 @@ class ColllectionTagController extends AbstractController
      * Update a Colllection tag.
      *
      * @Route("/{encodedTagName}", name="update", methods={"PUT"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Tags")
      * @ApiDoc\Operation(
@@ -213,6 +221,8 @@ class ColllectionTagController extends AbstractController
      * Delete a Colllection tag.
      *
      * @Route("/{encodedTagName}", name="delete", methods={"DELETE"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Tags")
      *

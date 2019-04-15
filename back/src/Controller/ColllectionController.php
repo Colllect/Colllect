@@ -33,6 +33,8 @@ class ColllectionController extends AbstractController
      *
      * @Route("/", name="list", methods={"GET"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllections")
      *
      * @SWG\Response(
@@ -63,6 +65,8 @@ class ColllectionController extends AbstractController
      * Create a Colllection.
      *
      * @Route("/", name="create", methods={"POST"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllections")
      * @ApiDoc\Operation(
@@ -103,6 +107,8 @@ class ColllectionController extends AbstractController
      *
      * @Route("/{encodedColllectionPath}", name="get", methods={"GET"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllections")
      *
      * @SWG\Parameter(
@@ -135,6 +141,8 @@ class ColllectionController extends AbstractController
      * Update a Colllection.
      *
      * @Route("/{encodedColllectionPath}", name="update", methods={"PUT"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllections")
      * @ApiDoc\Operation(
@@ -174,6 +182,8 @@ class ColllectionController extends AbstractController
      * Delete a Colllection.
      *
      * @Route("/{encodedColllectionPath}", name="delete", methods={"DELETE"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllections")
      *

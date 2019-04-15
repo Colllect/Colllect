@@ -43,6 +43,8 @@ class ColllectionElementController extends AbstractController
      *
      * @Route("/", name="create", methods={"POST"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllection Elements")
      * @ApiDoc\Operation(
      *     consumes={"multipart/form-data"}
@@ -120,6 +122,8 @@ class ColllectionElementController extends AbstractController
      *
      * @Route("/", name="list", methods={"GET"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="Colllection Elements")
      *
      * @SWG\Parameter(
@@ -157,6 +161,8 @@ class ColllectionElementController extends AbstractController
      * Get a Colllection element.
      *
      * @Route("/{encodedElementBasename}", name="get", methods={"GET"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Elements")
      *
@@ -197,6 +203,8 @@ class ColllectionElementController extends AbstractController
      * Update a Colllection element.
      *
      * @Route("/{encodedElementBasename}", name="update", methods={"PUT"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Elements")
      * @ApiDoc\Operation(
@@ -263,6 +271,8 @@ class ColllectionElementController extends AbstractController
      * Delete a Colllection element.
      *
      * @Route("/{encodedElementBasename}", name="delete", methods={"DELETE"})
+     *
+     * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Elements")
      *

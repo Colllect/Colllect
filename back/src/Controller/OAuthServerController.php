@@ -30,6 +30,8 @@ class OAuthServerController
      *
      * @Route("/token", name="token", methods={"POST"})
      *
+     * @ApiDoc\Areas({"default"})
+     *
      * @SWG\Tag(name="OAuth")
      * @ApiDoc\Operation(
      *     security={},

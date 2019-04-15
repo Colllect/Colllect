@@ -13,6 +13,7 @@
         "league/flysystem-cached-adapter": "^1.0",
         "league/flysystem-sftp": "^1.0",
         "nelmio/api-doc-bundle": "^3.4",
+        "nyholm/psr7": "^1.1",
         "spatie/flysystem-dropbox": "^1.0",
         "symfony/asset": "4.2.*",
         "symfony/console": "4.2.*",

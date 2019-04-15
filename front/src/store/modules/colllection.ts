@@ -23,7 +23,7 @@ const mutations = {
   },
   setColllection: (state: ColllectionState, payload: ApiInterfaces.Colllection) => {
     state.name = payload.name
-    state.encodedColllectionPath = payload.encoded_colllection_path
+    state.encodedColllectionPath = payload.encodedColllectionPath
   },
   setElements: (state: ColllectionState, payload: ApiInterfaces.Element[]) => {
     state.elements = payload
@@ -39,7 +39,7 @@ const actions = {
       colllectionStore.commitSetColllection(colllectionResponse.body)
     })
     api.getApiColllectionsByEncodedColllectionPathElements({encodedColllectionPath}).then((elementsResponse) => {
-      colllectionStore.commitSetElements(elementsResponse.body)
+      colllectionStore.commitSetElements(elementsResponse.body.itemListElement)
     })
   },
 }

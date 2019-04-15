@@ -34,7 +34,7 @@ export default class ColllectElement extends Vue {
   }
 
   get proxyUrl(): string {
-    return this.element.proxy_url
+    return this.element.proxyUrl
   }
 
   get classes(): object {
@@ -80,11 +80,11 @@ export default class ColllectElement extends Vue {
   private imageLoaded(e: Event): void {
     this.isLoaded = true
 
-    if (e.srcElement) {
+    if (e.currentTarget) {
       const {
         width,
         height,
-      } = e.srcElement.getBoundingClientRect()
+      } = (e.currentTarget as HTMLElement).getBoundingClientRect()
       localStorage.setItem(this.localStorageRatioKey, (height / width).toString())
     }
 

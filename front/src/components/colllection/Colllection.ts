@@ -30,7 +30,7 @@ export default class ColllectColllection extends Vue {
   }
 
   @Watch('elements')
-  private onElementsChanged(value: Element[], oldValue: Element[]) {
+  private onElementsChanged() {
     Vue.nextTick(() => {
       this.updateGrid(true)
     })

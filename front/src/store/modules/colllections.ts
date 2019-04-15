@@ -24,7 +24,7 @@ const actions = {
     Promise.all([
       api.getApiColllections({}),
     ]).then(([colllectionsResponse]) => {
-      colllectionsStore.commitSetColllections(colllectionsResponse.body)
+      colllectionsStore.commitSetColllections(colllectionsResponse.body.itemListElement)
     })
   },
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Model\Colllection;
 use App\Service\ColllectionService;
@@ -127,12 +127,14 @@ class ColllectionController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
-     * @throws FileNotFoundException
      */
     public function getColllection(string $encodedColllectionPath): JsonResponse
     {
-        $colllection = $this->colllectionService->get($encodedColllectionPath);
+        try {
+            $colllection = $this->colllectionService->get($encodedColllectionPath);
+        } catch (FileNotFoundException $exception) {
+            throw $this->createNotFoundException('Colllection not found', $exception);
+        }
 
         return $this->json($colllection);
     }

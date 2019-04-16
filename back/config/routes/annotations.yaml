@@ -4,7 +4,7 @@ app.security:
     name_prefix: 'app_security_'
 
 api.oauth:
-    resource: '../../src/Controller/OAuthServerController.php'
+    resource: '../../src/Controller/Api/OAuthServerController.php'
     type: annotation
     prefix: /api/oauth
     name_prefix: 'api_oauth_'
@@ -13,7 +13,7 @@ api.oauth:
         _format: json
 
 api.users:
-    resource: '../../src/Controller/UserController.php'
+    resource: '../../src/Controller/Api/UserController.php'
     type: annotation
     prefix: /api/users
     name_prefix: 'api_users_'
@@ -22,7 +22,7 @@ api.users:
         _format: json
 
 api.colllections:
-    resource: '../../src/Controller/ColllectionController.php'
+    resource: '../../src/Controller/Api/ColllectionController.php'
     type: annotation
     prefix: /api/colllections
     name_prefix: 'api_colllections_'
@@ -31,7 +31,7 @@ api.colllections:
         _format: json
 
 api.colllection_elements:
-    resource: '../../src/Controller/ColllectionElementController.php'
+    resource: '../../src/Controller/Api/ColllectionElementController.php'
     type: annotation
     prefix: /api/colllections/{encodedColllectionPath}/elements
     name_prefix: 'api_colllection_elements'
@@ -40,7 +40,7 @@ api.colllection_elements:
         _format: json
 
 api.colllection_tags:
-    resource: '../../src/Controller/ColllectionTagController.php'
+    resource: '../../src/Controller/Api/ColllectionTagController.php'
     type: annotation
     prefix: /api/colllections/{encodedColllectionPath}/tags
     name_prefix: 'api_colllection_tags'

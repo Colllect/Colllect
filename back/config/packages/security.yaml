@@ -15,22 +15,23 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         api_public:
-            pattern: ^/api/(doc(.json)?|oauth/token|users/?)$
+            pattern: ^/api/(doc(.json)?|oauth/token/?)$
             security: false
-        app:
-            pattern: ^/(login|logout)
+        login:
+            pattern: ^/login$
             anonymous: ~
             stateless: true
             oauth2: true
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
-        api:
-            pattern: ^/api
+        app:
             security: true
             stateless: true
             oauth2: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/login/account, roles: ROLE_USER }
+        #- { path: ^/login/account, roles: ROLE_USER }

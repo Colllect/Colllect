@@ -19,11 +19,12 @@ class Metadata
         if (isset($meta['path']) && !isset($meta['filename'])) {
             $pathParts = explode('/', $path);
             $meta['basename'] = end($pathParts);
-            if (strpos('.', $meta['basename']) === false) {
+
+            if (strpos($meta['basename'], '.') === false) {
                 $meta['filename'] = $meta['basename'];
             } else {
                 $basenameParts = explode('.', $meta['basename']);
-                $meta['extension'] = array_pop($basenameParts);
+                $meta['extension'] = strtolower(array_pop($basenameParts));
                 $meta['filename'] = implode('.', $basenameParts);
             }
         }

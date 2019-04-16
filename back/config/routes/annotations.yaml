@@ -3,6 +3,11 @@ app.security:
     type: annotation
     name_prefix: 'app_security_'
 
+app.proxy:
+    resource: '../../src/Controller/ProxyController.php'
+    type: annotation
+    name_prefix: 'app_proxy_'
+
 api.oauth:
     resource: '../../src/Controller/Api/OAuthServerController.php'
     type: annotation

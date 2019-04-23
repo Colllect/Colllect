@@ -8,25 +8,31 @@ use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapte
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    private const CACHE_NAME = 'dropbox';
+    private const NAME = 'dropbox';
 
-    /**
-     * @var FilesystemInterface
-     */
     private $filesystem;
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager, string $fsCacheRoot, int $fsCacheDuration)
+    {
+        parent::__construct($fsCacheRoot, $fsCacheDuration);
+
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * {@inheritdoc}
      */
-    final protected static function getCacheName(): string
+    final public static function getName(): string
     {
-        return self::CACHE_NAME;
+        return self::NAME;
     }
 
     /**
@@ -37,14 +43,16 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
     public function getFilesystem(User $user): FilesystemInterface
     {
         if (!$this->filesystem) {
-            // TODO: Dropbox token storage
-            $token = $user->getDropboxToken();
+            $userFilesystemCredentials = $user->getFilesystemCredentials();
 
-            if (!$token) {
+            if (!$userFilesystemCredentials
+                || $userFilesystemCredentials->getFilesystemProviderName() !== self::getName()) {
                 throw new DropboxAccessTokenMissingException('error.dropbox_not_linked');
             }
 
-            $client = new DropboxClient($token);
+            $accessToken = $userFilesystemCredentials->getCredentials();
+
+            $client = new DropboxClient($accessToken);
             $adapter = $this->cacheAdapter(new EnhancedDropboxAdapter($client), $user);
 
             $this->filesystem = new EnhancedFilesystem(

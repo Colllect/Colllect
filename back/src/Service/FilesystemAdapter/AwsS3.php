@@ -13,7 +13,7 @@ use League\Flysystem\FilesystemInterface;
 
 class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    private const CACHE_NAME = 'aws_s3';
+    private const NAME = 'aws_s3';
 
     /**
      * @var string
@@ -41,27 +41,27 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
     private $filesystem;
 
     public function __construct(
-        string $cacheRoot,
-        int $cacheDuration,
-        string $key,
-        string $secret,
-        string $region,
-        string $bucket
+        string $fsCacheRoot,
+        int $fsCacheDuration,
+        string $fsAwsKey,
+        string $fsAwsSecret,
+        string $fsAwsRegion,
+        string $fsAwsBucket
     ) {
-        parent::__construct($cacheRoot, $cacheDuration);
+        parent::__construct($fsCacheRoot, $fsCacheDuration);
 
-        $this->key = $key;
-        $this->secret = $secret;
-        $this->region = $region;
-        $this->bucket = $bucket;
+        $this->key = $fsAwsKey;
+        $this->secret = $fsAwsSecret;
+        $this->region = $fsAwsRegion;
+        $this->bucket = $fsAwsBucket;
     }
 
     /**
      * {@inheritdoc}
      */
-    final protected static function getCacheName(): string
+    final public static function getName(): string
     {
-        return self::CACHE_NAME;
+        return self::NAME;
     }
 
     public function getFilesystem(User $user): FilesystemInterface

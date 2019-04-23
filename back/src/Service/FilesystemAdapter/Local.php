@@ -21,9 +21,9 @@ class Local implements FilesystemAdapterInterface
      */
     private $filesystem;
 
-    public function __construct(string $rootPath)
+    public function __construct(string $fsLocalRootPath)
     {
-        $this->rootPath = rtrim($rootPath, '/') . '/'; // Ensure trailing slash
+        $this->rootPath = rtrim($fsLocalRootPath, '/') . '/'; // Ensure trailing slash
     }
 
     /**

@@ -22,10 +22,10 @@ abstract class AbstractCachedFilesystemAdapter
      */
     private $cacheDuration;
 
-    public function __construct(string $cacheRoot, int $cacheDuration)
+    public function __construct(string $fsCacheRoot, int $fsCacheDuration)
     {
-        $this->cacheRoot = rtrim($cacheRoot, '/') . '/'; // Ensure trailing slash
-        $this->cacheDuration = $cacheDuration;
+        $this->cacheRoot = rtrim($fsCacheRoot, '/') . '/'; // Ensure trailing slash
+        $this->cacheDuration = $fsCacheDuration;
     }
 
     /**
@@ -39,9 +39,9 @@ abstract class AbstractCachedFilesystemAdapter
             $adapter,
             new EnhancedCachedStorageAdapter(
                 new EnhancedLocalAdapter(
-                    $this->cacheRoot . self::getCacheName()
+                    $this->cacheRoot . $this::getName()
                 ),
-                sha1($user->getId()),
+                sha1($user->getEmail()),
                 $this->cacheDuration
             )
         );
@@ -50,7 +50,7 @@ abstract class AbstractCachedFilesystemAdapter
     }
 
     /**
-     * Get cache folder name.
+     * Get filesystem adapter name.
      */
-    abstract protected static function getCacheName(): string;
+    abstract public static function getName(): string;
 }

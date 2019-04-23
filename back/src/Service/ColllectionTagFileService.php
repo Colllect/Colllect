@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Security;
 
 class ColllectionTagFileService
 {
-    const TAGS_FILE = '.tags.colllect';
+    private const TAGS_FILE = '.tags.colllect';
 
     /**
      * @var EnhancedFilesystemInterface

@@ -35,7 +35,11 @@ class FilesystemAdapterManager
     {
         $adapter = $this->filesystemAdapters[$this->defaultFilesystemAdapterName];
 
-        // TODO: retrieve the right filesystem for the given user
+        $userFilesystemCredentials = $user->getFilesystemCredentials();
+        if ($userFilesystemCredentials) {
+            $userFilesystemProviderName = $userFilesystemCredentials->getFilesystemProviderName();
+            $adapter = $this->filesystemAdapters[$userFilesystemProviderName];
+        }
 
         $filesystem = $adapter->getFilesystem($user);
         $filesystem->addPlugin(new ListWith());

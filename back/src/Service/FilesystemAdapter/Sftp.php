@@ -12,7 +12,7 @@ use League\Flysystem\FilesystemInterface;
 
 class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
-    private const CACHE_NAME = 'sftp';
+    private const NAME = 'sftp';
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     /**
      * @var string
      */
-    private $root;
+    private $rootPath;
 
     /**
      * @var FilesystemInterface
@@ -45,29 +45,29 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     private $filesystem;
 
     public function __construct(
-        string $cacheRoot,
-        int $cacheDuration,
-        string $host,
-        int $port,
-        string $username,
-        string $password,
-        string $root
+        string $fsCacheRoot,
+        int $fsCacheDuration,
+        string $fsSftpHost,
+        int $fsSftpPort,
+        string $fsSftpUsername,
+        string $fsSftpPassword,
+        string $fsSftpRootPath
     ) {
-        parent::__construct($cacheRoot, $cacheDuration);
+        parent::__construct($fsCacheRoot, $fsCacheDuration);
 
-        $this->host = $host;
-        $this->port = $port;
-        $this->username = $username;
-        $this->password = $password;
-        $this->root = $root;
+        $this->host = $fsSftpHost;
+        $this->port = $fsSftpPort;
+        $this->username = $fsSftpUsername;
+        $this->password = $fsSftpPassword;
+        $this->rootPath = $fsSftpRootPath;
     }
 
     /**
      * {@inheritdoc}
      */
-    final protected static function getCacheName(): string
+    final public static function getName(): string
     {
-        return self::CACHE_NAME;
+        return self::NAME;
     }
 
     /**
@@ -83,7 +83,7 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
                         'port' => $this->port,
                         'username' => $this->username,
                         'password' => $this->password,
-                        'root' => $this->root,
+                        'root' => $this->rootPath,
                     ]
                 ),
                 $user

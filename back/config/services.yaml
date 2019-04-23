@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+
+    # default env
     env(FS_DEFAULT_ADAPTER): 'local'
     env(FS_CACHE_ROOT): '%kernel.cache_dir%/colllect/'
     env(FS_CACHE_DURATION_IN_SECONDS): 180
@@ -15,6 +17,37 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            # filesystem Cache
+            string $fsCacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
+            int $fsCacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
+
+            # filesystem Local
+            string $fsLocalRootPath: '%env(FS_LOCAL_ROOT_PATH)%'
+
+            # filesystem AWS S3
+            string $fsAwsKey: '%env(FS_AWS_S3_KEY)%'
+            string $fsAwsSecret: '%env(FS_AWS_S3_SECRET)%'
+            string $fsAwsRegion: '%env(FS_AWS_S3_REGION)%'
+            string $fsAwsBucket: '%env(FS_AWS_S3_BUCKET)%'
+
+            # filesystem Dropbox
+            string $fsDropboxKey: '%env(FS_DROPBOX_KEY)%'
+            string $fsDropboxSecret: '%env(FS_DROPBOX_SECRET)%'
+
+            # filesystem FTP
+            string $fsFtpHost: '%env(FS_FTP_HOST)%'
+            int $fsFtpPort: '%env(int:FS_FTP_PORT)%'
+            string $fsFtpUsername: '%env(FS_FTP_USERNAME)%'
+            string $fsFtpPassword: '%env(FS_FTP_PASSWORD)%'
+            string $fsFtpRootPath: '%env(FS_FTP_ROOT_PATH)%'
+
+            # filesystem SFTP
+            string $fsSftpHost: '%env(FS_SFTP_HOST)%'
+            int $fsSftpPort: '%env(int:FS_SFTP_PORT)%'
+            string $fsSftpUsername: '%env(FS_SFTP_USERNAME)%'
+            string $fsSftpPassword: '%env(FS_SFTP_PASSWORD)%'
+            string $fsSftpRootPath: '%env(FS_SFTP_ROOT_PATH)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -63,54 +96,26 @@ services:
 
     App\Service\FilesystemAdapter\Local:
         public: false
-        arguments:
-            $rootPath: '%env(resolve:FS_LOCAL_ROOT_PATH)%'
         tags:
             - { name: app.filesystem_adapter, alias: local }
 
     App\Service\FilesystemAdapter\AwsS3:
         public: false
-        arguments:
-            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
-            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
-            $key: '%env(FS_AWS_S3_KEY)%'
-            $secret: '%env(FS_AWS_S3_SECRET)%'
-            $region: '%env(FS_AWS_S3_REGION)%'
-            $bucket: '%env(FS_AWS_S3_BUCKET)%'
         tags:
             - { name: app.filesystem_adapter, alias: aws_s3 }
 
     App\Service\FilesystemAdapter\Dropbox:
         public: false
-        arguments:
-            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
-            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
         tags:
             - { name: app.filesystem_adapter, alias: dropbox }
 
     App\Service\FilesystemAdapter\Ftp:
         public: false
-        arguments:
-            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
-            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
-            $host: '%env(FS_FTP_HOST)%'
-            $port: '%env(int:FS_FTP_PORT)%'
-            $username: '%env(FS_FTP_USERNAME)%'
-            $password: '%env(FS_FTP_PASSWORD)%'
-            $root: '%env(FS_FTP_ROOT)%'
         tags:
             - { name: app.filesystem_adapter, alias: ftp }
 
     App\Service\FilesystemAdapter\Sftp:
         public: false
-        arguments:
-            $cacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
-            $cacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
-            $host: '%env(FS_SFTP_HOST)%'
-            $port: '%env(int:FS_SFTP_PORT)%'
-            $username: '%env(FS_SFTP_USERNAME)%'
-            $password: '%env(FS_SFTP_PASSWORD)%'
-            $root: '%env(FS_SFTP_ROOT)%'
         tags:
             - { name: app.filesystem_adapter, alias: sftp }
 

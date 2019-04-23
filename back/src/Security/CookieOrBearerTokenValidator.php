@@ -20,7 +20,7 @@ class CookieOrBearerTokenValidator extends BearerTokenValidator
 {
     use CryptTrait;
 
-    const OAUTH_COOKIE_NAME = 'colllect_oauth2';
+    public const OAUTH_COOKIE_NAME = 'colllect_oauth2';
 
     /**
      * @var AccessTokenRepositoryInterface

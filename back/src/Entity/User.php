@@ -21,8 +21,8 @@ use Swagger\Annotations as SWG;
 class User implements UserInterface
 {
     /**
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id()
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @SWG\Property(type="integer", readOnly=true)
@@ -78,6 +78,11 @@ class User implements UserInterface
      * @SWG\Property(type="string", format="date-time")
      */
     private $createdAt;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\UserFilesystemCredentials", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $filesystemCredentials;
 
     public function __construct()
     {
@@ -195,6 +200,23 @@ class User implements UserInterface
     public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getFilesystemCredentials(): ?UserFilesystemCredentials
+    {
+        return $this->filesystemCredentials;
+    }
+
+    public function setFilesystemCredentials(UserFilesystemCredentials $filesystemCredentials): self
+    {
+        $this->filesystemCredentials = $filesystemCredentials;
+
+        // set the owning side of the relation if necessary
+        if ($filesystemCredentials->getUser() !== $this) {
+            $filesystemCredentials->setUser($this);
+        }
 
         return $this;
     }

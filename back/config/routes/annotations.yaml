@@ -3,12 +3,20 @@ app.security:
     type: annotation
     name_prefix: 'app_security_'
 
+app.oauth2_clients.dropbox:
+    resource: '../../src/Controller/OAuth2Clients/DropboxController.php'
+    type: annotation
+    prefix: /oauth2/dropbox
+    name_prefix: 'app_oauth2_clients_dropbox_'
+    trailing_slash_on_root: false
+
 app.proxy:
     resource: '../../src/Controller/ProxyController.php'
     type: annotation
     name_prefix: 'app_proxy_'
 
-api.oauth:
+# API
+api.oauth_server:
     resource: '../../src/Controller/Api/OAuthServerController.php'
     type: annotation
     prefix: /api/oauth

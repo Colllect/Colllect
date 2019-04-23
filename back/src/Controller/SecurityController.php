@@ -10,21 +10,23 @@ use Exception;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class SecurityController extends AbstractController
 {
     private $accessTokenRepository;
     private $security;
+    private $router;
 
-    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security)
+    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, RouterInterface $router)
     {
         $this->accessTokenRepository = $accessTokenRepository;
         $this->security = $security;
+        $this->router = $router;
     }
 
     /**
@@ -46,7 +48,7 @@ class SecurityController extends AbstractController
             LoginFormAuthenticator::CSRF_TOKEN_COOKIE_NAME,
             $csrfToken,
             0,
-            '/login',
+            $this->router->generate('app_security_login'),
             null,
             true,
             true,
@@ -90,13 +92,13 @@ class SecurityController extends AbstractController
     public function logout(): Response
     {
         if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect('/login');
+            return $this->redirectToRoute('app_security_login');
         }
 
         $tokenId = $this->security->getToken()->getAttribute('server_request')->getAttribute('oauth_access_token_id');
         $this->accessTokenRepository->revokeAccessToken($tokenId);
 
-        $response = new RedirectResponse('/login');
+        $response = $this->redirectToRoute('app_security_login');
         $response->headers->clearCookie(CookieOrBearerTokenValidator::OAUTH_COOKIE_NAME, '/');
 
         return $response;

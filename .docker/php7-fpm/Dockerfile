@@ -53,5 +53,9 @@ RUN docker-php-ext-install pdo pdo_mysql
 #RUN echo "xdebug.profiler_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
 #    echo "xdebug.profiler_output_dir=\"/var/www/colllect/var/logs/xdebug_profiler\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+RUN mkdir -p /var/cache/colllect && \
+    chown 82:82 /var/cache/colllect && \
+    chmod 755 /var/cache/colllect
+
 WORKDIR /var/www/colllect
 USER www-data

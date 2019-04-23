@@ -29,6 +29,11 @@ class Kernel extends BaseKernel implements CompilerPassInterface
         }
     }
 
+    public function getCacheDir()
+    {
+        return '/var/cache/colllect/'.$this->environment;
+    }
+
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));

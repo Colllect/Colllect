@@ -1,11 +1,10 @@
-.c-colllect-colllection {
-  padding: 20px;
+.c-colllect-colllection--title {
+  padding: 20px 20px 0;
 }
 
 .c-colllect-colllection--elements {
   position: relative;
-  width: calc(100% + #{$grid-gutter * 2}) !important;
-  margin: 0 -$grid-gutter;
+  width: 100% !important;
   opacity: 0;
   transition: opacity 300ms;
 }

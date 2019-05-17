@@ -1,4 +1,6 @@
-import {Component, Prop, Vue} from 'vue-property-decorator'
+import {Debounce} from 'lodash-decorators'
+import * as md5 from 'md5'
+import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import WithRender from './Element.html'
 
 import {Element} from './../../api'
@@ -6,12 +8,14 @@ import {Element} from './../../api'
 @WithRender
 @Component
 export default class ColllectElement extends Vue {
+  private static readonly VERTICAL_DELTA = 200 // In pixels
+
   @Prop({required: true})
   private element!: Element
 
   private isLoaded: boolean = false
-  private showImage: boolean = false
-  private imageRatio: number = 1
+  private show: boolean = false
+  private ratio: number = 1
 
   get type(): string {
     return this.element.type
@@ -37,28 +41,32 @@ export default class ColllectElement extends Vue {
     return this.element.proxyUrl
   }
 
+  get watchableWindowScrollAndHeight(): string {
+    return [
+      this.$store.state.window.scrollTop,
+      this.$store.state.window.height,
+    ].join('|')
+  }
+
   get classes(): object {
     return {
       'c-colllect-element__loaded': this.isLoaded,
+      'c-colllect-element__show': this.show,
     }
   }
 
   get style(): object {
-    let width = 150
-    if (this.$el) {
-      width = this.$el.getBoundingClientRect().width
-    }
-
     return {
-      minHeight: width * this.imageRatio + 'px',
+      minHeight: Math.ceil(this.$store.state.colllection.elementWidth * this.ratio) + 'px',
     }
   }
 
   get localStorageRatioKey(): string {
-    return 'element.ratio.' + encodeURI(btoa(this.proxyUrl))
+    return 'elmtRatio.' + md5(this.proxyUrl)
   }
 
-  private updateShowImage(): void {
+  @Debounce(300, {leading: true, trailing: true})
+  private updateShow(): void {
     if (!this.$el) {
       return
     }
@@ -66,15 +74,22 @@ export default class ColllectElement extends Vue {
     const elementClientRect = this.$el.getBoundingClientRect()
     const elementTop = elementClientRect.top
     const elementBottom = elementTop + elementClientRect.height
+    const windowHeight = window.innerHeight
 
-    if (!document.documentElement) {
-      return
-    }
+    const topLimit = - ColllectElement.VERTICAL_DELTA
+    const bottomLimit = windowHeight + ColllectElement.VERTICAL_DELTA
 
-    const viewportTop = document.documentElement.scrollTop
-    const viewportBottom = viewportTop + window.innerHeight
+    this.show = elementBottom > topLimit && elementTop < bottomLimit
+  }
 
-    this.showImage = elementBottom > viewportTop && elementTop < viewportBottom
+  /**
+   * Lets the browser recompute the layer in Colllection
+   * component before do heavy getBoundingClientRect computation
+   */
+  private updateShowOnNextTick(): void {
+    Vue.nextTick(() => {
+      this.updateShow()
+    })
   }
 
   private imageLoaded(e: Event): void {
@@ -85,12 +100,26 @@ export default class ColllectElement extends Vue {
         width,
         height,
       } = (e.currentTarget as HTMLElement).getBoundingClientRect()
-      localStorage.setItem(this.localStorageRatioKey, (height / width).toString())
+
+      const ratio = parseFloat((height / width).toFixed(5))
+
+      if (!ratio) {
+        return
+      }
+
+      this.ratio = ratio
+      localStorage.setItem(this.localStorageRatioKey, this.ratio.toString())
     }
 
+    // Used to call updateGrid on Colllection component
     Vue.nextTick(() => {
       this.$emit('load')
     })
+  }
+
+  @Watch('watchableWindowScrollAndHeight')
+  private onWindowScrollOrHeight(): void {
+    this.updateShowOnNextTick()
   }
 
   private mounted(): void {
@@ -99,10 +128,10 @@ export default class ColllectElement extends Vue {
       ratio = '1'
     }
 
-    this.imageRatio = parseFloat(ratio)
+    this.ratio = parseFloat(ratio)
 
-    Vue.nextTick(() => {
-      this.updateShowImage()
+    this.$parent.$on('updateGrid', () => {
+      this.updateShowOnNextTick()
     })
   }
 }

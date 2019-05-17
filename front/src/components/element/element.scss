@@ -1,25 +1,44 @@
 .c-colllect-element {
   overflow: hidden;
-  width: calc((100% - #{$grid-gutter * ($grid-columns + 1)}) / #{$grid-columns});
+  // Defaults to 2 columns
+  // Hack: The -1px is here to ensure all columns can fit on Firefox
+  width: calc((100% - #{$grid-gutter * 3} - 1px) / 2);
   min-height: 100px;
   color: $white;
-  background: $outer-space;
   border-radius: 4px;
+  background: $outer-space;
 }
 
-.c-colllect-element__loaded {
-  min-height: 0 !important;
+.c-colllect-element .c-colllect-element--inner {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 300ms linear;
+}
+
+.c-colllect-element.c-colllect-element__show .c-colllect-element--inner {
+  visibility: visible;
+  opacity: 1;
 }
 
 .c-colllect-element img {
   display: block;
   width: 100%;
   opacity: 0;
+  // Hack (Blink): Avoid some blurry jump transition on resize
   filter: blur(0);
   transition: opacity 300ms;
 }
 
-.c-colllect-element__loaded img {
+.c-colllect-element.c-colllect-element__loaded img {
   opacity: 1;
 }
 
+// Generates support for 3 to 10 columns depending on the screen width
+@for $grid-columns from 3 through 10 {
+  @media (min-width: #{($grid-min-column-width + $grid-gutter) * $grid-columns}) {
+    .c-colllect-element {
+      // Hack: The -1px is here to ensure all columns can fit on Firefox
+      width: calc((100% - #{$grid-gutter * ($grid-columns + 1)} - 1px) / #{$grid-columns});
+    }
+  }
+}

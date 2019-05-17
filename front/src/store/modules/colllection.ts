@@ -7,12 +7,14 @@ export interface ColllectionState {
   name: string | null,
   encodedColllectionPath: string | null,
   elements: ApiInterfaces.Element[],
+  elementWidth: number,
 }
 
 const colllectionState: ColllectionState = {
   name: null,
   encodedColllectionPath: null,
   elements: [],
+  elementWidth: 130,
 }
 
 const colllectionModule = getStoreBuilder<RootState>().module('colllection', colllectionState)
@@ -27,6 +29,9 @@ const mutations = {
   },
   setElements: (state: ColllectionState, payload: ApiInterfaces.Element[]) => {
     state.elements = payload
+  },
+  setElementWidth: (state: ColllectionState, payload: number) => {
+    state.elementWidth = payload
   },
 }
 
@@ -52,6 +57,7 @@ const colllectionStore = {
   commitSetName: colllectionModule.commit(mutations.setName),
   commitSetColllection: colllectionModule.commit(mutations.setColllection),
   commitSetElements: colllectionModule.commit(mutations.setElements),
+  commitSetElementWidth: colllectionModule.commit(mutations.setElementWidth),
 
   dispatchLoadColllection: colllectionModule.dispatch(actions.loadColllection),
 }

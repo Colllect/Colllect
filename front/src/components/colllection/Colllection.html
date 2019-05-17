@@ -1,7 +1,7 @@
 <div class="c-colllect-colllection">
-  <h1>{{ name }}</h1>
+  <h1 class="c-colllect-colllection--title">{{ name }}</h1>
 
   <div class="c-colllect-colllection--elements">
-    <colllect-element :element="element" v-for="element in elements" :id="element.encodedElementBasename" @load="updateGrid"></colllect-element>
+    <colllect-element :element="element" v-for="element in elements" @load="updateGrid"></colllect-element>
   </div>
 </div>

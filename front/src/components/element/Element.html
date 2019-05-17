@@ -8,7 +8,7 @@
     -->
     <img v-if="type === 'image'"
          @load="imageLoaded"
-         :src="(show || isLoaded) ? proxyUrl : ''"
+         :src="(show || isLoaded) ? fileUrl : ''"
          alt="">
   </div>
 </div>

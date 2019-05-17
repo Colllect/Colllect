@@ -37,8 +37,8 @@ export default class ColllectElement extends Vue {
     return this.element.size
   }
 
-  get proxyUrl(): string {
-    return this.element.proxyUrl
+  get fileUrl(): string {
+    return this.element.fileUrl
   }
 
   get watchableWindowScrollAndHeight(): string {
@@ -62,7 +62,7 @@ export default class ColllectElement extends Vue {
   }
 
   get localStorageRatioKey(): string {
-    return 'elmtRatio.' + md5(this.proxyUrl)
+    return 'elmtRatio.' + md5(this.fileUrl)
   }
 
   @Debounce(300, {leading: true, trailing: true})

@@ -1,3 +1,4 @@
+import {encode} from 'punycode'
 import {getStoreBuilder} from 'vuex-typex'
 
 import api, * as ApiInterfaces from '../../api'
@@ -8,6 +9,7 @@ export interface ColllectionState {
   encodedColllectionPath: string | null,
   elements: ApiInterfaces.Element[],
   elementWidth: number,
+  isLoaded: boolean,
 }
 
 const colllectionState: ColllectionState = {
@@ -15,6 +17,7 @@ const colllectionState: ColllectionState = {
   encodedColllectionPath: null,
   elements: [],
   elementWidth: 130,
+  isLoaded: false,
 }
 
 const colllectionModule = getStoreBuilder<RootState>().module('colllection', colllectionState)
@@ -33,18 +36,33 @@ const mutations = {
   setElementWidth: (state: ColllectionState, payload: number) => {
     state.elementWidth = payload
   },
+  setIsLoaded: (state: ColllectionState, payload: boolean) => {
+    state.isLoaded = payload
+  },
 }
 
 const actions = {
   loadColllection: ({}, encodedColllectionPath: string) => {
-    colllectionStore.commitSetName(null)
+    // TODO: make an utility method for atob+decodeURI
+    const name = atob(decodeURIComponent(encodedColllectionPath)).split('/').pop() || null
+    colllectionStore.commitSetName(name)
     colllectionStore.commitSetElements([])
+    colllectionStore.commitSetIsLoaded(false)
 
-    api.getApiColllectionsByEncodedColllectionPath({encodedColllectionPath}).then((colllectionResponse) => {
-      colllectionStore.commitSetColllection(colllectionResponse.body)
-    })
-    api.getApiColllectionsByEncodedColllectionPathElements({encodedColllectionPath}).then((elementsResponse) => {
-      colllectionStore.commitSetElements(elementsResponse.body.itemListElement)
+    const loadColllectionPromise = api
+      .getApiColllectionsByEncodedColllectionPath({encodedColllectionPath})
+      .then((colllectionResponse) => {
+        colllectionStore.commitSetColllection(colllectionResponse.body)
+      })
+
+    const loadColllectionElementsPromise = api
+      .getApiColllectionsByEncodedColllectionPathElements({encodedColllectionPath})
+      .then((elementsResponse) => {
+        colllectionStore.commitSetElements(elementsResponse.body.itemListElement)
+      })
+
+    Promise.all([loadColllectionPromise, loadColllectionElementsPromise]).then(() => {
+      colllectionStore.commitSetIsLoaded(true)
     })
   },
 }
@@ -58,6 +76,7 @@ const colllectionStore = {
   commitSetColllection: colllectionModule.commit(mutations.setColllection),
   commitSetElements: colllectionModule.commit(mutations.setElements),
   commitSetElementWidth: colllectionModule.commit(mutations.setElementWidth),
+  commitSetIsLoaded: colllectionModule.commit(mutations.setIsLoaded),
 
   dispatchLoadColllection: colllectionModule.dispatch(actions.loadColllection),
 }

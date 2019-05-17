@@ -1,9 +1,8 @@
-import {Throttle} from 'lodash-decorators'
 import MiniGrid from 'minigrid'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import WithRender from './Colllection.html'
 
-import {Colllection, Element} from './../../api'
+import {Element} from './../../api'
 
 import colllectionStore from '../../store/modules/colllection'
 
@@ -26,6 +25,10 @@ export default class ColllectColllection extends Vue {
     return this.$store.state.colllection.name
   }
 
+  get isLoaded(): string {
+    return this.$store.state.colllection.isLoaded
+  }
+
   get elements(): Element[] {
     return this.$store.state.colllection.elements
   }
@@ -34,15 +37,22 @@ export default class ColllectColllection extends Vue {
     return this.$store.state.window.width
   }
 
+  get classes(): object {
+    return {
+      'c-colllect-colllection__loaded': this.isLoaded,
+    }
+  }
+
   private updateGrid(): void {
     if (!this.grid || this.mustRecreateTheGrid) {
       // Reset the flag
       this.mustRecreateTheGrid = false
 
       // Create a new grid
+      const container = this.$refs.container as Node
       this.grid = new MiniGrid({
-        container: '.c-colllect-colllection--elements',
-        item: '.c-colllect-element',
+        container,
+        item: container.childNodes,
         gutter: 20,
       })
     }

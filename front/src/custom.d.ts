@@ -14,7 +14,7 @@ declare module '*.html' {
 declare module 'minigrid' {
   interface MiniGridOptions {
     container?: string | Node
-    item?: string | Node
+    item?: string | NodeList
     gutter?: number
   }
 

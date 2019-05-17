@@ -29,11 +29,11 @@ RUN docker-php-ext-configure intl && \
 RUN docker-php-ext-install pdo pdo_mysql
 
 # Improve performances
-#RUN echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-#    echo "opcache.max_accelerated_files=20000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+RUN echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.max_accelerated_files=20000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
 #    echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-#    echo "realpath_cache_size=4096K" > /usr/local/etc/php/conf.d/custom.ini && \
-#    echo "realpath_cache_ttl=600" >> /usr/local/etc/php/conf.d/custom.ini
+    echo "realpath_cache_size=4096K" > /usr/local/etc/php/conf.d/custom.ini && \
+    echo "realpath_cache_ttl=600" >> /usr/local/etc/php/conf.d/custom.ini
 
 # Install Xdebug
 #RUN pecl install xdebug && \
@@ -52,6 +52,8 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Install Xdebug profiler
 #RUN echo "xdebug.profiler_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
 #    echo "xdebug.profiler_output_dir=\"/var/www/colllect/var/logs/xdebug_profiler\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+COPY php-fpm.conf /usr/local/etc/
 
 RUN mkdir -p /var/cache/colllect && \
     chown 82:82 /var/cache/colllect && \

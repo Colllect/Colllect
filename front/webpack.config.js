@@ -10,7 +10,10 @@ const isDev = process.env.NODE_ENV === 'development'
 let config = {
   mode: process.env.NODE_ENV,
   watchOptions: {
-    poll: true
+    // Makes watch works everywhere
+    poll: true,
+    // Avoid crazy CPU usage in some cases
+    ignored: /node_modules/
   },
   entry: {
     main: ['./assets/scss/main.scss', './src/main.ts']
@@ -26,9 +29,8 @@ let config = {
   devServer: {
     noInfo: true,
     overlay: true,
-    open: true,
     contentBase: path.resolve(__dirname, 'dist'),
-    https: true,
+    http2: true,
     allowedHosts: [
       'colllect.localhost',
       'localhost'

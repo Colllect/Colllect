@@ -8,6 +8,7 @@ use App\Exception\NotSupportedElementTypeException;
 use App\Service\ColllectionElementService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProxyController extends AbstractController
@@ -23,13 +24,18 @@ class ProxyController extends AbstractController
     }
 
     /**
-     * @Route("/proxy/{encodedColllectionPath}/{encodedElementBasename}", name="login", methods={"GET"})
+     * @Route("/proxy/{encodedColllectionPath}/{encodedElementBasename}", name="element", methods={"GET"})
      *
      * @throws NotSupportedElementTypeException
      */
     public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        // Avoid fetch storage if request is canceled
+        if (connection_aborted()) {
+            return new Response('', Response::HTTP_NO_CONTENT);
+        }
 
         $response = $this->colllectionElementService->getContent(
             $encodedElementBasename,

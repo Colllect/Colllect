@@ -65,6 +65,13 @@ abstract class AbstractElement implements ElementInterface
     private $encodedElementBasename;
 
     /**
+     * @var string
+     *
+     * @SWG\Property(type="string")
+     */
+    private $proxyUrl;
+
+    /**
      * Element constructor.
      *
      * @param string[] $meta
@@ -178,12 +185,18 @@ abstract class AbstractElement implements ElementInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @SWG\Property(type="string")
      */
     public function getProxyUrl(): string
     {
-        return '/proxy/' . $this->encodedColllectionPath . '/' . $this->encodedElementBasename;
+        return $this->proxyUrl;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setProxyUrl(string $proxyUrl): void
+    {
+        $this->proxyUrl = $proxyUrl;
     }
 
     /**

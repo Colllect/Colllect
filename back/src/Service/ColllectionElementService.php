@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -41,14 +43,19 @@ class ColllectionElementService
     private $filesystem;
 
     /**
+     * @var ElementFileHandler
+     */
+    private $elementFileHandler;
+
+    /**
      * @var FormFactoryInterface
      */
     private $formFactory;
 
     /**
-     * @var ElementFileHandler
+     * @var RouterInterface
      */
-    private $elementFileHandler;
+    private $router;
 
     /**
      * @var Stopwatch
@@ -61,10 +68,11 @@ class ColllectionElementService
      * @throws Exception
      */
     public function __construct(
-        Security $security,
         FilesystemAdapterManager $flysystemAdapters,
-        FormFactoryInterface $formFactory,
         ElementFileHandler $elementFileHandler,
+        Security $security,
+        FormFactoryInterface $formFactory,
+        RouterInterface $router,
         Stopwatch $stopwatch
     ) {
         $user = $security->getUser();
@@ -74,8 +82,9 @@ class ColllectionElementService
         }
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
-        $this->formFactory = $formFactory;
         $this->elementFileHandler = $elementFileHandler;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
         $this->stopwatch = $stopwatch;
     }
 
@@ -135,7 +144,9 @@ class ColllectionElementService
         foreach ($filesMetadata as $fileMetadata) {
             try {
                 $fileMetadata = Metadata::standardize($fileMetadata);
-                $elements[] = AbstractElement::get($fileMetadata, $encodedColllectionPath);
+                $element = AbstractElement::get($fileMetadata, $encodedColllectionPath);
+                $this->hydrateElementProxyUrl($element);
+                $elements[] = $element;
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
             }
@@ -189,6 +200,7 @@ class ColllectionElementService
 
         $elementMetadata = $this->filesystem->getMetadata($path);
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
+        $this->hydrateElementProxyUrl($element);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_create');
@@ -262,6 +274,7 @@ class ColllectionElementService
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
         $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
+        $this->hydrateElementProxyUrl($updatedElement);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_update');
@@ -302,6 +315,7 @@ class ColllectionElementService
 
         $standardizedMeta = Metadata::standardize($meta, $path);
         $element = AbstractElement::get($standardizedMeta, $encodedColllectionPath);
+        $this->hydrateElementProxyUrl($element);
 
         if ($element::shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -489,5 +503,24 @@ class ColllectionElementService
         $form->submit($requestContent, false);
 
         return $form;
+    }
+
+    /**
+     * Set proxyUrl on the given element
+     *
+     * @param ElementInterface $element
+     */
+    private function hydrateElementProxyUrl(ElementInterface &$element): void
+    {
+        $proxyUrl = $this->router->generate(
+            'app_proxy_element',
+            [
+                'encodedColllectionPath' => $element->getEncodedColllectionPath(),
+                'encodedElementBasename' => $element->getEncodedElementBasename(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $element->setProxyUrl($proxyUrl);
     }
 }

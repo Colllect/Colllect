@@ -96,4 +96,9 @@ interface ElementInterface
      * Get element proxy URL.
      */
     public function getProxyUrl(): string;
+
+    /**
+     * Set element proxy URL.
+     */
+    public function setProxyUrl(string $proxyUrl): void;
 }

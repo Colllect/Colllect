@@ -93,12 +93,12 @@ interface ElementInterface
     public function setEncodedElementBasename(string $encodedElementBasename): void;
 
     /**
-     * Get element proxy URL.
+     * Get element file URL.
      */
-    public function getProxyUrl(): string;
+    public function getFileUrl(): string;
 
     /**
-     * Set element proxy URL.
+     * Set element file URL.
      */
-    public function setProxyUrl(string $proxyUrl): void;
+    public function setFileUrl(string $fileUrl): void;
 }

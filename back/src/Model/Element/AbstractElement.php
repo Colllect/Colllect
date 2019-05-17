@@ -69,7 +69,7 @@ abstract class AbstractElement implements ElementInterface
      *
      * @SWG\Property(type="string")
      */
-    private $proxyUrl;
+    private $fileUrl;
 
     /**
      * Element constructor.
@@ -186,17 +186,17 @@ abstract class AbstractElement implements ElementInterface
     /**
      * {@inheritdoc}
      */
-    public function getProxyUrl(): string
+    public function getFileUrl(): string
     {
-        return $this->proxyUrl;
+        return $this->fileUrl;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setProxyUrl(string $proxyUrl): void
+    public function setFileUrl(string $fileUrl): void
     {
-        $this->proxyUrl = $proxyUrl;
+        $this->fileUrl = $fileUrl;
     }
 
     /**

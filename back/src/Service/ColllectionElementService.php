@@ -145,7 +145,7 @@ class ColllectionElementService
             try {
                 $fileMetadata = Metadata::standardize($fileMetadata);
                 $element = AbstractElement::get($fileMetadata, $encodedColllectionPath);
-                $this->hydrateElementProxyUrl($element);
+                $this->hydrateElementFileUrl($element);
                 $elements[] = $element;
             } catch (NotSupportedElementTypeException $e) {
                 // Ignore not supported elements
@@ -200,7 +200,7 @@ class ColllectionElementService
 
         $elementMetadata = $this->filesystem->getMetadata($path);
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
-        $this->hydrateElementProxyUrl($element);
+        $this->hydrateElementFileUrl($element);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_create');
@@ -274,7 +274,7 @@ class ColllectionElementService
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
         $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
-        $this->hydrateElementProxyUrl($updatedElement);
+        $this->hydrateElementFileUrl($updatedElement);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('colllection_element_update');
@@ -315,7 +315,7 @@ class ColllectionElementService
 
         $standardizedMeta = Metadata::standardize($meta, $path);
         $element = AbstractElement::get($standardizedMeta, $encodedColllectionPath);
-        $this->hydrateElementProxyUrl($element);
+        $this->hydrateElementFileUrl($element);
 
         if ($element::shouldLoadContent()) {
             $content = $this->filesystem->read($path);
@@ -506,13 +506,15 @@ class ColllectionElementService
     }
 
     /**
-     * Set proxyUrl on the given element
+     * Set url on the given element
+     *
+     * It can be proxy url, CDN url, etc.
      *
      * @param ElementInterface $element
      */
-    private function hydrateElementProxyUrl(ElementInterface &$element): void
+    private function hydrateElementFileUrl(ElementInterface &$element): void
     {
-        $proxyUrl = $this->router->generate(
+        $fileUrl = $this->router->generate(
             'app_proxy_element',
             [
                 'encodedColllectionPath' => $element->getEncodedColllectionPath(),
@@ -521,6 +523,6 @@ class ColllectionElementService
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $element->setProxyUrl($proxyUrl);
+        $element->setFileUrl($fileUrl);
     }
 }

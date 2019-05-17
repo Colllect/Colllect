@@ -4,8 +4,6 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import auth from './store/modules/auth'
-
 const CollectApp = new Vue({
   el: '#app',
   components: {App},
@@ -14,9 +12,6 @@ const CollectApp = new Vue({
   },
   router,
   store,
-  mounted() {
-    auth.dispatchTryLoginFromCookie()
-  },
 })
 
 // Hack for dev only

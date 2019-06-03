@@ -23,7 +23,7 @@ services:
             int $fsCacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
 
             # filesystem Local
-            string $fsLocalRootPath: '%env(FS_LOCAL_ROOT_PATH)%'
+            string $fsLocalRootPath: '%env(resolve:FS_LOCAL_ROOT_PATH)%'
 
             # filesystem AWS S3
             string $fsAwsKey: '%env(FS_AWS_S3_KEY)%'

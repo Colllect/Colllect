@@ -4,10 +4,10 @@ services:
   database:
     image: mariadb:10.4
     environment:
-      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MARIADB_DATABASE}
-      MYSQL_USER: ${MARIADB_USER}
-      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
     command: ['--skip-name-resolve']
     ports:
       - 3306:3306
@@ -18,19 +18,24 @@ services:
     build:
       context: ./.docker/php7-fpm
       args:
-        TIMEZONE: ${TIMEZONE}
-        DOCKER_HOST_IP: ${DOCKER_HOST_IP}
-        IDE_KEY: ${IDE_KEY}
+        - TIMEZONE
+        - DOCKER_HOST_IP
+        - IDE_KEY
     user: "www-data"
     volumes:
       - ./back:/var/www/colllect
       - ./logs/colllect-back:/var/www/colllect/var/log
+  blackfire:
+    image: blackfire/blackfire:1.26.0
+    environment:
+      - BLACKFIRE_SERVER_ID
+      - BLACKFIRE_SERVER_TOKEN
   nginx:
     image: colllect/nginx
     build: ./.docker/nginx
     environment:
-      ENVIRONMENT: ${ENVIRONMENT}
-      SERVER_NAME: ${SERVER_NAME}
+      - ENVIRONMENT
+      - SERVER_NAME
     ports:
       - 80:80
       - 443:443

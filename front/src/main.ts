@@ -4,15 +4,13 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-const CollectApp = new Vue({
-  el: '#app',
-  components: {App},
-  render(h) {
-    return h('App')
-  },
-  router,
+Vue.config.productionTip = false
+
+new Vue({
   store,
-})
+  router,
+  render: h => h(App),
+}).$mount('#app')
 
 // Hack for dev only
 if (window.location.hostname === 'localhost') {

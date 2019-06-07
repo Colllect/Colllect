@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Element;
 
-/**
- * TODO: add ColorsElement support.
- */
 class ColorsElement extends AbstractElement
 {
     private const TYPE_NAME = 'colors';

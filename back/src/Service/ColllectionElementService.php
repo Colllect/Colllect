@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -52,11 +51,6 @@ class ColllectionElementService
     private $formFactory;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var Stopwatch
      */
     private $stopwatch;
@@ -71,7 +65,6 @@ class ColllectionElementService
         ElementFileHandler $elementFileHandler,
         Security $security,
         FormFactoryInterface $formFactory,
-        RouterInterface $router,
         Stopwatch $stopwatch
     ) {
         $user = $security->getUser();
@@ -83,7 +76,6 @@ class ColllectionElementService
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
         $this->elementFileHandler = $elementFileHandler;
         $this->formFactory = $formFactory;
-        $this->router = $router;
         $this->stopwatch = $stopwatch;
     }
 

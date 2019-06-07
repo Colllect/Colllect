@@ -18,14 +18,6 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
     private const NAME = 'dropbox';
 
     private $filesystem;
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager, string $fsCacheRoot, int $fsCacheDuration)
-    {
-        parent::__construct($fsCacheRoot, $fsCacheDuration);
-
-        $this->entityManager = $entityManager;
-    }
 
     /**
      * {@inheritdoc}

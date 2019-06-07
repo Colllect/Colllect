@@ -62,7 +62,7 @@ class DropboxController extends AbstractController
         $cookie = new Cookie(
             self::STATE_COOKIE_NAME,
             $state,
-            $expire = time() + 3600, // one hour
+            time() + 3600, // one hour
             $this->router->generate('app_oauth2_clients_dropbox_redirect'),
             null,
             true,

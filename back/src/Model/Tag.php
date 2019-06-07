@@ -47,4 +47,9 @@ class Tag
 
         return $this;
     }
+
+    public function getEncodedName(): string
+    {
+        return $this->encodedName;
+    }
 }

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.email) }}
+    {{ form_row(form.password) }}
+    {{ form_row(form.nickname) }}
+
+    {{ form_row(form.csrfToken) }}
+
+    <br>
+
+    <button type="submit">
+        Create my account
+    </button>
+{{ form_end(form) }}
+{% endblock %}

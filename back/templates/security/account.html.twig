@@ -4,7 +4,9 @@
 
 {% block body %}
     <form method="post" action="/logout">
-        Logged in as {{ app.user.username }} <br>
+        Logged in as <strong>{{ app.user.nickname }}</strong> ({{ app.user.email }})<br>
+
+        <br>
 
         <button class="btn btn-lg btn-primary" type="submit">
             Log out

@@ -17,65 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * Create a new user account.
-     *
-     * TODO: remove this from API, move register into RegisterController
-     *
-     * @Route("", name="create", methods={"POST"})
-     *
-     * @SWG\Tag(name="Users")
-     * @ApiDoc\Operation(
-     *     security={},
-     *     consumes={"application/x-www-form-urlencoded"}
-     * )
-     *
-     * @SWG\Parameter(
-     *     name="email",
-     *     in="formData",
-     *     description="User email address",
-     *     type="string"
-     * )
-     * @SWG\Parameter(
-     *     name="nickname",
-     *     in="formData",
-     *     description="User nickname",
-     *     type="string"
-     * )
-     * @SWG\Parameter(
-     *     name="plainPassword",
-     *     in="formData",
-     *     description="User password",
-     *     type="string"
-     * )
-     * @SWG\Response(
-     *     response=201,
-     *     description="Returned when user was created",
-     *     @SWG\Schema(ref="#/definitions/User")
-     * )
-     *
-     * @SWG\Response(
-     *     response=400,
-     *     description="Returned when parameters are invalid"
-     * )
-     */
-    public function createUser(Request $request): JsonResponse
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->submit($request->request->all());
-
-        if (!$form->isValid()) {
-            return $this->json($form, Response::HTTP_BAD_REQUEST);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($user);
-        $em->flush();
-
-        return $this->json($user, Response::HTTP_CREATED);
-    }
-
-    /**
      * Get an user.
      *
      * @Route("/{userId}", name="read", methods={"GET"}, requirements={"userId"="\d+"})

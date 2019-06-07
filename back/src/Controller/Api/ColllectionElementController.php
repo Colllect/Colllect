@@ -7,7 +7,6 @@ namespace App\Controller\Api;
 use App\Exception\FilesystemCannotRenameException;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\NotSupportedElementTypeException;
-use App\Model\Element\AbstractElement;
 use App\Service\ColllectionElementService;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;

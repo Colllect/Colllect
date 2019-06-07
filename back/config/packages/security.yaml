@@ -25,6 +25,14 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
+        register:
+            pattern: ^/register$
+            anonymous: ~
+            stateless: true
+            oauth2: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
         app:
             security: true
             stateless: true

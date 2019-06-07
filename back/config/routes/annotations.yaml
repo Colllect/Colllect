@@ -3,6 +3,12 @@ app.security:
     type: annotation
     name_prefix: 'app_security_'
 
+app.register:
+    resource: '../../src/Controller/RegisterController.php'
+    type: annotation
+    name_prefix: 'app_'
+    trailing_slash_on_root: false
+
 app.oauth2_clients.dropbox:
     resource: '../../src/Controller/OAuth2Clients/DropboxController.php'
     type: annotation

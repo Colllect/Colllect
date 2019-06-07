@@ -6,10 +6,10 @@ namespace App\Controller;
 
 use App\Security\CookieOrBearerTokenValidator;
 use App\Security\LoginFormAuthenticator;
+use App\Service\CsrfService;
 use Exception;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,12 +21,14 @@ class SecurityController extends AbstractController
     private $accessTokenRepository;
     private $security;
     private $router;
+    private $csrfService;
 
-    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, RouterInterface $router)
+    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, RouterInterface $router, CsrfService $csrfService)
     {
         $this->accessTokenRepository = $accessTokenRepository;
         $this->security = $security;
         $this->router = $router;
+        $this->csrfService = $csrfService;
     }
 
     /**
@@ -38,26 +40,16 @@ class SecurityController extends AbstractController
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirect(LoginFormAuthenticator::HOME_PATH);
+            return $this->redirectToRoute(LoginFormAuthenticator::HOME_ROUTE);
         }
 
-        // Generate CSRF token
-        $csrfToken = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $csrfToken = $this->csrfService->generateCsrfToken();
 
-        $cookie = new Cookie(
+        $response = $this->csrfService->createResponseWithCsrfCookie(
             LoginFormAuthenticator::CSRF_TOKEN_COOKIE_NAME,
             $csrfToken,
-            0,
-            $this->router->generate('app_security_login'),
-            null,
-            true,
-            true,
-            false,
-            Cookie::SAMESITE_STRICT
+            'app_security_login'
         );
-
-        $response = new Response();
-        $response->headers->setCookie($cookie);
 
         $error = null;
         if ($request->isMethod(Request::METHOD_POST)) {

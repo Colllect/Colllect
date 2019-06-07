@@ -8,7 +8,6 @@ use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapte
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
-use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;

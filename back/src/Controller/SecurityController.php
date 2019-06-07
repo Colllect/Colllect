@@ -13,21 +13,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class SecurityController extends AbstractController
 {
     private $accessTokenRepository;
     private $security;
-    private $router;
     private $csrfService;
 
-    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, RouterInterface $router, CsrfService $csrfService)
+    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, CsrfService $csrfService)
     {
         $this->accessTokenRepository = $accessTokenRepository;
         $this->security = $security;
-        $this->router = $router;
         $this->csrfService = $csrfService;
     }
 

@@ -37,7 +37,7 @@ let config = {
     ],
     historyApiFallback: true,
     proxy: [{
-      context: ['/api', '/proxy', '/oauth2', '/login', '/logout'],
+      context: ['/api', '/proxy', '/oauth2', '/login', '/logout', '/register'],
       target: 'https://127.0.0.1/',
       bypass: function (req) {
         req.headers.host = 'colllect.localhost'

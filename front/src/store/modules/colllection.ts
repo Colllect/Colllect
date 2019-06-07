@@ -1,7 +1,7 @@
-import {encode} from 'punycode'
 import {getStoreBuilder} from 'vuex-typex'
 
 import api, * as ApiInterfaces from '../../api'
+import {base64UriDecode} from '../../helpers/base64Uri'
 import {RootState} from '../state'
 
 export interface ColllectionState {
@@ -43,8 +43,7 @@ const mutations = {
 
 const actions = {
   loadColllection: ({}, encodedColllectionPath: string) => {
-    // TODO: make an utility method for atob+decodeURI
-    const name = atob(decodeURIComponent(encodedColllectionPath)).split('/').pop() || null
+    const name = base64UriDecode(encodedColllectionPath).split('/').pop() || null
     colllectionStore.commitSetName(name)
     colllectionStore.commitSetElements([])
     colllectionStore.commitSetIsLoaded(false)

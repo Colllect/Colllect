@@ -19,6 +19,7 @@ app.oauth2_clients.dropbox:
 app.proxy:
     resource: '../../src/Controller/ProxyController.php'
     type: annotation
+    prefix: /proxy
     name_prefix: 'app_proxy_'
 
 # API

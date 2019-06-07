@@ -24,7 +24,7 @@ class ProxyController extends AbstractController
     }
 
     /**
-     * @Route("/proxy/{encodedColllectionPath}/{encodedElementBasename}", name="element", methods={"GET"})
+     * @Route("/{encodedColllectionPath}/{encodedElementBasename}", name="element", methods={"GET"})
      *
      * @throws NotSupportedElementTypeException
      */

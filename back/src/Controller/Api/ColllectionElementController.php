@@ -98,7 +98,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=201,
      *     description="Returned when element was created in Colllection",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
+     *     @SWG\Schema(ref="#/definitions/Element")
      * )
      * @SWG\Response(
      *     response=400,
@@ -141,7 +141,7 @@ class ColllectionElementController extends AbstractController
      *         @SWG\Property(
      *             property="itemListElement",
      *             type="array",
-     *             @SWG\Items(ref=@ApiDoc\Model(type=AbstractElement::class))
+     *             @SWG\Items(ref="#/definitions/Element")
      *         )
      *     )
      * )
@@ -182,7 +182,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllection file is found",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
+     *     @SWG\Schema(ref="#/definitions/Element")
      * )
      * @SWG\Response(
      *     response=404,
@@ -240,7 +240,7 @@ class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllection file is updated",
-     *     @SWG\Schema(ref=@ApiDoc\Model(type=AbstractElement::class))
+     *     @SWG\Schema(ref="#/definitions/Element")
      * )
      * @SWG\Response(
      *     response=400,

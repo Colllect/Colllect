@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\Model\Element;
 
 use DateTime;
-use Swagger\Annotations as SWG;
 
 interface ElementInterface
 {
     /**
      * Get element type.
-     *
-     * @SWG\Property(type="string")
      */
-    public static function getElementType(): string;
+    public static function getType(): string;
 
     /**
      * Gives extensions supported by this element.

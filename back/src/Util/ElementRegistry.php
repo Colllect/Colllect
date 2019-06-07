@@ -18,10 +18,10 @@ class ElementRegistry
     public static function getExtensionsByType(): array
     {
         return [
-            ColorsElement::getElementType() => ColorsElement::getSupportedExtensions(),
-            ImageElement::getElementType() => ImageElement::getSupportedExtensions(),
-            LinkElement::getElementType() => LinkElement::getSupportedExtensions(),
-            NoteElement::getElementType() => NoteElement::getSupportedExtensions(),
+            ColorsElement::getType() => ColorsElement::getSupportedExtensions(),
+            ImageElement::getType() => ImageElement::getSupportedExtensions(),
+            LinkElement::getType() => LinkElement::getSupportedExtensions(),
+            NoteElement::getType() => NoteElement::getSupportedExtensions(),
         ];
     }
 

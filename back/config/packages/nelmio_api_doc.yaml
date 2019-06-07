@@ -26,13 +26,37 @@ nelmio_api_doc:
                         description: 'JWT'
                     refresh_token:
                         type: string
+            Element:
+                properties:
+                    name:
+                        type: string
+                    type:
+                        type: string
+                    tags:
+                        items:
+                            type: string
+                        type: array
+                    updated:
+                        type: string
+                        format: date-time
+                    size:
+                        type: integer
+                    extension:
+                        type: string
+                    encodedColllectionPath:
+                        type: string
+                    encodedElementBasename:
+                        type: string
+                    fileUrl:
+                        type: string
+                    content:
+                        type: string
+                type: object
         produces:
             - application/json
 
     models:
         names:
-            - alias: Element
-              type: App\Model\Element\AbstractElement
             - alias: User
               type: App\Entity\User
               groups: ['public']

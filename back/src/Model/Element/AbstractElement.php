@@ -8,66 +8,46 @@ use App\Exception\NotSupportedElementTypeException;
 use App\Util\Base64;
 use App\Util\ElementBasenameParser;
 use DateTime;
-use Swagger\Annotations as SWG;
 
 abstract class AbstractElement implements ElementInterface
 {
     /**
      * @var string
-     *
-     * @SWG\Property(type="string")
      */
     private $name;
 
     /**
      * @var array
-     *
-     * @SWG\Property(
-     *     type="array",
-     *     @SWG\Items(type="string")
-     * )
      */
     private $tags;
 
     /**
      * @var DateTime
-     *
-     * @SWG\Property(type="string", format="date-time")
      */
     private $updated;
 
     /**
      * @var int
-     *
-     * @SWG\Property(type="integer")
      */
     private $size;
 
     /**
      * @var string
-     *
-     * @SWG\Property(type="string")
      */
     private $extension;
 
     /**
      * @var string
-     *
-     * @SWG\Property(type="string")
      */
     private $encodedColllectionPath;
 
     /**
      * @var string
-     *
-     * @SWG\Property(type="string")
      */
     private $encodedElementBasename;
 
     /**
      * @var string
-     *
-     * @SWG\Property(type="string")
      */
     private $fileUrl;
 
@@ -93,14 +73,6 @@ abstract class AbstractElement implements ElementInterface
         $this->extension = $elementMeta['extension'];
         $this->encodedColllectionPath = $encodedColllectionPath;
         $this->encodedElementBasename = Base64::encode($basename);
-    }
-
-    /**
-     * @SWG\Property(type="string")
-     */
-    public function getType(): string
-    {
-        return $this::getElementType();
     }
 
     /**
@@ -212,7 +184,7 @@ abstract class AbstractElement implements ElementInterface
     {
         $type = ElementBasenameParser::getTypeByPath($elementMetadata['path']);
         switch ($type) {
-            case ImageElement::getElementType():
+            case ImageElement::getType():
                 return new ImageElement($elementMetadata, $encodedColllectionPath);
                 break;
         }

@@ -13,7 +13,7 @@ class LinkElement extends AbstractElement
     /**
      * {@inheritdoc}
      */
-    public static function getElementType(): string
+    public static function getType(): string
     {
         return self::TYPE_NAME;
     }

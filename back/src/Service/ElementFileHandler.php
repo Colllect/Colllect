@@ -91,7 +91,7 @@ class ElementFileHandler
 
         // As we know the type, adjust some attributes
         switch ($elementFile->getType()) {
-            case LinkElement::getElementType():
+            case LinkElement::getType():
                 $elementFile->setContent($elementFile->getUrl());
                 if (\strlen($mediaContent) > 0) {
                     $oneLinedPage = trim(preg_replace('/\s+/', ' ', $mediaContent));
@@ -104,9 +104,9 @@ class ElementFileHandler
                     }
                 }
                 break;
-            case ImageElement::getElementType():
-            case NoteElement::getElementType():
-            case ColorsElement::getElementType():
+            case ImageElement::getType():
+            case NoteElement::getType():
+            case ColorsElement::getType():
                 $elementFile->setContent($mediaContent);
                 break;
             default:
@@ -147,7 +147,7 @@ class ElementFileHandler
                     if (!isset($elementFileExtension) || (isset($elementFileExtension) && $elementFileExtension !== $extension)) {
                         $elementFile->setExtension($extension);
                     }
-                    $elementFile->setType(ImageElement::getElementType());
+                    $elementFile->setType(ImageElement::getType());
 
                     return $elementFile;
                 }
@@ -163,7 +163,7 @@ class ElementFileHandler
 
         // URL works but that is not an image and extension does not allow us to guess another type
         if ($elementFile->getUrl()) {
-            $elementFile->setType(LinkElement::getElementType());
+            $elementFile->setType(LinkElement::getType());
 
             return $elementFile;
         }

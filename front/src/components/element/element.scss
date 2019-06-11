@@ -7,30 +7,43 @@
   color: $white;
   border-radius: 4px;
   background: $outer-space;
+  transition: background 300ms linear;
 }
 
-.c-colllect-element .c-colllect-element--inner {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s, opacity 300ms linear;
+// Content
+.c-colllect-element {
+  .c-colllect-element--content {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 300ms linear;
+  }
+
+  &.c-colllect-element__show .c-colllect-element--content {
+    visibility: visible;
+    opacity: 1;
+  }
 }
 
-.c-colllect-element.c-colllect-element__show .c-colllect-element--inner {
-  visibility: visible;
-  opacity: 1;
-}
+// Image element specific style
+.c-colllect-element.c-colllect-element__type-image {
+  img {
+    display: block;
+    width: 100%;
+    opacity: 0;
+    // Background for transparent images
+    background: $outer-space;
+    // Hack (Blink): Avoid some blurry jump transition on resize
+    filter: blur(0);
+    transition: opacity 300ms;
+  }
 
-.c-colllect-element img {
-  display: block;
-  width: 100%;
-  opacity: 0;
-  // Hack (Blink): Avoid some blurry jump transition on resize
-  filter: blur(0);
-  transition: opacity 300ms;
-}
+  &.c-colllect-element__show.c-colllect-element__loaded {
+    background: transparent;
 
-.c-colllect-element.c-colllect-element__loaded img {
-  opacity: 1;
+    img {
+      opacity: 1;
+    }
+  }
 }
 
 // Generates support for 3 to 10 columns depending on the screen width

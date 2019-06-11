@@ -1,4 +1,4 @@
-import {Debounce} from 'lodash-decorators'
+import {Throttle} from 'lodash-decorators'
 import * as md5 from 'md5'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
 import WithRender from './Element.html'
@@ -8,6 +8,12 @@ import {Element} from './../../api'
 @WithRender
 @Component
 export default class ColllectElement extends Vue {
+  private static readonly TYPES = {
+    COLORS: 'colors',
+    IMAGE: 'image',
+    LINK: 'link',
+    NOTE: 'note',
+  }
   private static readonly VERTICAL_DELTA = 200 // In pixels
 
   @Prop({required: true})
@@ -52,6 +58,10 @@ export default class ColllectElement extends Vue {
     return {
       'c-colllect-element__loaded': this.isLoaded,
       'c-colllect-element__show': this.show,
+      'c-colllect-element__type-colors': this.type === ColllectElement.TYPES.COLORS,
+      'c-colllect-element__type-image': this.type === ColllectElement.TYPES.IMAGE,
+      'c-colllect-element__type-link': this.type === ColllectElement.TYPES.LINK,
+      'c-colllect-element__type-note': this.type === ColllectElement.TYPES.NOTE,
     }
   }
 
@@ -65,7 +75,7 @@ export default class ColllectElement extends Vue {
     return 'elmtRatio.' + md5(this.fileUrl)
   }
 
-  @Debounce(300, {leading: true, trailing: true})
+  @Throttle(300, {leading: true, trailing: true})
   private updateShow(): void {
     if (!this.$el) {
       return

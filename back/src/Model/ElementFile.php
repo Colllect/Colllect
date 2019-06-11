@@ -9,7 +9,7 @@ use App\Model\Element\ElementInterface;
 use App\Util\Base64;
 use App\Util\ElementBasenameParser;
 use App\Util\ElementRegistry;
-use Exception;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -230,13 +230,11 @@ class ElementFile
         return $this->type;
     }
 
-    /**
-     * @throws Exception
-     */
     public function setType(string $type): self
     {
         if (!ElementRegistry::isValidType($type)) {
-            throw new Exception('error.invalid_type');
+            $supportedTypes = implode(', ', array_keys(ElementRegistry::getExtensionsByType()));
+            throw new InvalidArgumentException('$type must be one of: ' . $supportedTypes . '. "' . $type . '" given.');
         }
 
         $this->type = $type;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exception\EmptyFileException;
+use App\Exception\InvalidElementLinkException;
 use App\Exception\NotSupportedElementTypeException;
 use App\Model\Element\ColorsElement;
 use App\Model\Element\ImageElement;
@@ -22,7 +24,9 @@ class ElementFileHandler
     /**
      * Automatic fill some elementFile fields depending on the source.
      *
-     * @throws Exception
+     * @throws NotSupportedElementTypeException
+     * @throws InvalidElementLinkException
+     * @throws EmptyFileException
      */
     public function handleFileElement(ElementFile $elementFile): void
     {
@@ -45,14 +49,14 @@ class ElementFileHandler
             return;
         }
 
-        throw new Exception('error.empty_file');
+        throw new EmptyFileException();
     }
 
     /**
      * Use UploadedFile as source of ElementFile.
      *
      * @throws NotSupportedElementTypeException
-     * @throws Exception
+     * @throws InvalidElementLinkException
      */
     protected function handleElementFileByFile(ElementFile $elementFile): void
     {
@@ -67,7 +71,8 @@ class ElementFileHandler
     /**
      * Use file targeted by URL as source of ElementFile.
      *
-     * @throws Exception
+     * @throws NotSupportedElementTypeException
+     * @throws InvalidElementLinkException
      */
     protected function handleElementFileByUrl(ElementFile $elementFile): void
     {
@@ -126,7 +131,8 @@ class ElementFileHandler
     /**
      * Set elementFile type by trying multiple methods.
      *
-     * @throws Exception
+     * @throws NotSupportedElementTypeException
+     * @throws InvalidElementLinkException
      */
     protected function guessElementFileType(ElementFile $elementFile)
     {
@@ -134,7 +140,7 @@ class ElementFileHandler
             // Check if URL is valid and respond a 200
             $headers = get_headers($elementFile->getUrl(), true);
             if (strstr($headers[0], '200 OK') === false) {
-                throw new Exception('error.invalid_link');
+                throw new InvalidElementLinkException('error.invalid_link');
             }
 
             // Check if content type is in image allowed content types

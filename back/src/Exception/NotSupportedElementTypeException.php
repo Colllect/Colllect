@@ -8,7 +8,7 @@ use Exception;
 
 final class NotSupportedElementTypeException extends Exception
 {
-    public function __construct($message = 'error.unsupported_element_type')
+    public function __construct(string $message = 'error.unsupported_element_type')
     {
         parent::__construct($message);
     }

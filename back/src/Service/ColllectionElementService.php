@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exception\EmptyFileException;
+use App\Exception\InvalidElementLinkException;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
 use App\Exception\FilesystemCannotRenameException;
@@ -21,6 +23,7 @@ use App\Util\Metadata;
 use Closure;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -70,7 +73,7 @@ class ColllectionElementService
         $user = $security->getUser();
 
         if (!$user instanceof User) {
-            throw new Exception('$user must be instance of ' . User::class);
+            throw new InvalidArgumentException('$user must be instance of ' . User::class);
         }
 
         $this->filesystem = $flysystemAdapters->getFilesystem($user);
@@ -157,11 +160,12 @@ class ColllectionElementService
      *
      * @return ElementInterface|FormInterface
      *
+     * @throws NotSupportedElementTypeException
+     * @throws InvalidElementLinkException
+     * @throws EmptyFileException
      * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
-     * @throws NotSupportedElementTypeException
      * @throws FileExistsException
-     * @throws Exception                        TODO: make a typed exception
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
@@ -326,6 +330,7 @@ class ColllectionElementService
      * @return Response
      *
      * @throws NotSupportedElementTypeException
+     * @throws Exception
      */
     public function getContent(
         string $encodedElementBasename,

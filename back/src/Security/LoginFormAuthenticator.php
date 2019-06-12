@@ -28,7 +28,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
 {
     private const REMEMBER_ME_FIELD_NAME = 'colllect_remember_me';
     public const LOGIN_ROUTE = 'app_security_login';
-    public const HOME_ROUTE = 'app_security_account';
+    public const HOME_PATH = '/';
     public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
 
     private $entityManager;
@@ -126,7 +126,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): Response
     {
-        $response = new RedirectResponse($this->urlGenerator->generate(self::HOME_ROUTE));
+        $response = new RedirectResponse(self::HOME_PATH);
 
         if ($targetPath = $request->get('_target_path')) {
             $response = new RedirectResponse($targetPath);

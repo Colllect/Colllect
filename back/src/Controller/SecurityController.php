@@ -37,7 +37,7 @@ class SecurityController extends AbstractController
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute(LoginFormAuthenticator::HOME_ROUTE);
+            return $this->redirect(LoginFormAuthenticator::HOME_PATH);
         }
 
         $csrfToken = $this->csrfService->generateCsrfToken();

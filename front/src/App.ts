@@ -5,6 +5,7 @@ import WithRender from './App.html'
 
 import ColllectHeader from './components/header/Header'
 
+import authStore from './store/modules/auth'
 import windowStore from './store/modules/window'
 
 @WithRender
@@ -14,6 +15,10 @@ import windowStore from './store/modules/window'
   },
 })
 export default class App extends Vue {
+  private get isAuthenticated() {
+    return authStore.isAuthenticated
+  }
+
   private handleScroll() {
     windowStore.dispatchWindowScroll(window.scrollY)
   }
@@ -26,6 +31,8 @@ export default class App extends Vue {
   }
 
   private mounted() {
+    authStore.dispatchGetCurrentUser()
+
     window.addEventListener('scroll', throttle(this.handleScroll, 300, {leading: false}))
     window.addEventListener('resize', debounce(this.handleResize, 300, {leading: true}))
   }

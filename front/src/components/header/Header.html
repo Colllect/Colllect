@@ -27,7 +27,9 @@
       <div class="c-colllect-header--right-user">
         <template v-if="isAuthenticated">
           {{ nickname }}
-          <button @click.prevent="logout">Logout</button>
+          <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+          </form>
         </template>
         <template v-else>
           <a href="/login">Login</a>

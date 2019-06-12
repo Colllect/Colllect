@@ -66,9 +66,11 @@ const actions = {
   },
 }
 
+const stateGetter = colllectionModule.state()
+
 const colllectionStore = {
-  get state() {
-    return colllectionModule.state()
+  get state(): ColllectionState {
+    return stateGetter()
   },
 
   commitSetName: colllectionModule.commit(mutations.setName),

@@ -29,9 +29,11 @@ const actions = {
   },
 }
 
+const stateGetter = colllectionsModule.state()
+
 const colllectionsStore = {
-  get state() {
-    return colllectionsModule.state()
+  get state(): ColllectionsState {
+    return stateGetter()
   },
 
   commitSetColllections: colllectionsModule.commit(mutations.setColllections),

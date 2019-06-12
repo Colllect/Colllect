@@ -9,7 +9,7 @@ import colllectionsStore from '../../store/modules/colllections'
 @Component
 export default class ColllectionsPage extends Vue {
   get colllections(): Colllection[] {
-    return this.$store.state.colllections.colllections
+    return colllectionsStore.state.colllections
   }
 
   private mounted() {

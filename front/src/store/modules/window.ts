@@ -38,9 +38,11 @@ const actions = {
   },
 }
 
+const stateGetter = windowModule.state()
+
 const windowStore = {
-  get state() {
-    return windowModule.state()
+  get state(): WindowState {
+    return stateGetter()
   },
 
   commitSetScrollTop: windowModule.commit(mutations.setScrollTop),

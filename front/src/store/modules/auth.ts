@@ -1,11 +1,11 @@
 import {getStoreBuilder} from 'vuex-typex'
 
-import api, * as ApiInterfaces from '../../api'
+import api from '../../api'
 import {RootState} from '../state'
 
 export interface AuthState {
-  id: number|null,
-  nickname: string|null,
+  id: number | null,
+  nickname: string | null,
   roles: string[],
 }
 
@@ -17,7 +17,11 @@ const authState: AuthState = {
 
 const authModule = getStoreBuilder<RootState>().module('auth', authState)
 
-const parseJwt = (jwt: string): AuthState => JSON.parse(atob(jwt.split('.')[1]))
+const getters = {
+  isAuthenticated: authModule.read(function isAuthenticated(state): boolean {
+    return state.nickname !== null
+  }),
+}
 
 const mutations = {
   setUser: (state: AuthState, payload: AuthState) => {
@@ -26,42 +30,39 @@ const mutations = {
     state.roles = payload.roles
   },
   resetUser: (state: AuthState) => {
-    state.id = 0
+    state.id = null
     state.nickname = null
     state.roles = []
   },
 }
 
 const actions = {
-  login: async ({}, form: { email: string, password: string, stayLoggedIn: boolean }) => {
-    authStore.commitSetUser({id: 0, nickname: 'test', roles: []})
-  },
-  tryLoginFromCookie: () => {
-    // authStore.jwt = Cookies.get(jwtCookieKey) as string
-
-    if (authStore.jwt != null && authStore.jwt.length > 0) {
-      authStore.commitSetUser(parseJwt(authStore.jwt))
-    }
-  },
-  logout: () => {
-    // Cookies.remove(jwtCookieKey)
-    authStore.commitResetUser()
-    authStore.jwt = ''
+  getCurrentUser: () => {
+    api.getApiUsersCurrent({})
+      .then((currentUserResponse) => {
+        authStore.commitSetUser({
+          id: currentUserResponse.body.id,
+          nickname: currentUserResponse.body.nickname,
+          roles: currentUserResponse.body.roles,
+        })
+      })
   },
 }
 
+const stateGetter = authModule.state()
+
 const authStore = {
-  jwt: '',
-  get state() {
-    return authModule.state()
+  get state(): AuthState {
+    return stateGetter()
+  },
+  get isAuthenticated(): boolean {
+    return getters.isAuthenticated()
   },
 
   commitSetUser: authModule.commit(mutations.setUser),
   commitResetUser: authModule.commit(mutations.resetUser),
 
-  dispatchLogin: authModule.dispatch(actions.login),
-  dispatchTryLoginFromCookie: authModule.dispatch(actions.tryLoginFromCookie),
-  dispatchLogout: authModule.dispatch(actions.logout),
+  dispatchGetCurrentUser: authModule.dispatch(actions.getCurrentUser),
 }
 
 export default authStore

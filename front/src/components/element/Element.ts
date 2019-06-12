@@ -5,6 +5,9 @@ import WithRender from './Element.html'
 
 import {Element} from './../../api'
 
+import colllectionStore from '../../store/modules/colllection'
+import windowStore from '../../store/modules/window'
+
 @WithRender
 @Component
 export default class ColllectElement extends Vue {
@@ -49,8 +52,8 @@ export default class ColllectElement extends Vue {
 
   get watchableWindowScrollAndHeight(): string {
     return [
-      this.$store.state.window.scrollTop,
-      this.$store.state.window.height,
+      windowStore.state.scrollTop,
+      windowStore.state.height,
     ].join('|')
   }
 
@@ -67,7 +70,7 @@ export default class ColllectElement extends Vue {
 
   get style(): object {
     return {
-      minHeight: Math.ceil(this.$store.state.colllection.elementWidth * this.ratio) + 'px',
+      minHeight: Math.ceil(colllectionStore.state.elementWidth * this.ratio) + 'px',
     }
   }
 

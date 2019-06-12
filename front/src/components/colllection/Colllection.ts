@@ -5,6 +5,7 @@ import WithRender from './Colllection.html'
 import {Element} from './../../api'
 
 import colllectionStore from '../../store/modules/colllection'
+import windowStore from '../../store/modules/window'
 
 import ColllectElement from '../element/Element'
 
@@ -21,20 +22,20 @@ export default class ColllectColllection extends Vue {
   private grid!: MiniGrid
   private mustRecreateTheGrid: boolean = false
 
-  get name(): string {
-    return this.$store.state.colllection.name
+  get name(): string|null {
+    return colllectionStore.state.name
   }
 
-  get isLoaded(): string {
-    return this.$store.state.colllection.isLoaded
+  get isLoaded(): boolean {
+    return colllectionStore.state.isLoaded
   }
 
   get elements(): Element[] {
-    return this.$store.state.colllection.elements
+    return colllectionStore.state.elements
   }
 
   get watchableWindowWidth(): number {
-    return this.$store.state.window.width
+    return windowStore.state.width
   }
 
   get classes(): object {

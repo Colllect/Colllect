@@ -89,8 +89,11 @@ export default class ColllectElement extends Vue {
     const elementBottom = elementTop + elementClientRect.height
     const windowHeight = window.innerHeight
 
-    const topLimit = - ColllectElement.VERTICAL_DELTA
-    const bottomLimit = windowHeight + ColllectElement.VERTICAL_DELTA
+    // Double the delta to show earlier if already loaded
+    const DELTA = ColllectElement.VERTICAL_DELTA * (this.isLoaded ? 2 : 1)
+
+    const topLimit = - DELTA
+    const bottomLimit = windowHeight + DELTA
 
     this.show = elementBottom > topLimit && elementTop < bottomLimit
   }
@@ -136,6 +139,10 @@ export default class ColllectElement extends Vue {
   }
 
   private mounted(): void {
+    if (this.type !== ColllectElement.TYPES.IMAGE) {
+      this.isLoaded = true
+    }
+
     let ratio = localStorage.getItem(this.localStorageRatioKey)
     if (!ratio) {
       ratio = '1'

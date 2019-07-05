@@ -1,0 +1,138 @@
+.c-colllect-input {
+  position: relative;
+  display: block;
+  margin: 0 0 30px;
+  transition: color 150ms;
+}
+
+.c-colllect-input--label {
+  display: block;
+  padding: 0 0 7px $border-radius * 1.5;
+  font-family: $font-monserrat;
+  font-size: 15px;
+  font-weight: 700;
+  color: $rhino;
+}
+
+.c-colllect-input--input-border-wrap {
+  position: relative;
+  padding: 1px;
+  min-height: 50px;
+  max-height: 54px;
+  background: linear-gradient(to bottom right, $cornflower-blue, $chetwode-blue);
+  border-radius: $border-radius + 1;
+  transition: box-shadow 300ms, min-height 150ms, max-height 300ms;
+}
+
+.c-colllect-input--input-border-wrap::before,
+.c-colllect-input--input-border-wrap::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to bottom right, $cold-purple, $cornflower-blue);
+  border-radius: $border-radius + 1;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.c-colllect-input--input-border-wrap::after {
+  background: linear-gradient(to bottom right, $violet-red, $persian-red);
+  opacity: 0;
+}
+
+.c-colllect-input--input {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  line-height: 1;
+  font-size: 16px;
+  padding: 0 20px;
+  color: $shark;
+  background: $white;
+  border: 0;
+  border-radius: $border-radius;
+  z-index: 1;
+  transition: background-color 150ms;
+}
+
+.c-colllect-input--input[type="password"] {
+  font-family: $font-password;
+  letter-spacing: 2px;
+}
+
+.c-colllect-input:not(.c-colllect-input__focused) .c-colllect-input--input-border-wrap:hover::before {
+  opacity: 0.8;
+}
+
+.c-colllect-input:not(.c-colllect-input__disabled) .c-colllect-input--input:hover,
+.c-colllect-input__focused .c-colllect-input--input {
+  background: rgba($white, 0.95)
+}
+
+.c-colllect-input__focused .c-colllect-input--input-border-wrap::before {
+  opacity: 1;
+}
+
+.c-colllect-input__focused .c-colllect-input--input-border-wrap {
+  margin: -1px;
+  padding: 2px;
+  box-shadow: 0 10px 20px rgba($chetwode-blue, 0.12);
+}
+
+.c-colllect-input__focused .c-colllect-input--input-border-wrap,
+.c-colllect-input__focused .c-colllect-input--input-border-wrap::before,
+.c-colllect-input__focused .c-colllect-input--input-border-wrap::after {
+  border-radius: $border-radius + 2;
+}
+
+.c-colllect-input--input:focus {
+  outline: none;
+}
+
+.c-colllect-input--input::placeholder {
+  color: rgba($chetwode-blue, 0.7);
+  transition: color 300ms;
+}
+
+/* Safari hack */
+@media not all and (min-resolution: .001dpcm) {
+  @supports (-webkit-appearance: none) {
+    .c-colllect-input--input::placeholder {
+      line-height: 1.4;
+    }
+  }
+}
+
+.c-colllect-input__errored:not(.c-colllect-input__disabled) .c-colllect-input--input-border-wrap {
+  min-height: 90px;
+  max-height: 128px;
+}
+
+.c-colllect-input__errored:not(.c-colllect-input__disabled) .c-colllect-input--input-border-wrap::after,
+.c-colllect-input__errored:not(.c-colllect-input__disabled) .c-colllect-input--input-border-wrap:hover::after,
+.c-colllect-input__errored:not(.c-colllect-input__disabled) .c-colllect-input--input-border-wrap:focus::after {
+  opacity: 1;
+}
+
+.c-colllect-input__errored:not(.c-colllect-input__disabled) .c-colllect-input--input {
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.15);
+}
+
+.c-colllect-input--error {
+  position: relative;
+  display: block;
+  padding: 11px 10px 9px;
+  color: $white;
+  font-weight: 500;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.c-colllect-input__disabled {
+  opacity: 0.3;
+}

@@ -1,0 +1,119 @@
+.c-colllect-checkbox {
+  position: relative;
+  margin: 0 0 20px;
+  height: 38px;
+}
+
+.c-colllect-checkbox--label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 10px 0 36px;
+  color: $rhino;
+  font-size: 15px;
+  font-family: $font-monserrat;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.c-colllect-checkbox--input {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+
+.c-colllect-checkbox--checkbox {
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  padding: 1px;
+  background: linear-gradient(to bottom right, $cornflower-blue, $chetwode-blue);
+  margin: 0 10px 0 0;
+  border-radius: $border-radius + 1;
+  transform: translateY(6px);
+  transition: background-color 150ms;
+}
+
+.c-colllect-checkbox--checkbox::before,
+.c-colllect-checkbox--checkbox::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  background: linear-gradient(to bottom right, $cold-purple, $cornflower-blue);
+  border-radius: $border-radius + 2;
+  opacity: 0;
+}
+
+.c-colllect-checkbox--checkbox-tick {
+  position: relative;
+  display: block;
+  width: 23px;
+  height: 23px;
+  background-color: $white;
+  border-radius: $border-radius;
+  z-index: 1;
+  transition: background-color 150ms;
+}
+
+.c-colllect-checkbox--checkbox-tick::before,
+.c-colllect-checkbox--checkbox-tick::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 7px;
+  background: $chetwode-blue;
+  height: 3px;
+  width: 7px;
+  transform: rotate(45deg) scaleX(0);
+  transform-origin: 0 0;
+  transition: transform 25ms linear 50ms;
+}
+
+.c-colllect-checkbox--checkbox-tick::after {
+  width: 12px;
+  transform: rotate(-45deg) translate(-3px, 4px) scaleX(0);
+  transition: transform 50ms linear;
+}
+
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--label:hover ~ .c-colllect-checkbox--checkbox,
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--input:focus + .c-colllect-checkbox--checkbox {
+  box-shadow: 0 10px 20px rgba($chetwode-blue, 0.12);
+}
+
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--label:hover ~ .c-colllect-checkbox--checkbox::after,
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--input:focus + .c-colllect-checkbox--checkbox::after {
+  opacity: 1;
+}
+
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--label:hover ~ .c-colllect-checkbox--checkbox .c-colllect-checkbox--checkbox-tick,
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--input:focus + .c-colllect-checkbox--checkbox .c-colllect-checkbox--checkbox-tick {
+  background-color: rgba($white, 0.93);
+}
+
+.c-colllect-checkbox:not(.c-colllect-checkbox__disabled) .c-colllect-checkbox--label:active ~ .c-colllect-checkbox--checkbox {
+  transform: translateY(6px) scale(0.9);
+}
+
+.c-colllect-checkbox--input:checked + .c-colllect-checkbox--checkbox .c-colllect-checkbox--checkbox-tick::before {
+  transform: rotate(45deg) scaleX(1);
+  transition: transform 25ms linear;
+}
+
+.c-colllect-checkbox--input:checked + .c-colllect-checkbox--checkbox .c-colllect-checkbox--checkbox-tick::after {
+  transform: rotate(-45deg) translate(-3px, 4px) scaleX(1);
+  transition: transform 50ms linear 25ms;
+}
+
+.c-colllect-checkbox.c-colllect-checkbox__disabled {
+  opacity: 0.3;
+}

@@ -1,0 +1,108 @@
+.c-colllect-radio {
+  position: relative;
+  margin: 0 0 20px;
+  height: 38px;
+}
+
+.c-colllect-radio--label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 10px 0 36px;
+  color: $rhino;
+  font-size: 15px;
+  font-family: $font-monserrat;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.c-colllect-radio--input {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+
+.c-colllect-radio--radio {
+  display: inline-block;
+  height: 26px;
+  width: 26px;
+  padding: 1px;
+  background: linear-gradient(to bottom right, $cornflower-blue, $chetwode-blue);
+  margin: 0 10px 0 0;
+  border-radius: 100%;
+  transform: translateY(5px);
+  transition: background-color 150ms;
+}
+
+.c-colllect-radio--radio::before,
+.c-colllect-radio--radio::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  background: linear-gradient(to bottom right, $cold-purple, $cornflower-blue);
+  border-radius: 100%;
+  opacity: 0;
+}
+
+.c-colllect-radio--radio-dot {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: $white;
+  border-radius: 100%;
+  z-index: 1;
+  transition: background-color 150ms;
+}
+
+.c-colllect-radio--radio-dot::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: $chetwode-blue;
+  border-radius: 100%;
+  height: 9px;
+  width: 9px;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: opacity 150ms, transform 150ms;
+}
+
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--label:hover ~ .c-colllect-radio--radio,
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--input:focus + .c-colllect-radio--radio {
+  box-shadow: 0 10px 20px rgba($chetwode-blue, 0.12);
+}
+
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--label:hover ~ .c-colllect-radio--radio::after,
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--input:focus + .c-colllect-radio--radio::after {
+  opacity: 1;
+}
+
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--label:hover ~ .c-colllect-radio--radio .c-colllect-radio--radio-dot,
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--input:focus + .c-colllect-radio--radio .c-colllect-radio--radio-dot {
+  background-color: rgba($white, 0.93);
+}
+
+.c-colllect-radio:not(.c-colllect-radio__disabled) .c-colllect-radio--label:active ~ .c-colllect-radio--radio {
+  transform: translateY(6px) scale(0.9);
+}
+
+.c-colllect-radio--input:checked + .c-colllect-radio--radio .c-colllect-radio--radio-dot::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.c-colllect-radio.c-colllect-radio__disabled {
+  opacity: 0.3;
+}

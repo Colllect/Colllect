@@ -2,6 +2,11 @@ $header-height: 70px;
 $header-logo-padding: 20px;
 $header-menu-item-border-width: 3px;
 
+.c-colllect-header {
+  position: relative;
+  z-index: 2;
+}
+
 .c-colllect-header,
 .c-colllect-header--fixed {
   height: $header-height;
@@ -14,6 +19,7 @@ $header-menu-item-border-width: 3px;
   left: 0;
   z-index: 1;
   background: $white;
+  box-shadow: 0 10px 20px rgba($rhino, 0.12);
 
   display: flex;
   align-items: stretch;

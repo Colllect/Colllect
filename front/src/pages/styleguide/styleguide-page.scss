@@ -1,0 +1,23 @@
+.p-colllect-styleguide {
+  padding: 20px;
+  color: $shark;
+}
+
+.p-colllect-styleguide h1 {
+  color: $white;
+}
+
+.p-colllect-styleguide--form {
+  display: flex;
+  padding: 100px;
+  border-radius: $border-radius;
+  background: $white;
+}
+
+.p-colllect-styleguide--form > * {
+  display: block;
+  width: 40%;
+}
+.p-colllect-styleguide--form-fields-values-column {
+  margin-left: 20%;
+}

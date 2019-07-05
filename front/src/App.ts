@@ -3,6 +3,7 @@ import throttle from 'lodash-es/throttle'
 import {Component, Vue} from 'vue-property-decorator'
 import WithRender from './App.html'
 
+import ColllectAddElement from './components/add-element/AddElement'
 import ColllectHeader from './components/header/Header'
 
 import authStore from './store/modules/auth'
@@ -11,6 +12,7 @@ import windowStore from './store/modules/window'
 @WithRender
 @Component({
   components: {
+    ColllectAddElement,
     ColllectHeader,
   },
 })

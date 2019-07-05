@@ -8,6 +8,7 @@
 @import "variables/colors";
 @import "variables/fonts";
 @import "variables/margins";
+@import "variables/others";
 
 /* Global
    ========================================================================== */
@@ -19,7 +20,12 @@
 @import "components/header/header";
 @import "components/colllection/colllection";
 @import "components/element/element";
+@import "components/add-element/add-element";
+@import "components/button/button";
+@import "components/checkbox/checkbox";
+@import "components/input/input";
 
 /* Pages
    ========================================================================== */
 @import "pages/colllections/colllections-page";
+@import "pages/styleguide/styleguide-page";

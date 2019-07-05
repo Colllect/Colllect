@@ -1,0 +1,31 @@
+.c-colllect-button {
+  position: relative;
+  float: right;
+  display: block;
+  margin: 0 0 30px;
+  padding: 15px 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: $white;
+  background: $chetwode-blue;
+  border: 0;
+  border-radius: 52px;
+  transition: background-color 150ms, box-shadow 150ms, transform 150ms;
+}
+
+.c-colllect-button:not(.c-colllect-button__disabled):hover,
+.c-colllect-button:focus,
+.c-colllect-button:active {
+  outline: none;
+  background: $wild-strawberry;
+  box-shadow: 0 5px 30px rgba($wild-strawberry, 0.5);
+}
+.c-colllect-button:not(.c-colllect-button__disabled):active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 3px 20px rgba($wild-strawberry, 0.6);
+}
+
+.c-colllect-button__disabled {
+  opacity: 0.5;
+}

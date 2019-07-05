@@ -1,0 +1,21 @@
+.c-colllect-add-element {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  color: $shark;
+  background: $white;
+}
+
+.c-colllect-add-element--title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.c-colllect-add-element {
+  label {
+    display: block;
+  }
+}

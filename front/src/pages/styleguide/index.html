@@ -1,0 +1,21 @@
+<div class="p-colllect-styleguide">
+  <h1>Styleguide</h1>
+
+  <div class="p-colllect-styleguide--form">
+
+    <div class="p-colllect-styleguide--form-fields-column">
+      <colllect-input type="email" v-model="inputEmailValue" placeholder="john.doe@example.com" :errored="isEmailErrored" error-message="Please enter a valid email address">Email address</colllect-input>
+      <colllect-input type="email" placeholder="Disabled" :errored="isEmailErrored" error-message="Please enter a valid email address" disabled="disabled">Disabled field</colllect-input>
+      <colllect-input type="password" autocomplete="new-password" v-model="inputPasswordValue">Account password</colllect-input>
+      <colllect-checkbox v-model="checkboxRememberMeValue">Remember me</colllect-checkbox>
+      <colllect-checkbox disabled="disabled">Remember me</colllect-checkbox>
+      <br>
+      <colllect-button>Submit</colllect-button>
+    </div>
+    <div class="p-colllect-styleguide--form-fields-values-column">
+      Email: <strong>{{ inputEmailValue }}</strong> <br> <br>
+      Password: <strong>{{ inputPasswordValue }}</strong> <br> <br>
+      Remember me: <strong>{{ checkboxRememberMeValue ? 'Yes' : 'No' }}</strong> <br> <br>
+    </div>
+  </div>
+</div>

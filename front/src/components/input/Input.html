@@ -1,0 +1,15 @@
+<div class="c-colllect-input" :class="classes">
+  <label :for="id" class="c-colllect-input--label">
+    <slot></slot>
+  </label>
+
+  <div class="c-colllect-input--input-border-wrap">
+    <input :type="type" :id="id" v-model="localValue"
+           :disabled="disabled" :autofocus="autofocus" :autocomplete="autocomplete" :placeholder="placeholder"
+           class="c-colllect-input--input" @focus="focus" @blur="blur">
+
+    <span class="c-colllect-input--error" v-if="!disabled && errored && errorMessage">
+      {{ errorMessage }}
+    </span>
+  </div>
+</div>

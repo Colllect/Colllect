@@ -1,0 +1,38 @@
+.c-colllect-button {
+  position: relative;
+  float: right;
+  display: block;
+  margin: 0 0 30px 25px;
+  padding: 15px 50px;
+  font: $font-label;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba($color-rhino, 0.5);
+  color: $color-catskill-white;
+  background: $color-chetwode-blue;
+  border: 0;
+  border-radius: 52px;
+  user-select: none;
+  transition: background-color 150ms, box-shadow 150ms, transform 150ms;
+}
+
+.c-colllect-button:focus {
+  outline: none;
+}
+
+.c-colllect-button:not(.c-colllect-button__disabled):hover,
+.c-colllect-button:not(.c-colllect-button__disabled):focus,
+.c-colllect-button:not(.c-colllect-button__disabled):active {
+  background: $color-scampi;
+  box-shadow: 0 5px 30px rgba($color-scampi, 0.5);
+}
+.c-colllect-button:not(.c-colllect-button__disabled):active {
+  background: $color-rhino;
+  box-shadow: 0 3px 20px rgba($color-rhino, 0.6);
+  transform: translateY(2px) scale(0.97);
+}
+
+.c-colllect-button__disabled {
+  opacity: 0.3;
+  text-shadow: none;
+  background: $color-gull-gray;
+}

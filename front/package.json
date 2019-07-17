@@ -64,5 +64,14 @@
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "not Explorer 11",
+    "not ExplorerMobile 11",
+    "not OperaMini all",
+    "not Baidu 0",
+    "not Android < 67",
+    "not Samsung < 9"
+  ]
 }

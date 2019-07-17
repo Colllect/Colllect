@@ -1,12 +1,18 @@
 html,
 body {
-  color: $white;
-  background-color: $shark;
-  font-family: sans-serif;
+  color: $color-white;
+  background-color: $color-shark;
+  font: $font-default;
+}
+
+strong {
+  font-weight: $font-weight-source-sans-pro-semibold;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

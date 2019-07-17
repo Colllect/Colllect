@@ -4,15 +4,15 @@
 
 /* Variables
    ========================================================================== */
-@import "variables/animations";
 @import "variables/colors";
 @import "variables/fonts";
 @import "variables/margins";
+@import "variables/others";
 
 /* Global
    ========================================================================== */
 @import "global/base";
-@import "global/fonts";
+@import "global/font-faces";
 
 /* Components
    ========================================================================== */

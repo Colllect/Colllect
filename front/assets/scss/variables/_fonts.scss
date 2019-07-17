@@ -1,1 +1,13 @@
-$font-cocogoose: Cocogoose, sans-serif;
+/* Font family */
+$font-family-cocogoose: Cocogoose, sans-serif;
+$font-family-roboto: Roboto, sans-serif;
+$font-family-source-sans-pro: "Source Sans Pro", sans-serif;
+$font-family-password: ColllectPassword, Roboto, sans-serif;
+
+/* Font weight */
+$font-weight-source-sans-pro-regular: 400;
+$font-weight-source-sans-pro-semibold: 600;
+
+/* Fonts */
+$font-default: $font-weight-source-sans-pro-regular 16px $font-family-source-sans-pro;
+$font-label: $font-weight-source-sans-pro-semibold 16px $font-family-source-sans-pro;

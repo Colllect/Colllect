@@ -4,9 +4,9 @@
   // Hack: The -1px is here to ensure all columns can fit on Firefox
   width: calc((100% - #{$grid-gutter * 3} - 1px) / 2);
   min-height: 100px;
-  color: $white;
+  color: $color-white;
   border-radius: 4px;
-  background: $outer-space;
+  background: $color-outer-space;
   transition: background 300ms linear;
 }
 
@@ -31,7 +31,7 @@
     width: 100%;
     opacity: 0;
     // Background for transparent images
-    background: $outer-space;
+    background: $color-outer-space;
     // Hack (Blink): Avoid some blurry jump transition on resize
     filter: blur(0);
     transition: opacity 300ms;

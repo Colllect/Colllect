@@ -35,6 +35,7 @@ let config = {
       'colllect.localhost',
       'localhost'
     ],
+    host: '0.0.0.0',
     historyApiFallback: true,
     proxy: [{
       context: ['/api', '/proxy', '/oauth2', '/login', '/logout', '/register', '/_profiler', '/_wdt'],

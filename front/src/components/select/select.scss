@@ -1,0 +1,157 @@
+.c-colllect-select {
+  position: relative;
+  display: block;
+  margin: 0 0 30px;
+  transition: color 150ms;
+}
+
+.c-colllect-select--label {
+  display: block;
+  padding: 0 0 7px $border-radius * 1.5;
+  font: $font-label;
+  color: $color-rhino;
+  user-select: none;
+}
+
+.c-colllect-select--select-border-wrap {
+  position: relative;
+  padding: 1px;
+  min-height: 49px;
+  max-height: 53px;
+  background: linear-gradient(to bottom right, $color-cornflower-blue, $color-chetwode-blue);
+  border-radius: $border-radius + 1;
+  transition: box-shadow 300ms, min-height 150ms, max-height 300ms;
+}
+
+.c-colllect-select--select-border-wrap::before,
+.c-colllect-select--select-border-wrap::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to bottom right, $color-cold-purple, $color-cornflower-blue);
+  border-radius: $border-radius + 1;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+.c-colllect-select--select-border-wrap::after {
+  background: linear-gradient(to bottom right, $color-violet-red, $color-persian-red);
+  opacity: 0;
+}
+
+.c-colllect-select--select {
+  -webkit-appearance: none;
+  position: relative;
+  width: 100%;
+  height: 49px;
+  line-height: 49px;
+  font-size: 16px;
+  padding: 0 0 0 20px;
+  color: $color-shark;
+  background: $color-white;
+  border: 0;
+  border-radius: $border-radius;
+  z-index: 1;
+  transition: background-color 150ms;
+}
+
+.c-colllect-select--arrow {
+  display: block;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 25px;
+  right: 12px;
+  color: $color-chetwode-blue;
+  transform: rotate(315deg) translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.c-colllect-select--arrow::before,
+.c-colllect-select--arrow::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 7px;
+  background: currentColor;
+  height: 2px;
+  width: 10px;
+  border-radius: 2px;
+  transform-origin: 0 0;
+}
+
+.c-colllect-select--arrow::after {
+  transform: translateY(2px) rotate(270deg);
+}
+
+.c-colllect-select__focused .c-colllect-select--arrow {
+  top: 26px;
+  right: 13px;
+}
+
+.c-colllect-select__errored .c-colllect-select--arrow {
+  color: $color-persian-red;
+}
+
+.c-colllect-select:not(.c-colllect-select__focused) .c-colllect-select--select-border-wrap:hover::before {
+  opacity: 0.8;
+}
+
+.c-colllect-select:not(.c-colllect-select__disabled) .c-colllect-select--select:hover,
+.c-colllect-select__focused .c-colllect-select--select {
+  background: rgba($color-white, 0.95)
+}
+
+.c-colllect-select__focused .c-colllect-select--select-border-wrap::before {
+  opacity: 1;
+}
+
+.c-colllect-select__focused .c-colllect-select--select-border-wrap {
+  margin: -1px;
+  padding: 2px;
+  box-shadow: 0 10px 20px rgba($color-chetwode-blue, 0.12);
+}
+
+.c-colllect-select__focused .c-colllect-select--select-border-wrap,
+.c-colllect-select__focused .c-colllect-select--select-border-wrap::before,
+.c-colllect-select__focused .c-colllect-select--select-border-wrap::after {
+  border-radius: $border-radius + 2;
+}
+
+.c-colllect-select--select:focus {
+  outline: none;
+}
+
+.c-colllect-select__errored:not(.c-colllect-select__disabled) .c-colllect-select--select-border-wrap {
+  min-height: 89px;
+  max-height: 127px;
+}
+
+.c-colllect-select__errored:not(.c-colllect-select__disabled) .c-colllect-select--select-border-wrap::after {
+  opacity: 1;
+}
+
+.c-colllect-select__errored:not(.c-colllect-select__disabled) .c-colllect-select--select {
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.15);
+}
+
+.c-colllect-select--error {
+  position: relative;
+  display: block;
+  padding: 11px 10px 9px;
+  color: $color-white;
+  font-weight: 500;
+  font-size: 16px;
+  z-index: 1;
+}
+
+.c-colllect-select__disabled {
+  opacity: 0.3;
+}

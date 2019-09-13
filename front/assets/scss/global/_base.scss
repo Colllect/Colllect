@@ -16,3 +16,8 @@ strong {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.m-app--main {
+  height: calc(100vh - 70px);
+  overflow: auto;
+}

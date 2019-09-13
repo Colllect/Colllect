@@ -78,6 +78,7 @@ export default class ColllectInput extends Vue {
       'c-colllect-input__disabled': this.disabled,
       'c-colllect-input__focused': this.focused,
       'c-colllect-input__errored': this.errored,
+      'c-colllect-input__autocomplete-off': this.autocomplete === 'off',
     }
   }
 
@@ -98,5 +99,8 @@ export default class ColllectInput extends Vue {
    */
   private mounted(): void {
     this.id = 'c-colllect-input--' + (Math.random() + 1).toString(36).substring(2, 5)
+    if (this.autofocus) {
+      (this.$refs.input as HTMLInputElement).focus()
+    }
   }
 }

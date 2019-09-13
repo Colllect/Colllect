@@ -129,6 +129,11 @@
   z-index: 1;
 }
 
+.c-colllect-input__autocomplete-off .c-colllect-input--input::-webkit-contacts-auto-fill-button,
+.c-colllect-input__autocomplete-off .c-colllect-input--input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+}
+
 .c-colllect-input__disabled {
   opacity: 0.3;
 }

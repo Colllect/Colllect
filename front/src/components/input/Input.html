@@ -4,7 +4,7 @@
   </label>
 
   <div class="c-colllect-input--input-border-wrap">
-    <input :type="type" :id="id" v-model="localValue"
+    <input :type="type" :id="id" v-model="localValue" ref="input"
            :disabled="disabled" :autofocus="autofocus" :autocomplete="autocomplete" :placeholder="placeholder"
            class="c-colllect-input--input" @focus="focus" @blur="blur">
 

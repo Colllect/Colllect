@@ -20,6 +20,16 @@
        url('../fonts/source-sans-pro.woff2') format('woff2');
 }
 
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: 400;
+    font-style: normal;
+    font-display: fallback;
+    src: url('../fonts/source-sans-pro.svg') format('svg');
+  }
+}
+
 /* Source Sans Pro bold */
 @font-face {
   font-family: 'Source Sans Pro';
@@ -29,6 +39,16 @@
   src: local('Source Sans Pro SemiBold'),
        local('Source Sans Pro-SemiBold'),
        url('../fonts/source-sans-pro-semibold.woff2') format('woff2');
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: 'Source Sans Pro';
+    font-weight: 600;
+    font-style: normal;
+    font-display: fallback;
+    src: url('../fonts/source-sans-pro-semibold.svg') format('svg');
+  }
 }
 
 /* Custom normalized dot for password fields */

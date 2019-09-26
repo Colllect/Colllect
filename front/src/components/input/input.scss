@@ -20,7 +20,7 @@
   max-height: 53px;
   background: linear-gradient(to bottom right, $color-cornflower-blue, $color-chetwode-blue);
   border-radius: $border-radius + 1;
-  transition: box-shadow 300ms, min-height 150ms, max-height 300ms;
+  transition: min-height 150ms, max-height 300ms;
 }
 
 .c-colllect-input--input-border-wrap::before,
@@ -42,6 +42,20 @@
 .c-colllect-input--input-border-wrap::after {
   background: linear-gradient(to bottom right, $color-violet-red, $color-persian-red);
   opacity: 0;
+}
+
+.c-colllect-input--input-shadow::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: $border-radius + 1;
+  opacity: 0;
+  box-shadow: 0 10px 20px rgba($color-chetwode-blue, 0.12);
+  transition: opacity 300ms;
 }
 
 .c-colllect-input--input {
@@ -79,13 +93,16 @@
 .c-colllect-input__focused .c-colllect-input--input-border-wrap {
   margin: -1px;
   padding: 2px;
-  box-shadow: 0 10px 20px rgba($color-chetwode-blue, 0.12);
 }
 
 .c-colllect-input__focused .c-colllect-input--input-border-wrap,
 .c-colllect-input__focused .c-colllect-input--input-border-wrap::before,
 .c-colllect-input__focused .c-colllect-input--input-border-wrap::after {
   border-radius: $border-radius + 2;
+}
+
+.c-colllect-input__focused .c-colllect-input--input-shadow::before {
+  opacity: 1;
 }
 
 .c-colllect-input--input:focus {

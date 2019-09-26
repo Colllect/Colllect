@@ -7,24 +7,24 @@ const TerserJSPlugin = require('terser-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
-let config = {
+const config = {
   mode: process.env.NODE_ENV,
   watchOptions: {
     // Makes watch works everywhere
     poll: true,
     // Avoid crazy CPU usage in some cases
-    ignored: /node_modules/
+    ignored: /node_modules/,
   },
   entry: {
-    main: ['./assets/scss/main.scss', './src/main.ts']
+    main: ['./assets/scss/main.scss', './src/main.ts'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: 'main.js'
+    filename: 'main.js',
   },
   resolve: {
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.ts'],
   },
   devServer: {
     noInfo: true,
@@ -33,7 +33,7 @@ let config = {
     http2: true,
     allowedHosts: [
       'colllect.localhost',
-      'localhost'
+      'localhost',
     ],
     host: '0.0.0.0',
     historyApiFallback: true,
@@ -43,8 +43,8 @@ let config = {
       bypass: function (req) {
         req.headers.host = 'colllect.localhost'
       },
-      secure: false
-    }]
+      secure: false,
+    }],
   },
   plugins: [
     new CopyWebpackPlugin(['./index.html']),
@@ -52,20 +52,20 @@ let config = {
     new ForkTsCheckerWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-      }
-    })
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
   ],
   module: {
     rules: [
       {
         test: /\.ts$/,
         enforce: 'pre',
-        use: 'tslint-loader'
+        use: 'tslint-loader',
       },
       {
         test: /\.ts$/,
-        use: 'ts-loader'
+        use: 'ts-loader',
       },
       {
         test: /\.scss/,
@@ -75,29 +75,29 @@ let config = {
             : { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
           { loader: 'postcss-loader', options: { sourceMap: isDev } },
-          { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [path.resolve(__dirname, 'src')] } }
-        ]
+          { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [path.resolve(__dirname, 'src')] } },
+        ],
       },
       {
         test: /\.html$/,
-        use: 'vue-template-loader'
+        use: 'vue-template-loader',
       },
       {
-        test: /\.(png|jpe?g|gif|woff2?|eot|ttf|otf|wav)(\?.*)?$/,
-        use: 'url-loader'
-      }
-    ]
+        test: /\.(png|jpe?g|gif|woff2?|eot|ttf|otf|svg|wav)(\?.*)?$/,
+        use: 'url-loader',
+      },
+    ],
   },
-  optimization: {}
+  optimization: {},
 }
 
 if (process.env.NODE_ENV === 'production') {
   config.optimization.push(new TerserJSPlugin({
     uglifyOptions: {
       compress: {
-        unused: false
-      }
-    }
+        unused: false,
+      },
+    },
   }))
 } else {
   config.devtool = 'cheap-module-eval-source-map'

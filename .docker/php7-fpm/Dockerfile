@@ -1,16 +1,16 @@
-ARG COMPOSER_VERSION=1.8.5
+ARG COMPOSER_VERSION=1.9.1
 
 FROM composer:${COMPOSER_VERSION} as composer
 
-# See https://github.com/docker-library/php/blob/bb16de8a711d1ba1dc76adf4665b3b1c06a06922/7.2/alpine3.9/fpm/Dockerfile
-FROM php:7.2.18-fpm-alpine3.9
+# See https://github.com/docker-library/php/blob/master/7.3/alpine3.10/fpm/Dockerfile
+FROM php:7.3.12-fpm-alpine3.10
 
 MAINTAINER Alexandre DEMODE <contact@alex-d.fr>
 
 ARG TIMEZONE
 ARG DOCKER_HOST_IP
 ARG IDE_KEY
-ARG APCU_VERSION=5.1.17
+ARG APCU_VERSION=5.1.18
 
 RUN apk add --no-cache \
     openssl \

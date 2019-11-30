@@ -26,7 +26,7 @@ services:
       - ./back:/var/www/colllect
       - ./logs/colllect-back:/var/www/colllect/var/log
   blackfire:
-    image: blackfire/blackfire:1.26.0
+    image: blackfire/blackfire:1.30.0
     environment:
       - BLACKFIRE_SERVER_ID
       - BLACKFIRE_SERVER_TOKEN

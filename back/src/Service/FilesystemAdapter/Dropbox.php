@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter;
 
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;

@@ -2,24 +2,16 @@ trikoder_oauth2:
     authorization_server:
         # Full path to the private key file.
         # How to generate a private key: https://oauth2.thephpleague.com/installation/#generating-public-and-private-keys
-        private_key: '%env(resolve:OAUTH_PRIVATE_KEY_PATH)%'
+        private_key: '%env(resolve:OAUTH2_PRIVATE_KEY_PATH)%'
 
         # The string used as an encryption key.
         # How to generate an encryption key: https://oauth2.thephpleague.com/installation/#string-password
-        encryption_key: '%env(string:OAUTH_ENCRYPTION_KEY)%'
-
-        # How long the issued access token should be valid for.
-        # The value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-        access_token_ttl: PT1H
-
-        # How long the issued refresh token should be valid for.
-        # The value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
-        refresh_token_ttl: P1M
+        encryption_key: '%env(string:OAUTH2_ENCRYPTION_KEY)%'
 
     resource_server:
         # Full path to the public key file
         # How to generate a public key: https://oauth2.thephpleague.com/installation/#generating-public-and-private-keys
-        public_key: '%env(resolve:OAUTH_PUBLIC_KEY_PATH)%'
+        public_key: '%env(resolve:OAUTH2_PUBLIC_KEY_PATH)%'
 
     # Scopes that you wish to utilize in your application.
     # This should be a simple array of strings.

@@ -1,7 +1,7 @@
 security:
     encoders:
         App\Entity\User:
-            algorithm: argon2i
+            algorithm: argon2id
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
@@ -41,5 +41,7 @@ security:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
 
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
     access_control:
         #- { path: ^/login/account, roles: ROLE_USER }

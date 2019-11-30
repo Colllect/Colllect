@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
+use App\EventListener\OAuth2CookieListener;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -16,9 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -144,7 +145,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         $response->headers->clearCookie(self::CSRF_TOKEN_COOKIE_NAME, '/login');
         $response->headers->setCookie(
             new Cookie(
-                CookieOrBearerTokenValidator::OAUTH_COOKIE_NAME,
+                OAuth2CookieListener::OAUTH2_COOKIE_NAME,
                 $jwtAccessToken,
                 $expire,
                 '/',

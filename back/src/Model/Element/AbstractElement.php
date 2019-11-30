@@ -176,8 +176,6 @@ abstract class AbstractElement implements ElementInterface
      *
      * @param string[] $elementMetadata
      *
-     * @return ElementInterface
-     *
      * @throws NotSupportedElementTypeException
      */
     public static function get(array $elementMetadata, string $encodedColllectionPath): ElementInterface

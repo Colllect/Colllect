@@ -12,7 +12,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class HashPasswordListener implements EventSubscriber
+final class HashPasswordListener implements EventSubscriber
 {
     /**
      * @var UserPasswordEncoderInterface

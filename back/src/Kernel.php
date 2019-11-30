@@ -29,19 +29,27 @@ class Kernel extends BaseKernel implements CompilerPassInterface
         }
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
-        return '/var/cache/colllect/' . $this->environment;
+        if (file_exists('/.dockerenv')) {
+            return '/var/cache/colllect/' . $this->environment;
+        }
+
+        return parent::getCacheDir();
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', true);
+        $container->setParameter(
+            'container.dumper.inline_class_loader',
+            \PHP_VERSION_ID < 70400 || !ini_get('opcache.preload')
+        );
+        $container->setParameter('container.dumper.inline_factories', true);
         $confDir = $this->getProjectDir() . '/config';
 
         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
     }
@@ -50,7 +58,7 @@ class Kernel extends BaseKernel implements CompilerPassInterface
     {
         $confDir = $this->getProjectDir() . '/config';
 
-        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}/' . $this->environment . '/*' . self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
     }
@@ -58,7 +66,6 @@ class Kernel extends BaseKernel implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $this->loadFilesystemAdapters($container);
-        $this->overrideOAuthResourceServerAuthorizationValidator($container);
     }
 
     private function loadFilesystemAdapters(ContainerBuilder $container): void
@@ -71,14 +78,5 @@ class Kernel extends BaseKernel implements CompilerPassInterface
                 $definition->addMethodCall('addFilesystemAdapter', [new Reference($id), $attributes['alias']]);
             }
         }
-    }
-
-    private function overrideOAuthResourceServerAuthorizationValidator(ContainerBuilder $container): void
-    {
-        $resourceServerDefinition = $container->findDefinition('league.oauth2.server.resource_server');
-        $cookieOrBearerTokenValidatorDefinition = $container->findDefinition(
-            'App\Security\CookieOrBearerTokenValidator'
-        );
-        $resourceServerDefinition->setArgument('$authorizationValidator', $cookieOrBearerTokenValidatorDefinition);
     }
 }

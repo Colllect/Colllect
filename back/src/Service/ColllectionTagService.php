@@ -62,8 +62,7 @@ class ColllectionTagService
     /**
      * Add a tag to a colllection.
      *
-     * @param string  $encodedColllectionPath Base 64 encoded colllection path
-     * @param Request $request
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @return Tag|FormInterface
      *
@@ -94,8 +93,6 @@ class ColllectionTagService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName         Base 64 encoded tag name
      *
-     * @return Tag
-     *
      * @throws FileNotFoundException
      */
     public function get(string $encodedColllectionPath, string $encodedTagName): Tag
@@ -113,9 +110,8 @@ class ColllectionTagService
     /**
      * Update a tag from a colllection.
      *
-     * @param string  $encodedColllectionPath Base 64 encoded colllection path
-     * @param string  $encodedTagName         Base 64 encoded tag name
-     * @param Request $request
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
+     * @param string $encodedTagName         Base 64 encoded tag name
      *
      * @return Tag|FormInterface
      *

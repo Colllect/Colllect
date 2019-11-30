@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
-use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Form\ColllectionType;
 use App\Model\Colllection;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\ColllectionPath;
 use App\Util\Metadata;
 use Exception;
@@ -154,8 +154,7 @@ class ColllectionService
     /**
      * Update a colllection by path.
      *
-     * @param string  $encodedColllectionPath Base 64 encoded colllection path
-     * @param Request $request
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @return Colllection|FormInterface
      *
@@ -196,8 +195,6 @@ class ColllectionService
      * Get a colllection by path.
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
-     *
-     * @return Colllection
      *
      * @throws FileNotFoundException
      */

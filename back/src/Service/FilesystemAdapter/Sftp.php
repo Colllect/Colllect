@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter;
 
+use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedSftpAdapter;
-use App\Entity\User;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemInterface;
 

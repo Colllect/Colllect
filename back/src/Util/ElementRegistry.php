@@ -39,9 +39,6 @@ class ElementRegistry
         throw new NotSupportedElementTypeException();
     }
 
-    /**
-     * @return bool
-     */
     public static function isValidType(string $type): bool
     {
         $supportedTypes = array_keys(self::getExtensionsByType());

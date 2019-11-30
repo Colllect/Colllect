@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Security\CookieOrBearerTokenValidator;
+use App\EventListener\OAuth2CookieListener;
 use App\Security\LoginFormAuthenticator;
 use App\Service\CsrfService;
 use Exception;
@@ -88,7 +88,7 @@ class SecurityController extends AbstractController
         $this->accessTokenRepository->revokeAccessToken($tokenId);
 
         $response = $this->redirectToRoute('app_security_login');
-        $response->headers->clearCookie(CookieOrBearerTokenValidator::OAUTH_COOKIE_NAME, '/');
+        $response->headers->clearCookie(OAuth2CookieListener::OAUTH2_COOKIE_NAME, '/');
 
         return $response;
     }

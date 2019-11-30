@@ -1,5 +1,10 @@
 <?php
 
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
+    ->exclude('var')
+;
+
 return PhpCsFixer\Config::create()
     ->setRules([
         '@PHP71Migration' => true,
@@ -20,4 +25,5 @@ return PhpCsFixer\Config::create()
         ],
     ])
     ->setRiskyAllowed(true)
+    ->setFinder($finder)
 ;

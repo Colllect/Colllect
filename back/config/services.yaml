@@ -76,16 +76,8 @@ services:
     # allow DI of CryptKey into CookieAccessTokenProvider
     League\OAuth2\Server\CryptKey:
         arguments:
-            $keyPath: '%env(resolve:OAUTH_PRIVATE_KEY_PATH)%'
+            $keyPath: '%env(resolve:OAUTH2_PRIVATE_KEY_PATH)%'
             $keyPermissionsCheck: false
-
-    # injected in ResourceServer (see Kernel)
-    App\Security\CookieOrBearerTokenValidator:
-        arguments:
-            $accessTokenRepository: '@trikoder.oauth2.league.repository.access_token_repository'
-
-    trikoder.oauth2.security.firewall.oauth2_listener:
-        class: App\Security\OAuth2Listener
 
     # Filesystems
     app.filesystem_adapter_manager:
@@ -121,6 +113,3 @@ services:
 
     # aliases
     App\Service\FilesystemAdapter\FilesystemAdapterManager: '@app.filesystem_adapter_manager'
-    League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface: '@trikoder.oauth2.league.repository.access_token_repository'
-    League\OAuth2\Server\Repositories\ClientRepositoryInterface: '@trikoder.oauth2.league.repository.client_repository'
-    Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface: '@sensio_framework_extra.psr7.http_message_factory'

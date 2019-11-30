@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\TagAlreadyExistsException;
-use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Model\Tag;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\ColllectionPath;
 use Exception;
 use League\Flysystem\FileNotFoundException;
@@ -94,8 +94,6 @@ class ColllectionTagFileService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $tagName                The searched tag name
      *
-     * @return Tag
-     *
      * @throws FileNotFoundException
      */
     public function get(string $encodedColllectionPath, string $tagName): Tag
@@ -120,9 +118,6 @@ class ColllectionTagFileService
     }
 
     /**
-     * @param string $encodedColllectionPath
-     * @param Tag    $tag
-     *
      * @throws TagAlreadyExistsException
      * @throws FileNotFoundException
      */
@@ -183,8 +178,6 @@ class ColllectionTagFileService
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Tag    $tag                    Colllection tag to find
-     *
-     * @return bool
      *
      * @throws FileNotFoundException
      */

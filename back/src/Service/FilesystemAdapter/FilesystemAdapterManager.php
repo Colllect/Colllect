@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter;
 
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use League\Flysystem\Plugin\ListWith;
 
 class FilesystemAdapterManager

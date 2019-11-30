@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Exception\EmptyFileException;
-use App\Exception\InvalidElementLinkException;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Entity\User;
+use App\Exception\EmptyFileException;
 use App\Exception\FilesystemCannotRenameException;
 use App\Exception\FilesystemCannotWriteException;
+use App\Exception\InvalidElementLinkException;
 use App\Exception\NotSupportedElementTypeException;
-use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Form\ElementType;
 use App\Model\Element\AbstractElement;
 use App\Model\Element\ElementInterface;
 use App\Model\ElementFile;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\Base64;
 use App\Util\ColllectionPath;
 use App\Util\ElementBasenameParser;
@@ -155,8 +155,7 @@ class ColllectionElementService
     /**
      * Add an element to a colllection.
      *
-     * @param string  $encodedColllectionPath Base 64 encoded colllection path
-     * @param Request $request
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @return ElementInterface|FormInterface
      *
@@ -205,9 +204,8 @@ class ColllectionElementService
     /**
      * Update an element from a colllection.
      *
-     * @param string  $encodedElementBasename Base 64 encoded basename
-     * @param string  $encodedColllectionPath Base 64 encoded colllection path
-     * @param Request $request
+     * @param string $encodedElementBasename Base 64 encoded basename
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @return ElementInterface|FormInterface
      *
@@ -281,8 +279,6 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @return ElementInterface
-     *
      * @throws FileNotFoundException
      * @throws NotSupportedElementTypeException
      */
@@ -323,11 +319,8 @@ class ColllectionElementService
     /**
      * Get content of an element from a colllection based on base 64 encoded basename.
      *
-     * @param string    $encodedElementBasename Base 64 encoded basename
-     * @param string    $encodedColllectionPath Base 64 encoded colllection path
-     * @param HeaderBag $requestHeaders
-     *
-     * @return Response
+     * @param string $encodedElementBasename Base 64 encoded basename
+     * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @throws NotSupportedElementTypeException
      * @throws Exception
@@ -421,9 +414,8 @@ class ColllectionElementService
     }
 
     /**
-     * @param string  $encodedColllectionPath
-     * @param Closure $matches                Should return true if the element need to be process
-     * @param Closure $process                The process applied to element file
+     * @param Closure $matches Should return true if the element need to be process
+     * @param Closure $process The process applied to element file
      *
      * @throws FileNotFoundException
      * @throws FileExistsException
@@ -458,8 +450,6 @@ class ColllectionElementService
      *
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $colllectionPath        Colllection path
-     *
-     * @return string
      *
      * @throws NotSupportedElementTypeException
      */

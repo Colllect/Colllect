@@ -8,7 +8,10 @@
     "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 npm-run-all generate-api-client webpack-dev",
     "build": "cross-env NODE_ENV=production webpack",
     "generate-api-client": "node ./scripts/generateApiClient.js",
-    "webpack-dev": "cross-env NODE_ENV=development webpack-dev-server --hot"
+    "webpack-dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
+    "lint:eslint": "eslint .",
+    "lint:tslint": "tslint --project tsconfig.json --format codeFrame",
+    "lint": "npm-run-all lint:eslint lint:tslint"
   },
   "dependencies": {
     "http-status-codes": "^1.3.2",

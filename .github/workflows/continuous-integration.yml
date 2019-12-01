@@ -1,0 +1,52 @@
+name: Continuous Integration
+
+on:
+    push: ~
+    pull_request: ~
+
+jobs:
+    back-phpstan:
+        name: "Back: PHPStan"
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v1
+
+            -   name: Install dependencies
+                working-directory: ./back
+                run: composer install --prefer-dist --no-progress --no-suggest
+
+            -   name: PHPStan
+                working-directory: ./back
+                run: composer phpstan
+
+    back-phpcsfixer:
+        name: "Back: PHP CS fixer"
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v1
+
+            -   name: Install dependencies
+                working-directory: ./back
+                run: composer install --prefer-dist --no-progress --no-suggest
+
+            -   name: PHP CS Fixer
+                working-directory: ./back
+                run: composer cs
+
+    front-lint:
+        name: "Front: lint"
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v1
+
+            -   uses: actions/setup-node@v1
+                with:
+                    node-version: 12.x
+
+            -   name: Install dependencies
+                working-directory: ./front
+                run: yarn
+
+            -   name: Lint
+                working-directory: ./front
+                run: yarn lint

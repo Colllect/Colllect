@@ -34,6 +34,9 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "imbo/behat-api-extension": "^2.2",
         "nelmio/alice": "^3.5",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.11.19",
+        "phpstan/phpstan-symfony": "^0.11.6",
         "symfony/maker-bundle": "^1.14",
         "symfony/profiler-pack": "^1.0"
     },
@@ -63,6 +66,9 @@
         ],
         "cs": [
             "php-cs-fixer fix src --diff --diff-format udiff"
+        ],
+        "phpstan": [
+            "phpstan analyze"
         ]
     },
     "conflict": {

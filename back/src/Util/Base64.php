@@ -37,6 +37,10 @@ class Base64
     {
         $string = base64_decode(urldecode($encodedString), true);
 
+        if ($string === false) {
+            return '';
+        }
+
         return $string;
     }
 

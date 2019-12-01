@@ -38,7 +38,7 @@ class CookieAccessTokenProvider
                 return parent::issueAccessToken($accessTokenTTL, $client, $userIdentifier, $scopes);
             }
 
-            public function getIdentifier(): void
+            public function getIdentifier(): string
             {
                 throw new Exception('Must not be called');
             }
@@ -47,7 +47,7 @@ class CookieAccessTokenProvider
                 ServerRequestInterface $request,
                 ResponseTypeInterface $responseType,
                 DateInterval $accessTokenTTL
-            ): void {
+            ): ResponseTypeInterface {
                 throw new Exception('Must not be called');
             }
         };

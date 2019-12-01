@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Exception\EmptyFileException;
 use App\Exception\FilesystemCannotRenameException;
 use App\Exception\FilesystemCannotWriteException;
+use App\Exception\InvalidElementLinkException;
 use App\Exception\NotSupportedElementTypeException;
 use App\Service\ColllectionElementService;
 use League\Flysystem\FileExistsException;
@@ -18,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ColllectionElementController extends AbstractController
+final class ColllectionElementController extends AbstractController
 {
     /**
      * @var ColllectionElementService
@@ -108,6 +110,10 @@ class ColllectionElementController extends AbstractController
      * @throws NotSupportedElementTypeException
      * @throws FileExistsException
      * @throws FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws NotSupportedElementTypeException
+     * @throws EmptyFileException
+     * @throws InvalidElementLinkException
      */
     public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
     {

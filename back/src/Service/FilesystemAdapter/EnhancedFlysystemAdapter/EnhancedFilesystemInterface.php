@@ -11,7 +11,7 @@ use League\Flysystem\FilesystemInterface;
  */
 interface EnhancedFilesystemInterface extends FilesystemInterface
 {
-    /**
+    /*
      * Rename a directory.
      */
     public function renameDir(string $path, string $newPath): bool;

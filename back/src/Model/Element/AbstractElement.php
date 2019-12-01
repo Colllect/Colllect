@@ -11,50 +11,34 @@ use DateTime;
 
 abstract class AbstractElement implements ElementInterface
 {
-    /**
-     * @var string
-     */
+    /* @var string */
     private $name;
 
-    /**
-     * @var array
-     */
+    /* @var array */
     private $tags;
 
-    /**
-     * @var DateTime
-     */
+    /* @var DateTime */
     private $updated;
 
-    /**
-     * @var int
-     */
+    /* @var int */
     private $size;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $extension;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $encodedColllectionPath;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $encodedElementBasename;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $fileUrl;
 
     /**
      * Element constructor.
      *
-     * @param string[] $meta
+     * @param mixed[] $meta
      *
      * @throws NotSupportedElementTypeException
      */
@@ -64,7 +48,7 @@ abstract class AbstractElement implements ElementInterface
         $elementMeta = ElementBasenameParser::parse($basename);
 
         $updated = new DateTime();
-        $updated->setTimestamp($meta['timestamp']);
+        $updated->setTimestamp((int) $meta['timestamp']);
 
         $this->name = $elementMeta['name'];
         $this->tags = $elementMeta['tags'];

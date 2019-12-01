@@ -126,7 +126,11 @@ class ElementFile
         $this->basename = $basename;
 
         // Remove illegal chars
-        $basename = preg_replace('/[:;\[\]\/\?]+/i', '', $basename);
+        $basename = preg_replace('/[:;\[\]\/?]+/i', '', $basename);
+
+        if ($basename === null) {
+            throw new InvalidArgumentException('Invalid basename');
+        }
 
         $elementMeta = ElementBasenameParser::parse($basename);
 

@@ -8,14 +8,15 @@ use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use League\Flysystem\Config;
-use League\Flysystem\FilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
     private const NAME = 'dropbox';
 
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
     /**
@@ -31,17 +32,21 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
      *
      * @throws DropboxAccessTokenMissingException
      */
-    public function getFilesystem(User $user): FilesystemInterface
+    public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
         if (!$this->filesystem) {
             $userFilesystemCredentials = $user->getFilesystemCredentials();
 
-            if (!$userFilesystemCredentials
+            if ($userFilesystemCredentials === null
                 || $userFilesystemCredentials->getFilesystemProviderName() !== self::getName()) {
-                throw new DropboxAccessTokenMissingException('error.dropbox_not_linked');
+                throw $this->createTokenMissingException();
             }
 
             $accessToken = $userFilesystemCredentials->getCredentials();
+
+            if ($accessToken === null) {
+                throw $this->createTokenMissingException();
+            }
 
             $client = new DropboxClient($accessToken);
             $adapter = $this->cacheAdapter(new EnhancedDropboxAdapter($client), $user);
@@ -58,5 +63,10 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
         }
 
         return $this->filesystem;
+    }
+
+    private function createTokenMissingException()
+    {
+        return new DropboxAccessTokenMissingException('error.dropbox_not_linked');
     }
 }

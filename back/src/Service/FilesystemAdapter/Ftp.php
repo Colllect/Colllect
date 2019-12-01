@@ -6,42 +6,30 @@ namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFtpAdapter;
 use League\Flysystem\Config;
-use League\Flysystem\FilesystemInterface;
 
 class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
     private const NAME = 'ftp';
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $host;
 
-    /**
-     * @var int
-     */
+    /* @var int */
     private $port;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $username;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $password;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $rootPath;
 
-    /**
-     * @var FilesystemInterface
-     */
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
     public function __construct(
@@ -73,9 +61,9 @@ class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterIn
     /**
      * {@inheritdoc}
      */
-    public function getFilesystem(User $user): FilesystemInterface
+    public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
-        if (!$this->filesystem) {
+        if ($this->filesystem === null) {
             $adapter = $this->cacheAdapter(
                 new EnhancedFtpAdapter(
                     [

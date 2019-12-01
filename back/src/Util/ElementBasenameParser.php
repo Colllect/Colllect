@@ -55,7 +55,10 @@ class ElementBasenameParser
 
         $meta['name'] = $name;
         $meta['tags'] = $tags;
-        $meta['extension'] = $pathParts['extension'];
+
+        if (isset($pathParts['extension'])) {
+            $meta['extension'] = $pathParts['extension'];
+        }
 
         return $meta;
     }

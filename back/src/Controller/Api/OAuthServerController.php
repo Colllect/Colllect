@@ -7,13 +7,13 @@ namespace App\Controller\Api;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Component\Routing\Annotation\Route;
-use Zend\Diactoros\Response;
 
-class OAuthServerController
+final class OAuthServerController
 {
     /**
      * @var AuthorizationServer
@@ -99,9 +99,9 @@ class OAuthServerController
      *     description="Returned when bad credentials"
      * )
      */
-    public function token(ServerRequestInterface $serverRequest): ResponseInterface
+    public function token(ServerRequestInterface $serverRequest, ResponseFactoryInterface $responseFactory): ResponseInterface
     {
-        $serverResponse = new Response();
+        $serverResponse = $responseFactory->createResponse();
 
         try {
             return $this->authorizationServer->respondToAccessTokenRequest($serverRequest, $serverResponse);

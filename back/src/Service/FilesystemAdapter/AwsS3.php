@@ -7,37 +7,28 @@ namespace App\Service\FilesystemAdapter;
 use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedAwsS3Adapter;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use Aws\S3\S3Client;
+use Exception;
 use League\Flysystem\Config;
-use League\Flysystem\FilesystemInterface;
 
 class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
     private const NAME = 'aws_s3';
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $key;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $secret;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $region;
 
-    /**
-     * @var string
-     */
+    /* @var string */
     private $bucket;
 
-    /**
-     * @var FilesystemInterface
-     */
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
     public function __construct(
@@ -64,9 +55,12 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
         return self::NAME;
     }
 
-    public function getFilesystem(User $user): FilesystemInterface
+    /**
+     * @throws Exception
+     */
+    public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
-        if (!$this->filesystem) {
+        if ($this->filesystem === null) {
             $client = new S3Client(
                 [
                     'credentials' => [
@@ -78,7 +72,13 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
                 ]
             );
 
-            $adapter = $this->cacheAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, $user->getId()), $user);
+            $userId = $user->getId();
+
+            if ($userId === null) {
+                throw new \Exception('awss3.not_logged_in');
+            }
+
+            $adapter = $this->cacheAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, (string) $userId), $user);
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,

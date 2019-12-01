@@ -12,7 +12,7 @@ class EnhancedCachedAdapter extends CachedAdapter implements EnhancedFlysystemAd
     /**
      * {@inheritdoc}
      *
-     * @throws
+     * @throws Exception
      */
     public function renameDir(string $path, string $newPath): bool
     {

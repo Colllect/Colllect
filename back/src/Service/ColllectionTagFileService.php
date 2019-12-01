@@ -54,6 +54,7 @@ class ColllectionTagFileService
      * @return Tag[]
      *
      * @throws FileNotFoundException
+     * @throws Exception
      */
     public function getAll(string $encodedColllectionPath): array
     {
@@ -71,6 +72,10 @@ class ColllectionTagFileService
         }
 
         $tagsFileContent = $this->filesystem->read($tagsFilePath);
+
+        if ($tagsFileContent === false) {
+            throw new Exception('Cannon read file: ' . $tagsFilePath);
+        }
 
         try {
             $flatTags = \GuzzleHttp\json_decode($tagsFileContent, true);
@@ -113,6 +118,10 @@ class ColllectionTagFileService
 
         // We don't want to keep reference
         $tag = clone array_shift($filteredTags);
+
+        if ($tag === null) {
+            throw new NotFoundHttpException('error.tag_not_found');
+        }
 
         return $tag;
     }

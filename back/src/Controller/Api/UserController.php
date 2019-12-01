@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractController
+final class UserController extends AbstractController
 {
     /**
      * Get an user.
@@ -49,12 +49,12 @@ class UserController extends AbstractController
      */
     public function readUser(int $userId): JsonResponse
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
 
-        if (!$user) {
+        if ($user === null) {
             throw $this->createNotFoundException('User not found');
         }
 
@@ -145,12 +145,12 @@ class UserController extends AbstractController
      */
     public function updateUser(Request $request, int $userId): JsonResponse
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
 
-        if (!$user) {
+        if ($user === null) {
             throw $this->createNotFoundException('User not found');
         }
 
@@ -197,12 +197,12 @@ class UserController extends AbstractController
      */
     public function deleteUser(int $userId): Response
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
 
-        if (!$user) {
+        if ($user === null) {
             throw $this->createNotFoundException('User not found');
         }
 

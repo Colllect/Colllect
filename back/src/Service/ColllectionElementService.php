@@ -91,7 +91,7 @@ class ColllectionElementService
      */
     public function list(string $encodedColllectionPath): array
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_list');
         }
 
@@ -101,7 +101,7 @@ class ColllectionElementService
         } catch (Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_list');
             }
 
@@ -145,7 +145,7 @@ class ColllectionElementService
             }
         }
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_list');
         }
 
@@ -168,7 +168,7 @@ class ColllectionElementService
      */
     public function create(string $encodedColllectionPath, Request $request)
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_create');
         }
 
@@ -176,7 +176,7 @@ class ColllectionElementService
         $form = $this->handleRequest($request, $elementFile);
 
         if (!$form->isValid()) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_create');
             }
 
@@ -194,7 +194,7 @@ class ColllectionElementService
         $elementMetadata = $this->filesystem->getMetadata($path);
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_create');
         }
 
@@ -217,7 +217,7 @@ class ColllectionElementService
      */
     public function update(string $encodedElementBasename, string $encodedColllectionPath, Request $request)
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_update');
         }
 
@@ -231,7 +231,7 @@ class ColllectionElementService
         $form = $this->handleRequest($request, $elementFile);
 
         if (!$form->isValid()) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_update');
             }
 
@@ -243,7 +243,7 @@ class ColllectionElementService
         // Rename if necessary
         if ($path !== $newPath) {
             if (!$this->filesystem->rename($path, $newPath)) {
-                if ($this->stopwatch) {
+                if ($this->stopwatch !== null) {
                     $this->stopwatch->stop('colllection_element_update');
                 }
 
@@ -254,7 +254,7 @@ class ColllectionElementService
         // Update content if necessary
         if ($element::shouldLoadContent() && (bool) $elementFile->getContent()) {
             if (!$this->filesystem->update($newPath, $elementFile->getContent())) {
-                if ($this->stopwatch) {
+                if ($this->stopwatch !== null) {
                     $this->stopwatch->stop('colllection_element_update');
                 }
 
@@ -266,7 +266,7 @@ class ColllectionElementService
         $elementMetadata = $this->filesystem->getMetadata($newPath);
         $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_update');
         }
 
@@ -284,7 +284,7 @@ class ColllectionElementService
      */
     public function get(string $encodedElementBasename, string $encodedColllectionPath): ElementInterface
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_get');
         }
 
@@ -294,7 +294,7 @@ class ColllectionElementService
         $meta = $this->filesystem->getMetadata($path);
 
         if (!$meta) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_get');
             }
 
@@ -309,7 +309,7 @@ class ColllectionElementService
             $element->setContent($content);
         }
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_get');
         }
 
@@ -330,7 +330,7 @@ class ColllectionElementService
         string $encodedColllectionPath,
         HeaderBag $requestHeaders
     ): Response {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_get_content');
         }
 
@@ -341,7 +341,7 @@ class ColllectionElementService
             $meta = $this->filesystem->getMetadata($path);
 
             if (!$meta) {
-                if ($this->stopwatch) {
+                if ($this->stopwatch !== null) {
                     $this->stopwatch->stop('colllection_element_get_content');
                 }
 
@@ -354,7 +354,7 @@ class ColllectionElementService
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
 
-                    if ($this->stopwatch) {
+                    if ($this->stopwatch !== null) {
                         $this->stopwatch->stop('colllection_element_get_content');
                     }
 
@@ -371,13 +371,13 @@ class ColllectionElementService
             $response->headers->set('Content-Type', $standardizedMeta['mimetype']);
             $response->setLastModified((new DateTime())->setTimestamp($standardizedMeta['timestamp']));
 
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_get_content');
             }
 
             return $response;
         } catch (FileNotFoundException $e) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_get_content');
             }
 
@@ -395,7 +395,7 @@ class ColllectionElementService
      */
     public function delete(string $encodedElementBasename, string $encodedColllectionPath): void
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_delete');
         }
 
@@ -408,7 +408,7 @@ class ColllectionElementService
             // If file does not exists or was already deleted, it's OK
         }
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_delete');
         }
     }
@@ -422,7 +422,7 @@ class ColllectionElementService
      */
     public function batchRename(string $encodedColllectionPath, Closure $matches, Closure $process): void
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_element_batch_rename');
         }
 
@@ -440,7 +440,7 @@ class ColllectionElementService
             }
         }
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_element_batch_rename');
         }
     }

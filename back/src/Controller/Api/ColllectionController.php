@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ColllectionController extends AbstractController
+final class ColllectionController extends AbstractController
 {
     /**
      * @var ColllectionService

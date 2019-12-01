@@ -13,7 +13,7 @@ use App\Model\Element\NoteElement;
 class ElementRegistry
 {
     /**
-     * @return string[]
+     * @return array<string, array<string>>
      */
     public static function getExtensionsByType(): array
     {

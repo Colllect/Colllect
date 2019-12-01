@@ -17,14 +17,19 @@ class Metadata
 
         // Add filename as it is not returned sometimes
         if (isset($meta['path']) && !isset($meta['filename'])) {
-            $pathParts = explode('/', $path);
+            $pathParts = explode('/', $meta['path']);
             $meta['basename'] = end($pathParts);
 
             if (strpos($meta['basename'], '.') === false) {
                 $meta['filename'] = $meta['basename'];
             } else {
                 $basenameParts = explode('.', $meta['basename']);
-                $meta['extension'] = strtolower(array_pop($basenameParts));
+                $extension = array_pop($basenameParts);
+
+                if (isset($extension)) {
+                    $meta['extension'] = strtolower($extension);
+                }
+
                 $meta['filename'] = implode('.', $basenameParts);
             }
         }

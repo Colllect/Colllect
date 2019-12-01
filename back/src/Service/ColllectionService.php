@@ -22,19 +22,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionService
 {
-    /**
-     * @var EnhancedFilesystemInterface
-     */
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /* @var FormFactoryInterface */
     private $formFactory;
 
-    /**
-     * @var Stopwatch
-     */
+    /* @var Stopwatch|null */
     private $stopwatch;
 
     /**
@@ -66,7 +60,7 @@ class ColllectionService
      */
     public function list(): array
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_list');
         }
 
@@ -75,7 +69,7 @@ class ColllectionService
         } catch (Exception $e) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_list');
             }
 
@@ -83,7 +77,7 @@ class ColllectionService
         }
 
         if (\count($colllectionsMetadata) === 0) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_list');
             }
 
@@ -111,7 +105,7 @@ class ColllectionService
 
         $colllectionList = array_values($colllections);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_list');
         }
 
@@ -125,7 +119,7 @@ class ColllectionService
      */
     public function create(Request $request)
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_create');
         }
 
@@ -134,7 +128,7 @@ class ColllectionService
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_create');
             }
 
@@ -144,7 +138,7 @@ class ColllectionService
         $path = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $colllection->getName();
         $this->filesystem->createDir($path);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_create');
         }
 
@@ -162,7 +156,7 @@ class ColllectionService
      */
     public function update(string $encodedColllectionPath, Request $request)
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_update');
         }
 
@@ -173,7 +167,7 @@ class ColllectionService
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_update');
             }
 
@@ -184,7 +178,7 @@ class ColllectionService
         $renamedPath = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $renamedColllection->getName();
         $this->filesystem->renameDir($path, $renamedPath);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_update');
         }
 
@@ -200,7 +194,7 @@ class ColllectionService
      */
     public function get(string $encodedColllectionPath): Colllection
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_get');
         }
 
@@ -209,7 +203,7 @@ class ColllectionService
         $meta = $this->filesystem->getMetadata($colllectionPath);
 
         if (!$meta) {
-            if ($this->stopwatch) {
+            if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_get');
             }
 
@@ -220,7 +214,7 @@ class ColllectionService
 
         $colllection = new Colllection($standardizedMeta);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_get');
         }
 
@@ -234,7 +228,7 @@ class ColllectionService
      */
     public function delete(string $encodedColllectionPath): void
     {
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->start('colllection_delete');
         }
 
@@ -242,7 +236,7 @@ class ColllectionService
 
         $this->filesystem->deleteDir($colllectionPath);
 
-        if ($this->stopwatch) {
+        if ($this->stopwatch !== null) {
             $this->stopwatch->stop('colllection_delete');
         }
     }

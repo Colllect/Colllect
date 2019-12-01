@@ -15,6 +15,7 @@ use App\Model\ElementFile;
 use App\Util\ElementBasenameParser;
 use App\Util\ElementRegistry;
 use Exception;
+use LogicException;
 
 class ElementFileHandler
 {
@@ -57,27 +58,113 @@ class ElementFileHandler
      *
      * @throws NotSupportedElementTypeException
      * @throws InvalidElementLinkException
+     * @throws Exception
      */
     protected function handleElementFileByFile(ElementFile $elementFile): void
     {
-        if (!$elementFile->getCleanedBasename()) {
-            $elementFile->setBasename($elementFile->getFile()->getClientOriginalName());
+        $file = $elementFile->getFile();
+
+        if ($file === null) {
+            throw new Exception('No file to handle');
+        }
+
+        if ($elementFile->getCleanedBasename() === null) {
+            $clientOriginalName = $file->getClientOriginalName();
+
+            if ($clientOriginalName !== null) {
+                $elementFile->setBasename($clientOriginalName);
+            }
         }
 
         $this->guessElementFileType($elementFile);
-        $elementFile->setContent(file_get_contents($elementFile->getFile()->getRealPath()));
+
+        $fileRealPath = $file->getRealPath();
+
+        if ($fileRealPath === false) {
+            throw new Exception('File does not exists: ' . $fileRealPath);
+        }
+
+        $fileContent = file_get_contents($fileRealPath);
+
+        if ($fileContent === false) {
+            throw new Exception('Cannot read file: ' . $fileRealPath);
+        }
+
+        $elementFile->setContent($fileContent);
+    }
+
+    /**
+     * Set elementFile type by trying multiple methods.
+     *
+     * @throws NotSupportedElementTypeException
+     * @throws InvalidElementLinkException
+     */
+    protected function guessElementFileType(ElementFile $elementFile)
+    {
+        $elementFileUrl = $elementFile->getUrl();
+
+        if ($elementFileUrl !== null) {
+            // Check if URL is valid and respond a 200
+            $headers = get_headers($elementFileUrl);
+            if ($headers === false || strstr($headers[0], '200 OK') === false) {
+                throw new InvalidElementLinkException('error.invalid_link');
+            }
+
+            // Check if content type is in image allowed content types
+            foreach (self::ALLOWED_IMAGE_CONTENT_TYPE as $allowedContentType) {
+                $contentType = $headers['Content-Type'] ?? $headers['content-type'];
+                if (strstr($contentType, $allowedContentType) !== false) {
+                    $allowedContentTypeParts = explode('/', $allowedContentType);
+                    $extension = end($allowedContentTypeParts);
+                    $elementFileExtension = $elementFile->getExtension();
+                    if ($extension !== false && ($elementFileExtension === null || $elementFileExtension !== $extension)) {
+                        $elementFile->setExtension($extension);
+                    }
+                    $elementFile->setType(ImageElement::getType());
+
+                    return $elementFile;
+                }
+            }
+        }
+
+        try {
+            $elementCleanedBasename = $elementFile->getCleanedBasename();
+
+            if ($elementCleanedBasename !== null) {
+                $elementFile->setType(ElementBasenameParser::getTypeByPath($elementCleanedBasename));
+
+                return $elementFile;
+            }
+        } catch (Exception $e) {
+        }
+
+        // URL works but that is not an image and extension does not allow us to guess another type
+        if ($elementFileUrl !== null) {
+            $elementFile->setType(LinkElement::getType());
+
+            return $elementFile;
+        }
+
+        throw new NotSupportedElementTypeException();
     }
 
     /**
      * Use file targeted by URL as source of ElementFile.
      *
-     * @throws NotSupportedElementTypeException
      * @throws InvalidElementLinkException
+     * @throws LogicException
+     * @throws NotSupportedElementTypeException
      */
     protected function handleElementFileByUrl(ElementFile $elementFile): void
     {
+        $elementUrl = $elementFile->getUrl();
+
+        if ($elementUrl === null) {
+            throw new LogicException('Element must have an URL');
+        }
+
         if (!$elementFile->getCleanedBasename()) {
-            $parsedUrl = parse_url($elementFile->getUrl());
+            $parsedUrl = parse_url($elementUrl);
             $path = explode('/', trim($parsedUrl['path'], '/'));
             $endPath = end($path);
 
@@ -100,7 +187,7 @@ class ElementFileHandler
                 $elementFile->setContent($elementFile->getUrl());
                 if (\strlen($mediaContent) > 0) {
                     $oneLinedPage = trim(preg_replace('/\s+/', ' ', $mediaContent));
-                    preg_match('/\<title\>(.*)\<\/title\>/i', $oneLinedPage, $titleMatches);
+                    preg_match('/<title>(.*)<\/title>/i', $oneLinedPage, $titleMatches);
                     if (isset($titleMatches[1])) {
                         $title = $titleMatches[1];
                         $title = str_replace(self::NOT_ALLOWED_CHARS_IN_FILENAME, ' ', $title);
@@ -126,54 +213,5 @@ class ElementFileHandler
         if (!$elementFile->getName() || \strlen($elementFile->getName()) === 0) {
             $elementFile->setName(uniqid());
         }
-    }
-
-    /**
-     * Set elementFile type by trying multiple methods.
-     *
-     * @throws NotSupportedElementTypeException
-     * @throws InvalidElementLinkException
-     */
-    protected function guessElementFileType(ElementFile $elementFile)
-    {
-        if ($elementFile->getUrl()) {
-            // Check if URL is valid and respond a 200
-            $headers = get_headers($elementFile->getUrl(), true);
-            if (strstr($headers[0], '200 OK') === false) {
-                throw new InvalidElementLinkException('error.invalid_link');
-            }
-
-            // Check if content type is in image allowed content types
-            foreach (self::ALLOWED_IMAGE_CONTENT_TYPE as $allowedContentType) {
-                $contentType = $headers['Content-Type'] ?? $headers['content-type'];
-                if (strstr($contentType, $allowedContentType) !== false) {
-                    $allowedContentTypeParts = explode('/', $allowedContentType);
-                    $extension = end($allowedContentTypeParts);
-                    $elementFileExtension = $elementFile->getExtension();
-                    if (!isset($elementFileExtension) || (isset($elementFileExtension) && $elementFileExtension !== $extension)) {
-                        $elementFile->setExtension($extension);
-                    }
-                    $elementFile->setType(ImageElement::getType());
-
-                    return $elementFile;
-                }
-            }
-        }
-
-        try {
-            $elementFile->setType(ElementBasenameParser::getTypeByPath($elementFile->getCleanedBasename()));
-
-            return $elementFile;
-        } catch (Exception $e) {
-        }
-
-        // URL works but that is not an image and extension does not allow us to guess another type
-        if ($elementFile->getUrl()) {
-            $elementFile->setType(LinkElement::getType());
-
-            return $elementFile;
-        }
-
-        throw new NotSupportedElementTypeException();
     }
 }

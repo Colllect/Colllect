@@ -6,19 +6,16 @@ namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 use League\Flysystem\FilesystemInterface;
 
 class Local implements FilesystemAdapterInterface
 {
-    /**
-     * @var string
-     */
+    /* @var string */
     private $rootPath;
 
-    /**
-     * @var FilesystemInterface
-     */
+    /* @var FilesystemInterface */
     private $filesystem;
 
     public function __construct(string $fsLocalRootPath)
@@ -29,9 +26,9 @@ class Local implements FilesystemAdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilesystem(User $user): FilesystemInterface
+    public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
-        if (!$this->filesystem) {
+        if ($this->filesystem === null) {
             $adapter = new EnhancedLocalAdapter(
                 $this->rootPath . $user->getId(),
                 LOCK_EX,

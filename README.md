@@ -1,7 +1,7 @@
 Colllect
-==========
+========
 
-[![Build Status](https://travis-ci.org/Colllect/Colllect.svg?branch=develop)](https://travis-ci.org/Colllect/Colllect) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.sensiolabs.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Colllect/Colllect.svg)](LICENSE)
+[![Continuous Integration](https://github.com/Colllect/Colllect/workflows/Continuous%20Integration/badge.svg)](https://github.com/Colllect/Colllect/actions) [![SymfonyInsight](https://insight.symfony.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.symfony.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Colllect/Colllect.svg)](LICENSE)
 
 [Go to Colllect website](http://getcollect.io/) and subscribe to get notified of the launch.
 

@@ -22,9 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class ColllectionElementController extends AbstractController
 {
-    /**
-     * @var ColllectionElementService
-     */
+    /* @var ColllectionElementService */
     private $colllectionElementService;
 
     public function __construct(ColllectionElementService $colllectionElementService)

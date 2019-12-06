@@ -20,19 +20,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ColllectionTagService
 {
-    /**
-     * @var ColllectionElementService
-     */
+    /* @var ColllectionElementService */
     private $colllectionElementService;
 
-    /**
-     * @var ColllectionTagFileService
-     */
+    /* @var ColllectionTagFileService */
     private $colllectionTagFileService;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /* @var FormFactoryInterface */
     private $formFactory;
 
     public function __construct(

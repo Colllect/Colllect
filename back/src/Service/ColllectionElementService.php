@@ -38,24 +38,16 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionElementService
 {
-    /**
-     * @var EnhancedFilesystemInterface
-     */
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
-    /**
-     * @var ElementFileHandler
-     */
+    /* @var ElementFileHandler */
     private $elementFileHandler;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /* @var FormFactoryInterface */
     private $formFactory;
 
-    /**
-     * @var Stopwatch
-     */
+    /* @var Stopwatch */
     private $stopwatch;
 
     /**
@@ -116,22 +108,28 @@ class ColllectionElementService
             }
         );
 
-        if (\count($filesMetadata) > 0) {
-            // Sort files by last updated date
-            uasort(
-                $filesMetadata,
-                function ($a, $b) {
-                    $aTimestamp = $a['timestamp'];
-                    $bTimestamp = $b['timestamp'];
+        if ($filesMetadata === null || \count($filesMetadata) === 0) {
+            if ($this->stopwatch !== null) {
+                $this->stopwatch->stop('colllection_element_list');
+            }
 
-                    if ($aTimestamp === $bTimestamp) {
-                        return 0;
-                    }
-
-                    return $aTimestamp < $bTimestamp ? -1 : 1;
-                }
-            );
+            return [];
         }
+
+        // Sort files by last updated date
+        uasort(
+            $filesMetadata,
+            function ($a, $b) {
+                $aTimestamp = $a['timestamp'];
+                $bTimestamp = $b['timestamp'];
+
+                if ($aTimestamp === $bTimestamp) {
+                    return 0;
+                }
+
+                return $aTimestamp < $bTimestamp ? -1 : 1;
+            }
+        );
 
         // Get typed element for each file
         $elements = [];
@@ -187,11 +185,18 @@ class ColllectionElementService
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $colllectionPath . '/' . $elementFile->getCleanedBasename();
-        if (!$this->filesystem->write($path, $elementFile->getContent())) {
+        $content = $elementFile->getContent();
+        if ($content === null) {
+            throw new EmptyFileException();
+        }
+        if (!$this->filesystem->write($path, $content)) {
             throw new FilesystemCannotWriteException();
         }
 
         $elementMetadata = $this->filesystem->getMetadata($path);
+        if ($elementMetadata === false) {
+            throw new NotFoundHttpException('error.element_not_found');
+        }
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         if ($this->stopwatch !== null) {
@@ -211,7 +216,6 @@ class ColllectionElementService
      *
      * @throws FileNotFoundException
      * @throws FilesystemCannotRenameException
-     * @throws FilesystemCannotWriteException
      * @throws NotSupportedElementTypeException
      * @throws FileExistsException
      */
@@ -225,6 +229,9 @@ class ColllectionElementService
 
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
         $elementMetadata = $this->filesystem->getMetadata($path);
+        if ($elementMetadata === false) {
+            throw new NotFoundHttpException('error.element_not_found');
+        }
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         $elementFile = new ElementFile($element);
@@ -252,18 +259,24 @@ class ColllectionElementService
         }
 
         // Update content if necessary
-        if ($element::shouldLoadContent() && (bool) $elementFile->getContent()) {
-            if (!$this->filesystem->update($newPath, $elementFile->getContent())) {
-                if ($this->stopwatch !== null) {
-                    $this->stopwatch->stop('colllection_element_update');
-                }
+        if ($element::shouldLoadContent()) {
+            $content = $elementFile->getContent();
+            if ($content !== null) {
+                if (!$this->filesystem->update($newPath, $content)) {
+                    if ($this->stopwatch !== null) {
+                        $this->stopwatch->stop('colllection_element_update');
+                    }
 
-                throw new FilesystemCannotWriteException();
+                    throw new NotFoundHttpException('error.element_not_found');
+                }
             }
         }
 
         // Get fresh data about updated element
         $elementMetadata = $this->filesystem->getMetadata($newPath);
+        if ($elementMetadata === false) {
+            throw new FileNotFoundException($path);
+        }
         $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         if ($this->stopwatch !== null) {
@@ -291,9 +304,8 @@ class ColllectionElementService
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
-        $meta = $this->filesystem->getMetadata($path);
-
-        if (!$meta) {
+        $elementMetadata = $this->filesystem->getMetadata($path);
+        if ($elementMetadata === false) {
             if ($this->stopwatch !== null) {
                 $this->stopwatch->stop('colllection_element_get');
             }
@@ -301,11 +313,18 @@ class ColllectionElementService
             throw new NotFoundHttpException('error.element_not_found');
         }
 
-        $standardizedMeta = Metadata::standardize($meta, $path);
+        $standardizedMeta = Metadata::standardize($elementMetadata, $path);
         $element = AbstractElement::get($standardizedMeta, $encodedColllectionPath);
 
         if ($element::shouldLoadContent()) {
             $content = $this->filesystem->read($path);
+            if ($content === false) {
+                if ($this->stopwatch !== null) {
+                    $this->stopwatch->stop('colllection_element_get');
+                }
+
+                throw new NotFoundHttpException('error.element_not_found');
+            }
             $element->setContent($content);
         }
 
@@ -426,7 +445,7 @@ class ColllectionElementService
             $this->stopwatch->start('colllection_element_batch_rename');
         }
 
-        /** @var ElementInterface[] $elements */
+        /* @var ElementInterface[] $elements */
         $elements = $this->list($encodedColllectionPath);
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         foreach ($elements as $element) {

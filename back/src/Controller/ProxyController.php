@@ -13,9 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProxyController extends AbstractController
 {
-    /**
-     * @var ColllectionElementService
-     */
+    /* @var ColllectionElementService */
     private $colllectionElementService;
 
     public function __construct(ColllectionElementService $colllectionElementService)

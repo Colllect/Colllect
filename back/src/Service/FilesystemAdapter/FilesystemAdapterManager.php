@@ -10,14 +10,10 @@ use League\Flysystem\Plugin\ListWith;
 
 class FilesystemAdapterManager
 {
-    /**
-     * @var string
-     */
+    /* @var string */
     private $defaultFilesystemAdapterName;
 
-    /**
-     * @var FilesystemAdapterInterface[]
-     */
+    /* @var FilesystemAdapterInterface[] */
     private $filesystemAdapters;
 
     public function __construct(string $defaultFilesystemAdapterName)

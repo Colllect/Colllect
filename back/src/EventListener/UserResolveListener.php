@@ -10,14 +10,10 @@ use Trikoder\Bundle\OAuth2Bundle\Event\UserResolveEvent;
 
 final class UserResolveListener
 {
-    /**
-     * @var UserProviderInterface
-     */
+    /* @var UserProviderInterface */
     private $userProvider;
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
+    /* @var UserPasswordEncoderInterface */
     private $userPasswordEncoder;
 
     public function __construct(UserProviderInterface $userProvider, UserPasswordEncoderInterface $userPasswordEncoder)

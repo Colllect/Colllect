@@ -40,7 +40,7 @@ class ElementBasenameParser
         $filename = $pathParts['filename'];
 
         // Parse tags from filename
-        preg_match_all('/#([^\s.,\/#!$%\^&\*;:{}=\-`~()]+)/', $filename, $tags);
+        preg_match_all('/#([^\s.,\/#!$%^&*;:{}=\-`~()]+)/', $filename, $tags);
         $tags = $tags[1];
         foreach ($tags as $k => $tag) {
             // Remove tags from filename

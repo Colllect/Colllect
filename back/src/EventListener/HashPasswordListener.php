@@ -14,9 +14,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 final class HashPasswordListener implements EventSubscriber
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
+    /* @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)

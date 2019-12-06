@@ -18,9 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class ColllectionController extends AbstractController
 {
-    /**
-     * @var ColllectionService
-     */
+    /* @var ColllectionService */
     private $colllectionService;
 
     public function __construct(ColllectionService $colllectionService)

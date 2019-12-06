@@ -15,9 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class OAuthServerController
 {
-    /**
-     * @var AuthorizationServer
-     */
+    /* @var AuthorizationServer */
     private $authorizationServer;
 
     public function __construct(AuthorizationServer $authorizationServer)

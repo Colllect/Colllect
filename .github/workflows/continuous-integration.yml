@@ -6,7 +6,7 @@ on:
 
 jobs:
     back-phpstan:
-        name: "Back: PHPStan"
+        name: "Back / PHPStan"
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v1
@@ -20,7 +20,7 @@ jobs:
                 run: composer phpstan
 
     back-phpcsfixer:
-        name: "Back: PHP CS fixer"
+        name: "Back / PHP CS fixer"
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v1
@@ -31,10 +31,10 @@ jobs:
 
             -   name: PHP CS Fixer
                 working-directory: ./back
-                run: composer cs
+                run: composer cs -- --dry-run
 
     front-lint:
-        name: "Front: lint"
+        name: "Front / Lint"
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v1

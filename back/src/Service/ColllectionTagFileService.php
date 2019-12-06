@@ -20,14 +20,10 @@ class ColllectionTagFileService
 {
     private const TAGS_FILE = '.tags.colllect';
 
-    /**
-     * @var EnhancedFilesystemInterface
-     */
+    /* @var EnhancedFilesystemInterface */
     private $filesystem;
 
-    /**
-     * @var array
-     */
+    /* @var array */
     private $tagsFilesCache = [];
 
     /**

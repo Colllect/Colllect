@@ -108,8 +108,12 @@ class DropboxController extends AbstractController
         $decodedResponse = \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
         $accessToken = $decodedResponse['access_token'];
 
-        /* @var $user User */
+        /* @var User|null $user */
         $user = $this->getUser();
+
+        if ($user === null) {
+            throw new \LogicException('User must be logged');
+        }
 
         $this->userFilesystemCredentialsService->setUserFilesystem(
             $user,

@@ -32,21 +32,21 @@ class ElementFileHandler
     public function handleFileElement(ElementFile $elementFile): void
     {
         // If there is an UploadedFile, consider it first
-        if ($elementFile->getFile()) {
+        if ($elementFile->getFile() !== null) {
             $this->handleElementFileByFile($elementFile);
 
             return;
         }
 
         // If there is an URL, check his content and try to parse URL to get basename if needed
-        if ($elementFile->getUrl()) {
+        if ($elementFile->getUrl() !== null) {
             $this->handleElementFileByUrl($elementFile);
 
             return;
         }
 
         // If there is directly content, use it
-        if ($elementFile->getContent()) {
+        if ($elementFile->getContent() !== null) {
             return;
         }
 
@@ -116,10 +116,10 @@ class ElementFileHandler
                 if (strstr($contentType, $allowedContentType) !== false) {
                     $allowedContentTypeParts = explode('/', $allowedContentType);
                     $extension = end($allowedContentTypeParts);
-                    $elementFileExtension = $elementFile->getExtension();
-                    if ($extension !== false && ($elementFileExtension === null || $elementFileExtension !== $extension)) {
-                        $elementFile->setExtension($extension);
+                    if ($extension === false) {
+                        throw new LogicException('Content type must contain a slash');
                     }
+                    $elementFile->setExtension($extension);
                     $elementFile->setType(ImageElement::getType());
 
                     return $elementFile;
@@ -163,10 +163,13 @@ class ElementFileHandler
             throw new LogicException('Element must have an URL');
         }
 
-        if (!$elementFile->getCleanedBasename()) {
-            $parsedUrl = parse_url($elementUrl);
-            $path = explode('/', trim($parsedUrl['path'], '/'));
+        if ($elementFile->getCleanedBasename() === null) {
+            $path = explode('/', trim($elementUrl, '/'));
             $endPath = end($path);
+
+            if ($endPath === false) {
+                throw new LogicException('URL must contain a slash');
+            }
 
             if (\array_key_exists('extension', pathinfo($endPath))) {
                 $elementFile->setBasename($endPath);
@@ -179,30 +182,36 @@ class ElementFileHandler
         $this->guessElementFileType($elementFile);
 
         // Get URL media content needed by all types
-        $mediaContent = file_get_contents($elementFile->getUrl());
+        $mediaContent = file_get_contents($elementUrl);
 
-        // As we know the type, adjust some attributes
-        switch ($elementFile->getType()) {
-            case LinkElement::getType():
-                $elementFile->setContent($elementFile->getUrl());
-                if (\strlen($mediaContent) > 0) {
-                    $oneLinedPage = trim(preg_replace('/\s+/', ' ', $mediaContent));
-                    preg_match('/<title>(.*)<\/title>/i', $oneLinedPage, $titleMatches);
+        // As we know the type, adjust some attributes based on content
+        if ($mediaContent !== false && \strlen($mediaContent) > 0) {
+            switch ($elementFile->getType()) {
+                case LinkElement::getType():
+                    $elementFile->setContent($elementUrl);
+                    $oneLinedPage = preg_replace('/\s+/', ' ', $mediaContent);
+                    if ($oneLinedPage === null) {
+                        break;
+                    }
+                    preg_match('/<title>(.*)<\/title>/i', trim($oneLinedPage), $titleMatches);
                     if (isset($titleMatches[1])) {
                         $title = $titleMatches[1];
                         $title = str_replace(self::NOT_ALLOWED_CHARS_IN_FILENAME, ' ', $title);
                         $title = preg_replace('/\s+/', ' ', $title);
+                        if (!\is_string($title)) {
+                            break;
+                        }
                         $elementFile->setBasename(trim($title));
                     }
-                }
-                break;
-            case ImageElement::getType():
-            case NoteElement::getType():
-            case ColorsElement::getType():
-                $elementFile->setContent($mediaContent);
-                break;
-            default:
-                throw new NotSupportedElementTypeException();
+                    break;
+                case ImageElement::getType():
+                case NoteElement::getType():
+                case ColorsElement::getType():
+                    $elementFile->setContent($mediaContent);
+                    break;
+                default:
+                    throw new NotSupportedElementTypeException();
+            }
         }
 
         // Add default extension to typed file
@@ -210,7 +219,7 @@ class ElementFileHandler
         if (!$elementFile->getExtension() || !\in_array($elementFile->getExtension(), $typeExtensions, true)) {
             $elementFile->setExtension($typeExtensions[0]);
         }
-        if (!$elementFile->getName() || \strlen($elementFile->getName()) === 0) {
+        if ($elementFile->getName() === null || \strlen($elementFile->getName()) === 0) {
             $elementFile->setName(uniqid());
         }
     }

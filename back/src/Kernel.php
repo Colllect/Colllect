@@ -29,15 +29,6 @@ class Kernel extends BaseKernel implements CompilerPassInterface
         }
     }
 
-    public function getCacheDir(): string
-    {
-        if (file_exists('/.dockerenv')) {
-            return '/var/cache/colllect/' . $this->environment;
-        }
-
-        return parent::getCacheDir();
-    }
-
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));

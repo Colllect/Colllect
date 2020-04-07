@@ -4,10 +4,10 @@ services:
   database:
     image: mariadb:10.4
     environment:
-      - MYSQL_ROOT_PASSWORD
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DATABASE}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
     command: ['--skip-name-resolve']
     ports:
       - 3306:3306

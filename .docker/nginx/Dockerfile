@@ -22,7 +22,7 @@ COPY colllect.conf colllect-ssl.conf /etc/nginx/sites-available/
 RUN mkdir -p /etc/nginx/sites-enabled
 RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
-RUN adduser -u 82 -D -S -G www-data www-data
+RUN adduser -u 1000 -D -S -G www-data www-data
 
 EXPOSE 80
 EXPOSE 443

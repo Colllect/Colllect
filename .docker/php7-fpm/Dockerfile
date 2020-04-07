@@ -48,10 +48,11 @@ RUN apk add --no-cache --virtual .build-deps \
     apk del .build-deps
 
 # Install Composer
+USER www-data
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative && \
 	composer clear-cache
+USER root
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
@@ -93,9 +94,8 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 
 COPY php-fpm.conf /usr/local/etc/
 
-RUN mkdir -p /var/cache/colllect && \
-    chown 82:82 /var/cache/colllect && \
-    chmod 755 /var/cache/colllect
+RUN apk add --no-cache shadow
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data
 
 WORKDIR /var/www/colllect
-USER www-data

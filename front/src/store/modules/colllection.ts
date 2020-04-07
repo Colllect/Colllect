@@ -1,20 +1,21 @@
 import {getStoreBuilder} from 'vuex-typex'
+import {Colllection} from '../../api'
 
 import api, * as ApiInterfaces from '../../api'
 import {base64UriDecode} from '../../helpers/base64Uri'
 import {RootState} from '../state'
 
 export interface ColllectionState {
-  name: string | null,
-  encodedColllectionPath: string | null,
+  name?: string,
+  encodedColllectionPath?: string,
   elements: ApiInterfaces.Element[],
   elementWidth: number,
   isLoaded: boolean,
 }
 
 const colllectionState: ColllectionState = {
-  name: null,
-  encodedColllectionPath: null,
+  name: undefined,
+  encodedColllectionPath: undefined,
   elements: [],
   elementWidth: 130,
   isLoaded: false,
@@ -23,7 +24,7 @@ const colllectionState: ColllectionState = {
 const colllectionModule = getStoreBuilder<RootState>().module('colllection', colllectionState)
 
 const mutations = {
-  setName: (state: ColllectionState, payload: string|null) => {
+  setName: (state: ColllectionState, payload?: string) => {
     state.name = payload
   },
   setColllection: (state: ColllectionState, payload: ApiInterfaces.Colllection) => {
@@ -43,7 +44,7 @@ const mutations = {
 
 const actions = {
   loadColllection: ({}, encodedColllectionPath: string) => {
-    const name = base64UriDecode(encodedColllectionPath).split('/').pop() || null
+    const name = base64UriDecode(encodedColllectionPath).split('/').pop()
     colllectionStore.commitSetName(name)
     colllectionStore.commitSetElements([])
     colllectionStore.commitSetIsLoaded(false)
@@ -51,13 +52,13 @@ const actions = {
     const loadColllectionPromise = api
       .getApiColllectionsByEncodedColllectionPath({encodedColllectionPath})
       .then((colllectionResponse) => {
-        colllectionStore.commitSetColllection(colllectionResponse.body)
+        colllectionStore.commitSetColllection(colllectionResponse.body as Colllection)
       })
 
     const loadColllectionElementsPromise = api
       .getApiColllectionsByEncodedColllectionPathElements({encodedColllectionPath})
       .then((elementsResponse) => {
-        colllectionStore.commitSetElements(elementsResponse.body.itemListElement)
+        colllectionStore.commitSetElements(elementsResponse.body)
       })
 
     Promise.all([loadColllectionPromise, loadColllectionElementsPromise]).then(() => {

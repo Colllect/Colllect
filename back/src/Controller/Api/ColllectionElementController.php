@@ -139,25 +139,14 @@ final class ColllectionElementController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when colllection files are listed",
-     *     @SWG\Schema(
-     *         type="object",
-     *         @SWG\Property(
-     *             property="itemListElement",
-     *             type="array",
-     *             @SWG\Items(ref="#/definitions/Element")
-     *         )
-     *     )
+     *     @SWG\Schema(ref="#/definitions/ElementList")
      * )
      */
     public function listColllectionElements(string $encodedColllectionPath): JsonResponse
     {
         $elements = $this->colllectionElementService->list($encodedColllectionPath);
 
-        return $this->json(
-            [
-                'itemListElement' => $elements,
-            ]
-        );
+        return $this->json($elements);
     }
 
     /**

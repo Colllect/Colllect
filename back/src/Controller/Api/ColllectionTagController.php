@@ -95,14 +95,7 @@ final class ColllectionTagController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when colllection tags are listed",
-     *     @SWG\Schema(
-     *         type="object",
-     *         @SWG\Property(
-     *             property="itemListElement",
-     *             type="array",
-     *             @SWG\Items(ref=@ApiDoc\Model(type=Tag::class))
-     *         )
-     *     )
+     *     @SWG\Schema(ref="#/definitions/TagList")
      * )
      *
      * @throws FileNotFoundException
@@ -111,11 +104,7 @@ final class ColllectionTagController extends AbstractController
     {
         $tags = $this->colllectionTagService->list($encodedColllectionPath);
 
-        return $this->json(
-            [
-                'itemListElement' => $tags,
-            ]
-        );
+        return $this->json($tags);
     }
 
     /**

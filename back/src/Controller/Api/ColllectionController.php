@@ -38,25 +38,14 @@ final class ColllectionController extends AbstractController
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllections are listed",
-     *     @SWG\Schema(
-     *         type="object",
-     *         @SWG\Property(
-     *             property="itemListElement",
-     *             type="array",
-     *             @SWG\Items(ref=@ApiDoc\Model(type=Colllection::class))
-     *         )
-     *     )
+     *     @SWG\Schema(ref="#/definitions/ColllectionList")
      * )
      */
     public function listColllections(): JsonResponse
     {
         $colllections = $this->colllectionService->list();
 
-        return $this->json(
-            [
-                'itemListElement' => $colllections,
-            ]
-        );
+        return $this->json($colllections);
     }
 
     /**

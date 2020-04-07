@@ -27,6 +27,7 @@ nelmio_api_doc:
                     refresh_token:
                         type: string
             Element:
+                type: object
                 properties:
                     name:
                         type: string
@@ -51,7 +52,18 @@ nelmio_api_doc:
                         type: string
                     content:
                         type: string
-                type: object
+            ColllectionList:
+                type: array
+                items:
+                    $ref: '#/definitions/Colllection'
+            ElementList:
+                type: array
+                items:
+                    $ref: '#/definitions/Element'
+            TagList:
+                type: array
+                items:
+                    $ref: '#/definitions/Tag'
         produces:
             - application/json
 

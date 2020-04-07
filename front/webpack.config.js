@@ -71,11 +71,14 @@ const config = {
         test: /\.scss/,
         use: [
           isDev
-            ? { loader: 'style-loader', options: { sourceMap: isDev } }
+            ? { loader: 'style-loader' }
             : { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader', options: { sourceMap: isDev, importLoaders: 1 } },
           { loader: 'postcss-loader', options: { sourceMap: isDev } },
-          { loader: 'sass-loader', options: { sourceMap: isDev, includePaths: [path.resolve(__dirname, 'src')] } },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: isDev, sassOptions: { includePaths: [path.resolve(__dirname, 'src')] } },
+          },
         ],
       },
       {

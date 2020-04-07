@@ -32,6 +32,7 @@ function getTemplate(templateName) {
 function swaggerCodeGen (swagger) {
   console.log('Generating TypeScript code...')
   const tsSourceCode = CodeGen.getTypescriptCode({
+    isES6: true,
     className: 'Api',
     swagger,
     template: {
@@ -43,10 +44,12 @@ function swaggerCodeGen (swagger) {
     beautifyOptions: {
       indent_size: 2,
     },
-  }).replace(/\r\n/g, '\n')
+  })
+    .replace(/\r\n/g, '\n')
     .replace(/"/g, '\'')
     .replace(/\s\?\s:/g, '?:')
-    .replace(/Promise < request\.Response >/g, 'Promise<request.Response>')
+    .replace(/ >/g, '>')
+    .replace(/< /g, '<')
     .replace(/(\/\*\*\n)(\s+)(\*[^\n]+)([^*]+)\*\n\s+\*/g, (match, commentStart, indentSpaces, firstLine, otherLines) => {
       return [
         commentStart.replace('\n', ''),
@@ -55,7 +58,7 @@ function swaggerCodeGen (swagger) {
         indentSpaces + ' *',
       ].join('\n')
     })
-    .replace(/ {2,4}\*/g, '   *')
+    .replace(/ {2,}\*/g, '   *')
     .replace(/[ ]+$/gm, '')
     .replace(/( {3}\*\n){2,}/g, '   *\n') + '\n'
 

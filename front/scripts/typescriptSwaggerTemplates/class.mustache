@@ -16,11 +16,16 @@ type CallbackHandler = (err: any, res?: request.Response) => void
 type RequestHandler = (req: request.Request) => void
 
 {{#definitions}}
-export interface {{&name}} {{#tsType}}{{> type}}{{/tsType}}
+export type {{&name}} = {{#tsType}}{{> type}}{{/tsType}}
 {{/definitions}}
 
-interface Logger {
+export type Logger = {
   log: (line: string) => any
+}
+
+export interface ResponseWithBody<S extends number, T> extends  Omit<keyof Response, 'body'> {
+  status: S
+  body: T
 }
 
 /**

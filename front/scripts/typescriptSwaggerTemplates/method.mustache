@@ -12,7 +12,7 @@ public {{&methodName}}(parameters: {
   {{/isSingleton}}{{/parameters}}
   $queryParameters?: any,
   $domain?: string,
-}): Promise<request.Response> {
+}): Promise<{{&responseTypes}}> {
   const domain = parameters.$domain ? parameters.$domain : this.domain
   let path = '{{&path}}'
   let body: any

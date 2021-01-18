@@ -22,7 +22,7 @@ export default class ColllectColllection extends Vue {
   private grid!: MiniGrid
   private mustRecreateTheGrid: boolean = false
 
-  get name(): string|null {
+  get name(): string | undefined {
     return colllectionStore.state.name
   }
 

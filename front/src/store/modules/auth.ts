@@ -40,10 +40,14 @@ const actions = {
   getCurrentUser: () => {
     api.getApiUsersCurrent({})
       .then((currentUserResponse) => {
+        if (currentUserResponse.status !== 200) {
+          return
+        }
+
         authStore.commitSetUser({
-          id: currentUserResponse.body.id,
+          id: currentUserResponse.body.id as number,
           nickname: currentUserResponse.body.nickname,
-          roles: currentUserResponse.body.roles,
+          roles: currentUserResponse.body.roles as string[],
         })
       })
   },

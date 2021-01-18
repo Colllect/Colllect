@@ -26,27 +26,27 @@ export default class ColllectElement extends Vue {
   private show: boolean = false
   private ratio: number = 1
 
-  get type(): string {
+  get type(): string | undefined {
     return this.element.type
   }
 
-  get name(): string {
+  get name(): string | undefined {
     return this.element.name
   }
 
-  get tags(): string[] {
+  get tags(): string[] | undefined {
     return this.element.tags
   }
 
-  get updatedDate(): string {
+  get updatedDate(): string | undefined {
     return this.element.updated
   }
 
-  get size(): number {
+  get size(): number | undefined {
     return this.element.size
   }
 
-  get fileUrl(): string {
+  get fileUrl(): string | undefined {
     return this.element.fileUrl
   }
 
@@ -74,7 +74,11 @@ export default class ColllectElement extends Vue {
     }
   }
 
-  get localStorageRatioKey(): string {
+  get localStorageRatioKey(): string | undefined {
+    if (this.fileUrl === undefined) {
+      return
+    }
+
     return 'elmtRatio.' + md5(this.fileUrl)
   }
 
@@ -124,6 +128,10 @@ export default class ColllectElement extends Vue {
       }
 
       this.ratio = ratio
+
+      if (this.localStorageRatioKey === undefined) {
+        return
+      }
       localStorage.setItem(this.localStorageRatioKey, this.ratio.toString())
     }
 
@@ -143,7 +151,7 @@ export default class ColllectElement extends Vue {
       this.isLoaded = true
     }
 
-    let ratio = localStorage.getItem(this.localStorageRatioKey)
+    let ratio = this.localStorageRatioKey !== undefined ? localStorage.getItem(this.localStorageRatioKey) : undefined
     if (!ratio) {
       ratio = '1'
     }

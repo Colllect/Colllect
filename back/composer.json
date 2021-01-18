@@ -4,7 +4,7 @@
     "type": "project",
     "description": "Colllect - Your new bookmark manager",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^1.8",

@@ -11,6 +11,12 @@ jobs:
         steps:
             -   uses: actions/checkout@v1
 
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '7.3'
+                    tools: composer:v1, prestissimo
+
             -   name: Install dependencies
                 working-directory: ./back
                 run: composer install --prefer-dist --no-progress --no-suggest
@@ -24,6 +30,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v1
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '7.3'
+                    tools: composer:v1, prestissimo
 
             -   name: Install dependencies
                 working-directory: ./back

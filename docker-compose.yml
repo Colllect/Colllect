@@ -24,7 +24,6 @@ services:
     user: "www-data"
     volumes:
       - ./back:/var/www/colllect
-      - ./logs/colllect-back:/var/www/colllect/var/log
   blackfire:
     image: blackfire/blackfire:1.30.0
     environment:

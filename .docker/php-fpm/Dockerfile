@@ -1,16 +1,16 @@
-ARG COMPOSER_VERSION=1.9.1
+ARG COMPOSER_VERSION=2.1.5
 
 FROM composer:${COMPOSER_VERSION} as composer
 
-# See https://github.com/docker-library/php/blob/master/7.3/alpine3.10/fpm/Dockerfile
-FROM php:7.3.12-fpm-alpine3.10
+# See https://github.com/docker-library/php/blob/master/8.0/alpine3.14/fpm/Dockerfile
+FROM php:8.0.9-fpm-alpine3.14
 
 MAINTAINER Alexandre DEMODE <contact@alex-d.fr>
 
 ARG TIMEZONE
 ARG DOCKER_HOST_IP
 ARG IDE_KEY
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 
 RUN apk add --no-cache \
     openssl \
@@ -48,11 +48,7 @@ RUN apk add --no-cache --virtual .build-deps \
     apk del .build-deps
 
 # Install Composer
-USER www-data
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative && \
-	composer clear-cache
-USER root
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
@@ -66,13 +62,12 @@ RUN echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/docker-ph
     echo "realpath_cache_ttl=600" >> /usr/local/etc/php/conf.d/custom.ini
 
 # Blackfire
-ENV current_os=alpine
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/$current_os/amd64/$version \
+    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
     && mkdir -p /tmp/blackfire \
     && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
-    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
+    && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
+    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
     && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
 # Install Xdebug
@@ -95,7 +90,9 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 COPY php-fpm.conf /usr/local/etc/
 
 RUN apk add --no-cache shadow
-RUN usermod -u 1000 www-data && \
-    groupmod -g 1000 www-data
+RUN usermod -u 1000 www-data \
+    && groupmod -g 1000 www-data
+
+USER www-data
 
 WORKDIR /var/www/colllect

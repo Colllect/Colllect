@@ -20,13 +20,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class CookieAccessTokenProvider
 {
     private $abstractGrant;
-    private $clientRepository;
-    private $privateKey;
 
     public function __construct(
+        private ClientRepositoryInterface $clientRepository,
         AccessTokenRepositoryInterface $accessTokenRepository,
-        ClientRepositoryInterface $clientRepository,
-        CryptKey $privateKey
+        CryptKey $privateKey,
     ) {
         $this->abstractGrant = new class() extends AbstractGrant {
             public function issueAccessToken(
@@ -52,9 +50,7 @@ class CookieAccessTokenProvider
             }
         };
         $this->abstractGrant->setAccessTokenRepository($accessTokenRepository);
-
-        $this->clientRepository = $clientRepository;
-        $this->privateKey = $privateKey;
+        $this->abstractGrant->setPrivateKey($privateKey);
     }
 
     /**
@@ -65,11 +61,8 @@ class CookieAccessTokenProvider
     {
         $client = $this->clientRepository->getClientEntity('default');
 
-        $accessToken = $this->abstractGrant
-            ->issueAccessToken($accessTokenTTL, $client, $username)
-            ->convertToJWT($this->privateKey)
-        ;
+        $accessToken = $this->abstractGrant->issueAccessToken($accessTokenTTL, $client, $username);
 
-        return (string) $accessToken;
+        return (string)$accessToken;
     }
 }

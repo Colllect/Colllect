@@ -1,4 +1,4 @@
-FROM nginx:1.17.6-alpine
+FROM nginx:1.21.0-alpine
 
 MAINTAINER Alexandre DEMDOE <contact@alex-d.fr>
 
@@ -27,7 +27,4 @@ RUN adduser -u 1000 -D -S -G www-data www-data
 EXPOSE 80
 EXPOSE 443
 
-COPY docker-entrypoint.sh /opt/
-RUN chmod +x /opt/docker-entrypoint.sh
-
-ENTRYPOINT ["/opt/docker-entrypoint.sh"]
+COPY entrypoint.sh /docker-entrypoint.d

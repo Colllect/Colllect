@@ -10,25 +10,33 @@ services:
       MYSQL_PASSWORD: ${MARIADB_PASSWORD}
     command: ['--skip-name-resolve']
     ports:
-      - 3306:3306
+      - '3306:3306'
     volumes:
       - database:/var/lib/mysql
+
   php:
-    image: colllect/php7-fpm
+    image: colllect/php-fpm
     build:
-      context: ./.docker/php7-fpm
+      context: .docker/php-fpm
       args:
         - TIMEZONE
         - DOCKER_HOST_IP
         - IDE_KEY
-    user: "www-data"
     volumes:
       - ./back:/var/www/colllect
+
   blackfire:
-    image: blackfire/blackfire:1.30.0
+    image: blackfire/blackfire:2.4.3
     environment:
-      - BLACKFIRE_SERVER_ID
-      - BLACKFIRE_SERVER_TOKEN
+      BLACKFIRE_LOG_LEVEL: 4
+      BLACKFIRE_DISABLE_LEGACY_PORT: 1
+      BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID}
+      BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN}
+      BLACKFIRE_CLIENT_ID: ${BLACKFIRE_CLIENT_ID}
+      BLACKFIRE_CLIENT_TOKEN: ${BLACKFIRE_CLIENT_TOKEN}
+    ports:
+      - '8307:8307'
+
   nginx:
     image: colllect/nginx
     build: ./.docker/nginx
@@ -36,8 +44,8 @@ services:
       - ENVIRONMENT
       - SERVER_NAME
     ports:
-      - 80:80
-      - 443:443
+      - '80:80'
+      - '443:443'
     volumes:
       - ./back:/var/www/colllect:ro
       - ./logs/nginx/:/var/log/nginx

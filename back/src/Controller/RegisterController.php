@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegisterController extends AbstractController
 {
-    const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
+    public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
 
     private $csrfService;
 

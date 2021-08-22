@@ -63,6 +63,6 @@ class CookieAccessTokenProvider
 
         $accessToken = $this->abstractGrant->issueAccessToken($accessTokenTTL, $client, $username);
 
-        return (string)$accessToken;
+        return (string) $accessToken;
     }
 }

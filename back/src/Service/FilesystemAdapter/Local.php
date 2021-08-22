@@ -31,7 +31,7 @@ class Local implements FilesystemAdapterInterface
         if ($this->filesystem === null) {
             $adapter = new EnhancedLocalAdapter(
                 $this->rootPath . $user->getId(),
-                LOCK_EX,
+                \LOCK_EX,
                 EnhancedLocalAdapter::SKIP_LINKS
             );
 

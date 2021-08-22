@@ -5,8 +5,8 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('var')
 ;
 
-return PhpCsFixer\Config::create()
-    ->setRules([
+$config = new PhpCsFixer\Config();
+return $config->setRules([
         '@PHP71Migration' => true,
         '@PHP71Migration:risky' => true,
         '@Symfony' => true,

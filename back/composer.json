@@ -31,7 +31,7 @@
         "trikoder/oauth2-bundle": "3.2.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "imbo/behat-api-extension": "^2.2",
         "nelmio/alice": "^3.5",
         "phpstan/extension-installer": "^1.0",
@@ -65,7 +65,7 @@
             "@auto-scripts"
         ],
         "cs": [
-            "php-cs-fixer fix src --diff --diff-format udiff"
+            "php-cs-fixer fix --diff"
         ],
         "phpstan": [
             "phpstan analyze"

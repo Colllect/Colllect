@@ -9,10 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method UserFilesystemCredentials|null find($id, $lockMode = null, $lockVersion = null)
- * @method UserFilesystemCredentials|null findOneBy(array $criteria, array $orderBy = null)
- * @method UserFilesystemCredentials[]    findAll()
- * @method UserFilesystemCredentials[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<UserFilesystemCredentials>
  */
 class UserFilesystemCredentialsRepository extends ServiceEntityRepository
 {

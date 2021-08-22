@@ -25,19 +25,15 @@ class DropboxController extends AbstractController
     private const DROPBOX_API_OAUTH2_TOKEN_URL = 'https://api.dropboxapi.com/oauth2/token';
     private const STATE_COOKIE_NAME = 'colllect_dropbox_state';
 
-    private $router;
-    private $userFilesystemCredentialsService;
-    private $dropboxKey;
-    private $dropboxSecret;
+    private string $dropboxKey;
+    private string $dropboxSecret;
 
     public function __construct(
-        RouterInterface $router,
-        UserFilesystemCredentialsService $userFilesystemCredentialsService,
+        private RouterInterface $router,
+        private UserFilesystemCredentialsService $userFilesystemCredentialsService,
         string $fsDropboxKey,
         string $fsDropboxSecret
     ) {
-        $this->router = $router;
-        $this->userFilesystemCredentialsService = $userFilesystemCredentialsService;
         $this->dropboxKey = $fsDropboxKey;
         $this->dropboxSecret = $fsDropboxSecret;
     }
@@ -108,7 +104,7 @@ class DropboxController extends AbstractController
         $decodedResponse = \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
         $accessToken = $decodedResponse['access_token'];
 
-        /* @var User|null $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         if ($user === null) {
@@ -136,7 +132,7 @@ class DropboxController extends AbstractController
         return $state;
     }
 
-    private function generateDropboxRedirectUrl()
+    private function generateDropboxRedirectUrl(): string
     {
         return $this->generateUrl('app_oauth2_clients_dropbox_complete', [], UrlGeneratorInterface::ABSOLUTE_URL);
     }

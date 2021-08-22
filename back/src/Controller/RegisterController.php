@@ -20,11 +20,9 @@ class RegisterController extends AbstractController
 {
     public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
 
-    private $csrfService;
-
-    public function __construct(CsrfService $csrfService)
-    {
-        $this->csrfService = $csrfService;
+    public function __construct(
+        private CsrfService $csrfService,
+    ) {
     }
 
     /**

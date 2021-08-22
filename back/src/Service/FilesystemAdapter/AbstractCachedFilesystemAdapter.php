@@ -13,11 +13,8 @@ use Exception;
 
 abstract class AbstractCachedFilesystemAdapter
 {
-    /* @var string Cache root path */
-    private $cacheRoot;
-
-    /* @var int Cache duration */
-    private $cacheDuration;
+    private string $cacheRoot;
+    private int $cacheDuration;
 
     public function __construct(string $fsCacheRoot, int $fsCacheDuration)
     {

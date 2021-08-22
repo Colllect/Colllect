@@ -13,19 +13,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
 class SecurityController extends AbstractController
 {
-    private $accessTokenRepository;
-    private $security;
-    private $csrfService;
-
-    public function __construct(AccessTokenRepositoryInterface $accessTokenRepository, Security $security, CsrfService $csrfService)
-    {
-        $this->accessTokenRepository = $accessTokenRepository;
-        $this->security = $security;
-        $this->csrfService = $csrfService;
+    public function __construct(
+        private AccessTokenRepositoryInterface $accessTokenRepository,
+        private Security $security,
+        private CsrfService $csrfService,
+    ) {
     }
 
     /**
@@ -84,7 +81,9 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_security_login');
         }
 
-        $tokenId = $this->security->getToken()->getAttribute('server_request')->getAttribute('oauth_access_token_id');
+        /** @var TokenInterface $token */
+        $token = $this->security->getToken();
+        $tokenId = $token->getAttribute('server_request')->getAttribute('oauth_access_token_id');
         $this->accessTokenRepository->revokeAccessToken($tokenId);
 
         $response = $this->redirectToRoute('app_security_login');

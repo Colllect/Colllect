@@ -10,23 +10,19 @@ use Swagger\Annotations as SWG;
 class Tag
 {
     /**
-     * @var string
-     *
      * @SWG\Property(type="string")
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var string
-     *
      * @SWG\Property(type="string")
      */
-    private $encodedName;
+    private string $encodedName;
 
     /**
      * Tag constructor.
      *
-     * @param array $flatTag Tag as flat array
+     * @param array<string, string> $flatTag Tag as flat array
      */
     public function __construct(array $flatTag = [])
     {

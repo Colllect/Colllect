@@ -20,19 +20,20 @@ class ColllectionTagFileService
 {
     private const TAGS_FILE = '.tags.colllect';
 
-    /* @var EnhancedFilesystemInterface */
-    private $filesystem;
+    private EnhancedFilesystemInterface $filesystem;
 
-    /* @var array */
-    private $tagsFilesCache = [];
+    /** @var array<string, array<Tag>> */
+    private array $tagsFilesCache = [];
 
     /**
      * ColllectionTagFileService constructor.
      *
      * @throws Exception
      */
-    public function __construct(Security $security, FilesystemAdapterManager $flysystemAdapters)
-    {
+    public function __construct(
+        Security $security,
+        FilesystemAdapterManager $flysystemAdapters,
+    ) {
         $user = $security->getUser();
 
         if (!$user instanceof User) {
@@ -75,7 +76,7 @@ class ColllectionTagFileService
 
         try {
             $flatTags = \GuzzleHttp\json_decode($tagsFileContent, true);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return [];
         }
 
@@ -111,6 +112,7 @@ class ColllectionTagFileService
         }
 
         // We don't want to keep reference
+        /** @var Tag|null $tag */
         $tag = clone array_shift($filteredTags);
 
         if ($tag === null) {
@@ -135,6 +137,9 @@ class ColllectionTagFileService
         $this->tagsFilesCache[$encodedColllectionPath][] = $tag;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function remove(string $encodedColllectionPath, Tag $tag): void
     {
         // Check if tag does not already exists

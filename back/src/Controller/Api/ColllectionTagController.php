@@ -20,12 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class ColllectionTagController extends AbstractController
 {
-    /* @var ColllectionTagService */
-    private $colllectionTagService;
-
-    public function __construct(ColllectionTagService $colllectionTagService)
-    {
-        $this->colllectionTagService = $colllectionTagService;
+    public function __construct(
+        private ColllectionTagService $colllectionTagService,
+    ) {
     }
 
     /**

@@ -14,23 +14,12 @@ class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterIn
 {
     private const NAME = 'ftp';
 
-    /* @var string */
-    private $host;
-
-    /* @var int */
-    private $port;
-
-    /* @var string */
-    private $username;
-
-    /* @var string */
-    private $password;
-
-    /* @var string */
-    private $rootPath;
-
-    /* @var EnhancedFilesystemInterface */
-    private $filesystem;
+    private string $host;
+    private int $port;
+    private string $username;
+    private string $password;
+    private string $rootPath;
+    private ?EnhancedFilesystemInterface $filesystem;
 
     public function __construct(
         string $fsCacheRoot,

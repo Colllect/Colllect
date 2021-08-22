@@ -99,7 +99,7 @@ class ElementFileHandler
      * @throws NotSupportedElementTypeException
      * @throws InvalidElementLinkException
      */
-    protected function guessElementFileType(ElementFile $elementFile)
+    protected function guessElementFileType(ElementFile $elementFile): ElementFile
     {
         $elementFileUrl = $elementFile->getUrl();
 
@@ -115,6 +115,7 @@ class ElementFileHandler
                 $contentType = $headers['Content-Type'] ?? $headers['content-type'];
                 if (strstr($contentType, $allowedContentType) !== false) {
                     $allowedContentTypeParts = explode('/', $allowedContentType);
+                    /** @var string|false $extension */
                     $extension = end($allowedContentTypeParts);
                     if ($extension === false) {
                         throw new LogicException('Content type must contain a slash');
@@ -135,7 +136,7 @@ class ElementFileHandler
 
                 return $elementFile;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         // URL works but that is not an image and extension does not allow us to guess another type
@@ -165,6 +166,7 @@ class ElementFileHandler
 
         if ($elementFile->getCleanedBasename() === null) {
             $path = explode('/', trim($elementUrl, '/'));
+            /** @var string|false $endPath */
             $endPath = end($path);
 
             if ($endPath === false) {

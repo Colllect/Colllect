@@ -29,11 +29,9 @@ class LinkElement extends AbstractElement
     }
 
     /**
-     * @var string
-     *
      * @SWG\Property(type="string")
      */
-    private $url;
+    private string $url;
 
     public function getUrl(): ?string
     {

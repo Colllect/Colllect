@@ -27,7 +27,7 @@ class User implements UserInterface
      *
      * @SWG\Property(type="integer", readOnly=true)
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(name="email", type="string", length=255, unique=true)
@@ -38,7 +38,7 @@ class User implements UserInterface
      *
      * @SWG\Property(type="string", format="email")
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(name="nickname", type="string", length=255)
@@ -48,41 +48,42 @@ class User implements UserInterface
      *
      * @SWG\Property(type="string")
      */
-    private $nickname;
+    private ?string $nickname;
 
     /**
-     * @ORM\Column(name="roles", type="json_array")
+     * @var array<string>
+     * @ORM\Column(name="roles", type="json")
      *
      * @SWG\Property(
      *     type="array",
      *     @SWG\Items(type="string")
      * )
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @ORM\Column(name="password", type="string", length=255)
      */
-    private $password;
+    private ?string $password;
 
     /**
      * @Assert\Type("string")
      * @Assert\NotBlank(message="cannot_be_blank")
      * @Assert\Length(min="8", minMessage="too_short")
      */
-    private $plainPassword;
+    private ?string $plainPassword;
 
     /**
      * @ORM\Column(name="created_at", type="datetime")
      *
      * @SWG\Property(type="string", format="date-time")
      */
-    private $createdAt;
+    private DateTimeInterface $createdAt;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserFilesystemCredentials", mappedBy="user", cascade={"persist", "remove"})
      */
-    private $filesystemCredentials;
+    private ?UserFilesystemCredentials $filesystemCredentials;
 
     public function __construct()
     {
@@ -132,6 +133,9 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

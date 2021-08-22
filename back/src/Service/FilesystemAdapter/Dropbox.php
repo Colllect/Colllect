@@ -16,8 +16,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
 {
     private const NAME = 'dropbox';
 
-    /* @var EnhancedFilesystemInterface */
-    private $filesystem;
+    private ?EnhancedFilesystemInterface $filesystem;
 
     /**
      * {@inheritdoc}
@@ -34,7 +33,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
      */
     public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
-        if (!$this->filesystem) {
+        if ($this->filesystem === null) {
             $userFilesystemCredentials = $user->getFilesystemCredentials();
 
             if ($userFilesystemCredentials === null
@@ -65,7 +64,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
         return $this->filesystem;
     }
 
-    private function createTokenMissingException()
+    private function createTokenMissingException(): DropboxAccessTokenMissingException
     {
         return new DropboxAccessTokenMissingException('error.dropbox_not_linked');
     }

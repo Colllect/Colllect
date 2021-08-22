@@ -20,23 +20,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ColllectionTagService
 {
-    /* @var ColllectionElementService */
-    private $colllectionElementService;
-
-    /* @var ColllectionTagFileService */
-    private $colllectionTagFileService;
-
-    /* @var FormFactoryInterface */
-    private $formFactory;
-
     public function __construct(
-        ColllectionElementService $colllectionElementService,
-        ColllectionTagFileService $colllectionTagFileService,
-        FormFactoryInterface $formFactory
+        private ColllectionElementService $colllectionElementService,
+        private ColllectionTagFileService $colllectionTagFileService,
+        private FormFactoryInterface $formFactory
     ) {
-        $this->colllectionElementService = $colllectionElementService;
-        $this->colllectionTagFileService = $colllectionTagFileService;
-        $this->formFactory = $formFactory;
     }
 
     /**
@@ -60,11 +48,11 @@ class ColllectionTagService
      *
      * @return Tag|FormInterface
      *
+     * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
-     * @throws FileNotFoundException
      */
-    public function create(string $encodedColllectionPath, Request $request)
+    public function create(string $encodedColllectionPath, Request $request): Tag|FormInterface
     {
         $tag = new Tag();
         $form = $this->formFactory->create(TagType::class, $tag);
@@ -109,12 +97,12 @@ class ColllectionTagService
      *
      * @return Tag|FormInterface
      *
-     * @throws FilesystemCannotWriteException
-     * @throws TagAlreadyExistsException
      * @throws FileExistsException
      * @throws FileNotFoundException
+     * @throws FilesystemCannotWriteException
+     * @throws TagAlreadyExistsException
      */
-    public function update(string $encodedColllectionPath, string $encodedTagName, Request $request)
+    public function update(string $encodedColllectionPath, string $encodedTagName, Request $request): Tag|FormInterface
     {
         $tag = $this->get($encodedColllectionPath, $encodedTagName);
         $oldTag = clone $tag;

@@ -92,7 +92,7 @@ interface ElementInterface
     /**
      * Get element file URL.
      */
-    public function getFileUrl(): string;
+    public function getFileUrl(): ?string;
 
     /**
      * Set element file URL.

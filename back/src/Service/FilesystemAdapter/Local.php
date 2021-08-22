@@ -8,15 +8,11 @@ use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
-use League\Flysystem\FilesystemInterface;
 
 class Local implements FilesystemAdapterInterface
 {
-    /* @var string */
-    private $rootPath;
-
-    /* @var FilesystemInterface */
-    private $filesystem;
+    private string $rootPath;
+    private ?EnhancedFilesystemInterface $filesystem;
 
     public function __construct(string $fsLocalRootPath)
     {

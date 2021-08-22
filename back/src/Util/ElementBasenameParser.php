@@ -27,6 +27,8 @@ class ElementBasenameParser
     /**
      * Parse basename to get type, name, tags and extension.
      *
+     * @return array<string, mixed>
+     *
      * @throws NotSupportedElementTypeException
      */
     public static function parse(string $basename): array

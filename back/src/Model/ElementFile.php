@@ -16,51 +16,42 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ElementFile
 {
     /**
-     * @var UploadedFile
      * @Assert\File()
      */
-    protected $file;
+    protected UploadedFile $file;
 
     /**
-     * @var string
      * @Assert\Url()
      */
-    protected $url;
+    protected string $url;
 
     /**
-     * @var string
      * @Assert\Type("string")
      */
-    protected $content;
+    protected string $content;
 
     /**
-     * @var string
      * @Assert\Type("string")
      */
-    protected $name;
+    protected string $name;
 
     /**
-     * @var array
+     * @var array<string>
      * @Assert\Type("array")
      */
-    protected $tags;
+    protected array $tags;
 
     /**
-     * @var string
      * @Assert\Type("string")
      */
-    protected $extension;
+    protected string $extension;
 
     /**
-     * @var string
      * @Assert\Type("string")
      */
-    protected $type;
+    protected string $type;
 
-    /**
-     * @var string
-     */
-    private $basename;
+    private string $basename;
 
     public function __construct(ElementInterface $element = null)
     {
@@ -74,9 +65,6 @@ class ElementFile
         }
     }
 
-    /**
-     * @return UploadedFile
-     */
     public function getFile(): ?UploadedFile
     {
         return $this->file;

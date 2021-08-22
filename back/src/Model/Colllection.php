@@ -12,18 +12,21 @@ class Colllection
     /**
      * @SWG\Property(type="string")
      */
-    private $name;
+    private ?string $name;
 
     /**
      * @SWG\Property(type="string")
      */
-    private $encodedColllectionPath;
+    private ?string $encodedColllectionPath;
 
+    /**
+     * @param array<string, string|int> $colllectionMetadata
+     */
     public function __construct(array $colllectionMetadata = [])
     {
         if (\count($colllectionMetadata) > 0) {
-            $this->setName($colllectionMetadata['filename']);
-            $this->setEncodedColllectionPath(Base64::encode($colllectionMetadata['path']));
+            $this->setName((string) $colllectionMetadata['filename']);
+            $this->setEncodedColllectionPath(Base64::encode((string) $colllectionMetadata['path']));
         }
     }
 

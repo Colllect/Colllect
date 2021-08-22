@@ -8,7 +8,12 @@ use App\Service\ElementFileHandler;
 
 class Metadata
 {
-    public static function standardize(array $meta, string $path = null): array
+    /**
+     * @param array<string, string> $meta
+     *
+     * @return array<string, string|int>
+     */
+    public static function standardize(array $meta, ?string $path = null): array
     {
         // Add path if needed because some adapters didn't return it in metadata
         if ($path && !isset($meta['path'])) {
@@ -20,13 +25,13 @@ class Metadata
             $pathParts = explode('/', $meta['path']);
             $meta['basename'] = end($pathParts);
 
-            if (strpos($meta['basename'], '.') === false) {
+            if (!str_contains($meta['basename'], '.')) {
                 $meta['filename'] = $meta['basename'];
             } else {
                 $basenameParts = explode('.', $meta['basename']);
                 $extension = array_pop($basenameParts);
 
-                if (isset($extension)) {
+                if (!empty($extension)) {
                     $meta['extension'] = strtolower($extension);
                 }
 

@@ -11,40 +11,26 @@ use DateTime;
 
 abstract class AbstractElement implements ElementInterface
 {
-    /* @var string */
-    private $name;
-
-    /* @var array */
-    private $tags;
-
-    /* @var DateTime */
-    private $updated;
-
-    /* @var int */
-    private $size;
-
-    /* @var string */
-    private $extension;
-
-    /* @var string */
-    private $encodedColllectionPath;
-
-    /* @var string */
-    private $encodedElementBasename;
-
-    /* @var string */
-    private $fileUrl;
+    private string $name;
+    /** @var array<string> */
+    private array $tags;
+    private DateTime $updated;
+    private int $size;
+    private string $extension;
+    private string $encodedColllectionPath;
+    private string $encodedElementBasename;
+    private ?string $fileUrl;
 
     /**
      * Element constructor.
      *
-     * @param mixed[] $meta
+     * @param array<string, string|int> $meta
      *
      * @throws NotSupportedElementTypeException
      */
     public function __construct(array $meta, string $encodedColllectionPath)
     {
-        $basename = pathinfo($meta['path'])['basename'];
+        $basename = pathinfo((string) $meta['path'])['basename'];
         $elementMeta = ElementBasenameParser::parse($basename);
 
         $updated = new DateTime();
@@ -53,7 +39,7 @@ abstract class AbstractElement implements ElementInterface
         $this->name = $elementMeta['name'];
         $this->tags = $elementMeta['tags'];
         $this->updated = $updated;
-        $this->size = $meta['size'];
+        $this->size = (int) $meta['size'];
         $this->extension = $elementMeta['extension'];
         $this->encodedColllectionPath = $encodedColllectionPath;
         $this->encodedElementBasename = Base64::encode($basename);
@@ -142,7 +128,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * {@inheritdoc}
      */
-    public function getFileUrl(): string
+    public function getFileUrl(): ?string
     {
         return $this->fileUrl;
     }
@@ -158,7 +144,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * Return typed element based on flysystem metadata.
      *
-     * @param string[] $elementMetadata
+     * @param array<string, mixed> $elementMetadata
      *
      * @throws NotSupportedElementTypeException
      */
@@ -168,7 +154,6 @@ abstract class AbstractElement implements ElementInterface
         switch ($type) {
             case ImageElement::getType():
                 return new ImageElement($elementMetadata, $encodedColllectionPath);
-                break;
         }
 
         throw new NotSupportedElementTypeException();

@@ -10,13 +10,14 @@ use Symfony\Component\Routing\RouterInterface;
 
 class CsrfService
 {
-    private $router;
-
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private RouterInterface $router,
+    ) {
     }
 
+    /**
+     * @throws \Exception
+     */
     public function generateCsrfToken(): string
     {
         $csrfToken = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');

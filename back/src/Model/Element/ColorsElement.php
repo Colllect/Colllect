@@ -37,7 +37,7 @@ class ColorsElement extends AbstractElement
     /**
      * {@inheritdoc}
      */
-    public function setContent($content): void
+    public function setContent(string $content): void
     {
         // Nothing to do here since shouldLoadContent returns false
     }

@@ -11,8 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserFilesystemCredentialsService
 {
-    /* @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * @return string[]

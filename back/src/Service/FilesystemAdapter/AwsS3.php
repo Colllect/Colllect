@@ -16,20 +16,11 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
 {
     private const NAME = 'aws_s3';
 
-    /* @var string */
-    private $key;
-
-    /* @var string */
-    private $secret;
-
-    /* @var string */
-    private $region;
-
-    /* @var string */
-    private $bucket;
-
-    /* @var EnhancedFilesystemInterface */
-    private $filesystem;
+    private string $key;
+    private string $secret;
+    private string $region;
+    private string $bucket;
+    private ?EnhancedFilesystemInterface $filesystem;
 
     public function __construct(
         string $fsCacheRoot,
@@ -75,7 +66,7 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
             $userId = $user->getId();
 
             if ($userId === null) {
-                throw new \Exception('awss3.not_logged_in');
+                throw new Exception('aws_s3.not_logged_in');
             }
 
             $adapter = $this->cacheAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, (string) $userId), $user);

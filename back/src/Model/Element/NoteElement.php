@@ -30,11 +30,9 @@ class NoteElement extends AbstractElement
     }
 
     /**
-     * @var string
-     *
      * @SWG\Property(type="string")
      */
-    private $content;
+    private string $content;
 
     /**
      * {@inheritdoc}
@@ -55,7 +53,7 @@ class NoteElement extends AbstractElement
     /**
      * {@inheritdoc}
      */
-    public function setContent($content): void
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }

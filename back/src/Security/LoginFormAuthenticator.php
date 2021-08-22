@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\EventListener\OAuth2CookieListener;
+use App\Repository\UserRepository;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -32,27 +33,18 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
     public const HOME_PATH = '/';
     public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
 
-    private $entityManager;
-    private $urlGenerator;
-    private $passwordEncoder;
-    private $cookieAccessTokenProvider;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator,
-        UserPasswordEncoderInterface $passwordEncoder,
-        CookieAccessTokenProvider $cookieAccessTokenProvider
+        private EntityManagerInterface $entityManager,
+        private UrlGeneratorInterface $urlGenerator,
+        private UserPasswordEncoderInterface $passwordEncoder,
+        private CookieAccessTokenProvider $cookieAccessTokenProvider
     ) {
-        $this->entityManager = $entityManager;
-        $this->urlGenerator = $urlGenerator;
-        $this->passwordEncoder = $passwordEncoder;
-        $this->cookieAccessTokenProvider = $cookieAccessTokenProvider;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return $request->attributes->get('_route') === self::LOGIN_ROUTE
             && $request->isMethod('POST');
@@ -69,6 +61,8 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * {@inheritdoc}
+     *
+     * @return array<string, string>
      */
     public function getCredentials(Request $request): array
     {
@@ -91,9 +85,9 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)
-            ->findOneBy(['email' => $credentials['email']])
-        ;
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
+        $user = $userRepository->findOneBy(['email' => $credentials['email']]);
 
         if ($user === null) {
             throw new CustomUserMessageAuthenticationException('Email could not be found.');

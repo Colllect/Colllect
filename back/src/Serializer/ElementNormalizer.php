@@ -15,22 +15,35 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use NormalizerAwareTrait;
 
-    private $router;
-
-    public function __construct(UrlGeneratorInterface $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private UrlGeneratorInterface $router,
+    ) {
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return array{
+     *                'content': string|null,
+     *                'type': string,
+     *                'name': string,
+     *                'tags': array<string>,
+     *                'updated': string,
+     *                'size': int,
+     *                'extension': string,
+     *                'encodedColllectionPath': string,
+     *                'encodedElementBasename': string,
+     *                'fileUrl': string,
+     *                }
      */
-    public function normalize($element, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array
     {
-        if (!$element instanceof ElementInterface) {
+        if (!$object instanceof ElementInterface) {
             throw new InvalidArgumentException('The object must implement the "App\Model\Element\ElementInterface".');
         }
+        $element = $object;
 
+        /** @var string $updated */
         $updated = $this->normalizer->normalize($element->getUpdated(), $format, $context);
 
         $fileUrl = $this->router->generate(
@@ -59,7 +72,7 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof ElementInterface;
     }

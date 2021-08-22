@@ -13,12 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProxyController extends AbstractController
 {
-    /* @var ColllectionElementService */
-    private $colllectionElementService;
-
-    public function __construct(ColllectionElementService $colllectionElementService)
-    {
-        $this->colllectionElementService = $colllectionElementService;
+    public function __construct(
+        private ColllectionElementService $colllectionElementService,
+    ) {
     }
 
     /**
@@ -26,7 +23,7 @@ class ProxyController extends AbstractController
      *
      * @throws NotSupportedElementTypeException
      */
-    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename)
+    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 

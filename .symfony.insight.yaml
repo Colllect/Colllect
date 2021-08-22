@@ -1,0 +1,13 @@
+php_version: '8.0'
+
+rules:
+    composer.dependencies_not_installable:
+        enabled: false
+    web.apache_config:
+        enabled: false
+    web.missing_favicon:
+        enabled: false
+    web.missing_web_manifest:
+        enabled: false
+
+working_directory: 'back'

@@ -98,9 +98,7 @@ class ColllectionService
         // Sort colllections by name
         uasort(
             $colllections,
-            function (Colllection $a, Colllection $b) {
-                return $a->getName() < $b->getName() ? -1 : 1;
-            }
+            fn (Colllection $a, Colllection $b) => $a->getName() < $b->getName() ? -1 : 1
         );
 
         $colllectionList = array_values($colllections);

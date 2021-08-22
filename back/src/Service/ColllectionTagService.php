@@ -138,9 +138,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            function (AbstractElement $element) use ($oldTag) {
-                return \in_array($oldTag->getName(), $element->getTags(), true);
-            },
+            fn (AbstractElement $element) => \in_array($oldTag->getName(), $element->getTags(), true),
             function (ElementFile $elementFile) use ($oldTag, $tag): void {
                 $elementFile
                     ->removeTag($oldTag->getName())
@@ -176,9 +174,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            function (AbstractElement $element) use ($tag) {
-                return \in_array($tag->getName(), $element->getTags(), true);
-            },
+            fn (AbstractElement $element) => \in_array($tag->getName(), $element->getTags(), true),
             function (ElementFile $elementFile) use ($tag): void {
                 $elementFile->removeTag($tag->getName());
             }

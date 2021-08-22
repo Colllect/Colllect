@@ -103,9 +103,7 @@ class ColllectionElementService
         // Keep only files
         $filesMetadata = array_filter(
             $filesMetadata,
-            function ($fileMetadata) {
-                return $fileMetadata['type'] === 'file';
-            }
+            fn ($fileMetadata) => $fileMetadata['type'] === 'file'
         );
 
         if ($filesMetadata === null || \count($filesMetadata) === 0) {

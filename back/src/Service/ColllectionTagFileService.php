@@ -103,9 +103,7 @@ class ColllectionTagFileService
 
         $filteredTags = array_filter(
             $tags,
-            function (Tag $tag) use ($tagName) {
-                return $tag->getName() === $tagName;
-            }
+            fn (Tag $tag) => $tag->getName() === $tagName
         );
 
         if (\count($filteredTags) === 0) {
@@ -147,9 +145,7 @@ class ColllectionTagFileService
         // remove the tag from the list
         $this->tagsFilesCache[$encodedColllectionPath] = array_filter(
             $this->tagsFilesCache[$encodedColllectionPath],
-            function (Tag $existingTag) use ($tag) {
-                return $existingTag->getName() !== $tag->getName();
-            }
+            fn (Tag $existingTag) => $existingTag->getName() !== $tag->getName()
         );
     }
 
@@ -191,9 +187,7 @@ class ColllectionTagFileService
         $tags = $this->getAll($encodedColllectionPath);
 
         $existingTagNames = array_map(
-            function (Tag $tag) {
-                return $tag->getName();
-            },
+            fn (Tag $tag) => $tag->getName(),
             $tags
         );
 

@@ -2,18 +2,6 @@
     "aws/aws-sdk-php": {
         "version": "3.191.1"
     },
-    "beberlei/assert": {
-        "version": "v2.9.9"
-    },
-    "behat/behat": {
-        "version": "v3.8.1"
-    },
-    "behat/gherkin": {
-        "version": "v4.8.0"
-    },
-    "behat/transliterator": {
-        "version": "v1.3.0"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
@@ -118,9 +106,6 @@
     "fakerphp/faker": {
         "version": "v1.15.0"
     },
-    "firebase/php-jwt": {
-        "version": "v5.4.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.0",
         "recipe": {
@@ -150,9 +135,6 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.8.2"
-    },
-    "imbo/behat-api-extension": {
-        "version": "v2.3.1"
     },
     "jms/serializer": {
         "version": "2.2.0"
@@ -295,6 +277,9 @@
     },
     "psr/container": {
         "version": "1.1.1"
+    },
+    "psr/http-client": {
+        "version": "1.0.1"
     },
     "psr/http-factory": {
         "version": "1.0.1"
@@ -568,19 +553,6 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.27"
-    },
-    "symfony/translation": {
-        "version": "3.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.3",
-            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
-        },
-        "files": [
-            "config/packages/translation.yaml",
-            "translations/.gitignore"
-        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.4.0"

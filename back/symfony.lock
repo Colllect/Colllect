@@ -311,6 +311,9 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
+    "rector/rector": {
+        "version": "0.11.49"
+    },
     "sebastian/comparator": {
         "version": "4.0.6"
     },

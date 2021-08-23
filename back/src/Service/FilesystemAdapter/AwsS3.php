@@ -20,7 +20,7 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
     private string $secret;
     private string $region;
     private string $bucket;
-    private ?EnhancedFilesystemInterface $filesystem;
+    private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
         string $fsCacheRoot,

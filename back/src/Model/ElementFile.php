@@ -138,7 +138,7 @@ class ElementFile
         $concatTags = implode(
             '',
             array_map(
-                fn ($tag) => ' #' . str_replace(' ', '_', $tag),
+                fn ($tag): string => ' #' . str_replace(' ', '_', $tag),
                 $this->tags
             )
         );
@@ -168,8 +168,6 @@ class ElementFile
 
     /**
      * @param string[] $tags
-     *
-     * @return ElementFile
      */
     public function setTags(array $tags): self
     {
@@ -195,7 +193,7 @@ class ElementFile
     {
         $this->tags = array_filter(
             $this->tags,
-            fn (string $existingTagName) => $tag !== $existingTagName
+            fn (string $existingTagName): bool => $tag !== $existingTagName
         );
 
         return $this;

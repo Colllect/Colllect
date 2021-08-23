@@ -104,10 +104,10 @@ class ColllectionTagFileService
 
         $filteredTags = array_filter(
             $tags,
-            fn (Tag $tag) => $tag->getName() === $tagName
+            fn (Tag $tag): bool => $tag->getName() === $tagName
         );
 
-        if (\count($filteredTags) === 0) {
+        if ($filteredTags === []) {
             throw new NotFoundHttpException('error.tag_not_found');
         }
 
@@ -115,7 +115,7 @@ class ColllectionTagFileService
         /** @var Tag|null $tag */
         $tag = clone array_shift($filteredTags);
 
-        if ($tag === null) {
+        if (!$tag instanceof \App\Model\Tag) {
             throw new NotFoundHttpException('error.tag_not_found');
         }
 
@@ -150,7 +150,7 @@ class ColllectionTagFileService
         // remove the tag from the list
         $this->tagsFilesCache[$encodedColllectionPath] = array_filter(
             $this->tagsFilesCache[$encodedColllectionPath],
-            fn (Tag $existingTag) => $existingTag->getName() !== $tag->getName()
+            fn (Tag $existingTag): bool => $existingTag->getName() !== $tag->getName()
         );
     }
 
@@ -162,11 +162,9 @@ class ColllectionTagFileService
     {
         // Remap tag objects to flat array
         $flatTags = array_map(
-            function (Tag $tag) {
-                return [
-                    'name' => $tag->getName(),
-                ];
-            },
+            fn (Tag $tag): array => [
+                'name' => $tag->getName(),
+            ],
             $this->getall($encodedColllectionPath)
         );
         $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
@@ -192,7 +190,7 @@ class ColllectionTagFileService
         $tags = $this->getAll($encodedColllectionPath);
 
         $existingTagNames = array_map(
-            fn (Tag $tag) => $tag->getName(),
+            fn (Tag $tag): string => $tag->getName(),
             $tags
         );
 

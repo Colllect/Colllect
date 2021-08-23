@@ -29,7 +29,7 @@ class FilesystemAdapterManager
         $adapter = $this->filesystemAdapters[$this->defaultFilesystemAdapterName];
 
         $userFilesystemCredentials = $user->getFilesystemCredentials();
-        if ($userFilesystemCredentials) {
+        if ($userFilesystemCredentials !== null) {
             $userFilesystemProviderName = $userFilesystemCredentials->getFilesystemProviderName();
             $adapter = $this->filesystemAdapters[$userFilesystemProviderName];
         }

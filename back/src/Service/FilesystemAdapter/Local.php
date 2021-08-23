@@ -12,7 +12,7 @@ use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 class Local implements FilesystemAdapterInterface
 {
     private string $rootPath;
-    private ?EnhancedFilesystemInterface $filesystem;
+    private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(string $fsLocalRootPath)
     {

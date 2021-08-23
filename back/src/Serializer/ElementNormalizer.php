@@ -16,7 +16,7 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
     use NormalizerAwareTrait;
 
     public function __construct(
-        private UrlGeneratorInterface $router,
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -46,7 +46,7 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
         /** @var string $updated */
         $updated = $this->normalizer->normalize($element->getUpdated(), $format, $context);
 
-        $fileUrl = $this->router->generate(
+        $fileUrl = $this->urlGenerator->generate(
             'app_proxy_element',
             [
                 'encodedColllectionPath' => $element->getEncodedColllectionPath(),

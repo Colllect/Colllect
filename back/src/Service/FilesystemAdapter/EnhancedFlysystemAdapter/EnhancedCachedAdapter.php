@@ -24,7 +24,7 @@ class EnhancedCachedAdapter extends CachedAdapter implements EnhancedFlysystemAd
 
         $result = $adapter->renameDir($path, $newPath);
 
-        if ($result !== false) {
+        if ($result) {
             $cache = $this->getCache();
 
             if (!$cache instanceof EnhancedFlysystemAdapterInterface) {

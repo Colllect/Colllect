@@ -46,8 +46,6 @@ class ColllectionTagService
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @return Tag|FormInterface
-     *
      * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
@@ -95,8 +93,6 @@ class ColllectionTagService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName         Base 64 encoded tag name
      *
-     * @return Tag|FormInterface
-     *
      * @throws FileExistsException
      * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
@@ -126,7 +122,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            fn (AbstractElement $element) => \in_array($oldTag->getName(), $element->getTags(), true),
+            fn (AbstractElement $element): bool => \in_array($oldTag->getName(), $element->getTags(), true),
             function (ElementFile $elementFile) use ($oldTag, $tag): void {
                 $elementFile
                     ->removeTag($oldTag->getName())
@@ -162,7 +158,7 @@ class ColllectionTagService
         // Rename all elements which has this tag
         $this->colllectionElementService->batchRename(
             $encodedColllectionPath,
-            fn (AbstractElement $element) => \in_array($tag->getName(), $element->getTags(), true),
+            fn (AbstractElement $element): bool => \in_array($tag->getName(), $element->getTags(), true),
             function (ElementFile $elementFile) use ($tag): void {
                 $elementFile->removeTag($tag->getName());
             }

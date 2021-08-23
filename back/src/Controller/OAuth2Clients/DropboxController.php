@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\OAuth2Clients;
 
-use App\Entity\User;
 use App\Service\FilesystemAdapter\Dropbox;
 use App\Service\UserFilesystemCredentialsService;
 use Exception;
@@ -104,10 +103,9 @@ class DropboxController extends AbstractController
         $decodedResponse = \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
         $accessToken = $decodedResponse['access_token'];
 
-        /** @var User|null $user */
         $user = $this->getUser();
 
-        if ($user === null) {
+        if (!$user instanceof \App\Entity\User) {
             throw new \LogicException('User must be logged');
         }
 

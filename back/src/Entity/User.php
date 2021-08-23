@@ -27,7 +27,7 @@ class User implements UserInterface
      *
      * @SWG\Property(type="integer", readOnly=true)
      */
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(name="email", type="string", length=255, unique=true)
@@ -71,7 +71,7 @@ class User implements UserInterface
      * @Assert\NotBlank(message="cannot_be_blank")
      * @Assert\Length(min="8", minMessage="too_short")
      */
-    private ?string $plainPassword;
+    private ?string $plainPassword = null;
 
     /**
      * @ORM\Column(name="created_at", type="datetime")
@@ -83,7 +83,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\UserFilesystemCredentials", mappedBy="user", cascade={"persist", "remove"})
      */
-    private ?UserFilesystemCredentials $filesystemCredentials;
+    private ?UserFilesystemCredentials $filesystemCredentials = null;
 
     public function __construct()
     {
@@ -118,7 +118,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -145,7 +145,7 @@ class User implements UserInterface
 
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self

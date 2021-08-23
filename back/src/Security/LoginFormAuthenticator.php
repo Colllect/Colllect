@@ -46,8 +46,11 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request): bool
     {
-        return $request->attributes->get('_route') === self::LOGIN_ROUTE
-            && $request->isMethod('POST');
+        if ($request->attributes->get('_route') !== self::LOGIN_ROUTE) {
+            return false;
+        }
+
+        return $request->isMethod('POST');
     }
 
     /**
@@ -89,7 +92,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         $userRepository = $this->entityManager->getRepository(User::class);
         $user = $userRepository->findOneBy(['email' => $credentials['email']]);
 
-        if ($user === null) {
+        if (!$user instanceof \App\Entity\User) {
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 

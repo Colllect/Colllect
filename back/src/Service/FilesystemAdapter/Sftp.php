@@ -19,7 +19,7 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     private string $username;
     private string $password;
     private string $rootPath;
-    private ?EnhancedFilesystemInterface $filesystem;
+    private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
         string $fsCacheRoot,

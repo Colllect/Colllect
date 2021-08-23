@@ -4,20 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\Cached\Storage\Adapter;
 use League\Flysystem\Util;
 
 class EnhancedCachedStorageAdapter extends Adapter implements EnhancedCacheInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(AdapterInterface $adapter, string $file, int $expire = null)
-    {
-        parent::__construct($adapter, $file, $expire);
-    }
-
     /**
      * {@inheritdoc}
      */

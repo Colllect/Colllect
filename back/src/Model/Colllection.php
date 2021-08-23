@@ -12,19 +12,19 @@ class Colllection
     /**
      * @SWG\Property(type="string")
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @SWG\Property(type="string")
      */
-    private ?string $encodedColllectionPath;
+    private ?string $encodedColllectionPath = null;
 
     /**
      * @param array<string, string|int> $colllectionMetadata
      */
     public function __construct(array $colllectionMetadata = [])
     {
-        if (\count($colllectionMetadata) > 0) {
+        if ($colllectionMetadata !== []) {
             $this->setName((string) $colllectionMetadata['filename']);
             $this->setEncodedColllectionPath(Base64::encode((string) $colllectionMetadata['path']));
         }

@@ -86,10 +86,10 @@ class ColllectionElementService
         // Keep only files
         $filesMetadata = array_filter(
             $filesMetadata,
-            fn ($fileMetadata) => $fileMetadata['type'] === 'file'
+            fn ($fileMetadata): bool => $fileMetadata['type'] === 'file'
         );
 
-        if (\count($filesMetadata) === 0) {
+        if ($filesMetadata === []) {
             $this->stopwatch?->stop('colllection_element_list');
 
             return [];
@@ -98,7 +98,7 @@ class ColllectionElementService
         // Sort files by last updated date
         uasort(
             $filesMetadata,
-            function ($a, $b) {
+            function ($a, $b): int {
                 $aTimestamp = $a['timestamp'];
                 $bTimestamp = $b['timestamp'];
 
@@ -211,23 +211,17 @@ class ColllectionElementService
         $newPath = $colllectionPath . '/' . $elementFile->getCleanedBasename();
 
         // Rename if necessary
-        if ($path !== $newPath) {
-            if (!$this->filesystem->rename($path, $newPath)) {
-                $this->stopwatch?->stop('colllection_element_update');
-
-                throw new FilesystemCannotRenameException();
-            }
+        if ($path !== $newPath && !$this->filesystem->rename($path, $newPath)) {
+            $this->stopwatch?->stop('colllection_element_update');
+            throw new FilesystemCannotRenameException();
         }
 
         // Update content if necessary
         if ($element::shouldLoadContent()) {
             $content = $elementFile->getContent();
-            if ($content !== null) {
-                if (!$this->filesystem->update($newPath, $content)) {
-                    $this->stopwatch?->stop('colllection_element_update');
-
-                    throw new NotFoundHttpException('error.element_not_found');
-                }
+            if ($content !== null && !$this->filesystem->update($newPath, $content)) {
+                $this->stopwatch?->stop('colllection_element_update');
+                throw new NotFoundHttpException('error.element_not_found');
             }
         }
 

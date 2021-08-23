@@ -34,7 +34,7 @@ class CookieAccessTokenProvider
     public function getJwtAccessToken(string $username, DateInterval $accessTokenTTL): string
     {
         $client = $this->clientRepository->getClientEntity('default');
-        if ($client === null) {
+        if (!$client instanceof \League\OAuth2\Server\Entities\ClientEntityInterface) {
             throw new Exception('default client must be created');
         }
 

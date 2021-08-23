@@ -63,7 +63,7 @@ class ColllectionService
             return [];
         }
 
-        if (\count($colllectionsMetadata) === 0) {
+        if ($colllectionsMetadata === []) {
             $this->stopwatch?->stop('colllection_list');
 
             return [];
@@ -83,7 +83,7 @@ class ColllectionService
         // Sort colllections by name
         uasort(
             $colllections,
-            fn (Colllection $a, Colllection $b) => $a->getName() < $b->getName() ? -1 : 1
+            fn (Colllection $a, Colllection $b): int => $a->getName() < $b->getName() ? -1 : 1
         );
 
         $colllectionList = array_values($colllections);
@@ -95,8 +95,6 @@ class ColllectionService
 
     /**
      * Create a colllection.
-     *
-     * @return Colllection|FormInterface
      */
     public function create(Request $request): Colllection|FormInterface
     {
@@ -124,8 +122,6 @@ class ColllectionService
      * Update a colllection by path.
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
-     *
-     * @return Colllection|FormInterface
      *
      * @throws FileNotFoundException
      */

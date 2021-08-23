@@ -8,18 +8,19 @@ use App\Exception\NotSupportedElementTypeException;
 use App\Util\Base64;
 use App\Util\ElementBasenameParser;
 use DateTime;
+use DateTimeInterface;
 
 abstract class AbstractElement implements ElementInterface
 {
     private string $name;
     /** @var array<string> */
     private array $tags;
-    private DateTime $updated;
+    private DateTimeInterface $updated;
     private int $size;
     private string $extension;
     private string $encodedColllectionPath;
     private string $encodedElementBasename;
-    private ?string $fileUrl;
+    private ?string $fileUrl = null;
 
     /**
      * Element constructor.
@@ -71,8 +72,10 @@ abstract class AbstractElement implements ElementInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return \DateTime|\DateTimeImmutable
      */
-    public function getUpdated(): DateTime
+    public function getUpdated(): DateTimeInterface
     {
         return $this->updated;
     }
@@ -151,9 +154,8 @@ abstract class AbstractElement implements ElementInterface
     public static function get(array $elementMetadata, string $encodedColllectionPath): ElementInterface
     {
         $type = ElementBasenameParser::getTypeByPath($elementMetadata['path']);
-        switch ($type) {
-            case ImageElement::getType():
-                return new ImageElement($elementMetadata, $encodedColllectionPath);
+        if ($type === ImageElement::getType()) {
+            return new ImageElement($elementMetadata, $encodedColllectionPath);
         }
 
         throw new NotSupportedElementTypeException();

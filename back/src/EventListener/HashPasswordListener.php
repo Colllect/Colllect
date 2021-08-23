@@ -51,9 +51,13 @@ final class HashPasswordListener implements EventSubscriber
 
         $om = $args->getObjectManager();
         $meta = $om->getClassMetadata(\get_class($user));
-        if ($om instanceof EntityManager && $meta instanceof ClassMetadata) {
-            $om->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $user);
+        if (!$om instanceof EntityManager) {
+            return;
         }
+        if (!$meta instanceof ClassMetadata) {
+            return;
+        }
+        $om->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $user);
     }
 
     private function encodePassword(User $user): void

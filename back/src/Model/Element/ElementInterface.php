@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Element;
 
-use DateTime;
-
 interface ElementInterface
 {
     /**
@@ -57,7 +55,7 @@ interface ElementInterface
     /**
      * Get element last updated date.
      */
-    public function getUpdated(): DateTime;
+    public function getUpdated(): \DateTimeInterface;
 
     /**
      * Get element size.

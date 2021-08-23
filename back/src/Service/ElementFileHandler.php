@@ -64,7 +64,7 @@ class ElementFileHandler
     {
         $file = $elementFile->getFile();
 
-        if ($file === null) {
+        if (!$file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
             throw new Exception('No file to handle');
         }
 
@@ -221,7 +221,7 @@ class ElementFileHandler
         if (!$elementFile->getExtension() || !\in_array($elementFile->getExtension(), $typeExtensions, true)) {
             $elementFile->setExtension($typeExtensions[0]);
         }
-        if ($elementFile->getName() === null || \strlen($elementFile->getName()) === 0) {
+        if ($elementFile->getName() === null || $elementFile->getName() === '') {
             $elementFile->setName(uniqid());
         }
     }

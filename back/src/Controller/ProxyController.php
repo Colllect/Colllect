@@ -28,7 +28,7 @@ class ProxyController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // Avoid fetch storage if request is canceled
-        if (connection_aborted()) {
+        if (connection_aborted() !== 0) {
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 

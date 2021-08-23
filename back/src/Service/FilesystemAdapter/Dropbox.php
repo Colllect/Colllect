@@ -16,7 +16,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
 {
     private const NAME = 'dropbox';
 
-    private ?EnhancedFilesystemInterface $filesystem;
+    private ?EnhancedFilesystemInterface $filesystem = null;
 
     /**
      * {@inheritdoc}
@@ -36,7 +36,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
         if ($this->filesystem === null) {
             $userFilesystemCredentials = $user->getFilesystemCredentials();
 
-            if ($userFilesystemCredentials === null
+            if (!$userFilesystemCredentials instanceof \App\Entity\UserFilesystemCredentials
                 || $userFilesystemCredentials->getFilesystemProviderName() !== self::getName()) {
                 throw $this->createTokenMissingException();
             }

@@ -35,9 +35,10 @@
         "imbo/behat-api-extension": "^2.2",
         "nelmio/alice": "^3.5",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.96",
+        "phpstan/phpstan": "0.12.95",
         "phpstan/phpstan-doctrine": "^0.12.43",
         "phpstan/phpstan-symfony": "^0.12.42",
+        "rector/rector": "^0.11.49",
         "symfony/maker-bundle": "^1.14",
         "symfony/profiler-pack": "^1.0"
     },
@@ -70,6 +71,9 @@
         ],
         "phpstan": [
             "phpstan analyze"
+        ],
+        "rector": [
+            "rector"
         ]
     },
     "conflict": {

@@ -38,7 +38,7 @@ class User implements UserInterface
      *
      * @SWG\Property(type="string", format="email")
      */
-    private ?string $email;
+    private string $email;
 
     /**
      * @ORM\Column(name="nickname", type="string", length=255)
@@ -48,7 +48,7 @@ class User implements UserInterface
      *
      * @SWG\Property(type="string")
      */
-    private ?string $nickname;
+    private string $nickname;
 
     /**
      * @var array<string>
@@ -64,7 +64,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(name="password", type="string", length=255)
      */
-    private ?string $password;
+    private string $password;
 
     /**
      * @Assert\Type("string")
@@ -162,8 +162,8 @@ class User implements UserInterface
 
     public function setPlainPassword(string $plainPassword): self
     {
+        $this->password = 'new_password'; // change entity to 'dirty' for Doctrine
         $this->plainPassword = $plainPassword;
-        $this->password = null; // change entity to 'dirty' for Doctrine
 
         return $this;
     }

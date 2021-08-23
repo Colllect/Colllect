@@ -42,11 +42,6 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
             }
 
             $accessToken = $userFilesystemCredentials->getCredentials();
-
-            if ($accessToken === null) {
-                throw $this->createTokenMissingException();
-            }
-
             $client = new DropboxClient($accessToken);
             $adapter = $this->cacheAdapter(new EnhancedDropboxAdapter($client), $user);
 

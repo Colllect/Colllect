@@ -19,12 +19,12 @@ class UserFilesystemCredentials
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="filesystemCredentials", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private User $user;
 
     /**
      * @ORM\Column(name="filesystem_provider_name", type="string", length=20)
      */
-    private ?string $filesystemProviderName;
+    private string $filesystemProviderName;
 
     /**
      * Contains credentials depending of the filesystem provider:
@@ -32,7 +32,7 @@ class UserFilesystemCredentials
      *
      * @ORM\Column(name="credentials", type="text")
      */
-    private ?string $credentials;
+    private string $credentials;
 
     public function __construct(User $user, string $filesystemProviderName)
     {
@@ -40,19 +40,19 @@ class UserFilesystemCredentials
         $this->setFilesystemProviderName($filesystemProviderName);
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getFilesystemProviderName(): ?string
+    public function getFilesystemProviderName(): string
     {
         return $this->filesystemProviderName;
     }
@@ -69,7 +69,7 @@ class UserFilesystemCredentials
         return $this;
     }
 
-    public function getCredentials(): ?string
+    public function getCredentials(): string
     {
         return $this->credentials;
     }

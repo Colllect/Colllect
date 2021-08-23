@@ -3,4 +3,6 @@ parameters:
     paths:
         - src
         - migrations
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
     tipsOfTheDay: false

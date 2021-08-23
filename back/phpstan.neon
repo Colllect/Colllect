@@ -2,6 +2,5 @@ parameters:
     level: max
     paths:
         - src
-    autoload_directories:
-        - %rootDir%/../../../src/Migrations
+        - migrations
     tipsOfTheDay: false

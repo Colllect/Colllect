@@ -284,6 +284,9 @@
     "phpstan/phpstan": {
         "version": "0.12.96"
     },
+    "phpstan/phpstan-doctrine": {
+        "version": "0.12.43"
+    },
     "phpstan/phpstan-symfony": {
         "version": "0.12.42"
     },

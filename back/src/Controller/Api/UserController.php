@@ -49,7 +49,6 @@ final class UserController extends AbstractController
      */
     public function readUser(int $userId): JsonResponse
     {
-        /* @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
@@ -145,7 +144,6 @@ final class UserController extends AbstractController
      */
     public function updateUser(Request $request, int $userId): JsonResponse
     {
-        /* @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
@@ -197,7 +195,6 @@ final class UserController extends AbstractController
      */
     public function deleteUser(int $userId): Response
     {
-        /* @var User|null $user */
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;

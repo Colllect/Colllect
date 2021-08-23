@@ -34,8 +34,9 @@
         "friendsofphp/php-cs-fixer": "^3.0",
         "imbo/behat-api-extension": "^2.2",
         "nelmio/alice": "^3.5",
-        "phpstan/extension-installer": "^1.0",
+        "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.96",
+        "phpstan/phpstan-doctrine": "^0.12.43",
         "phpstan/phpstan-symfony": "^0.12.42",
         "symfony/maker-bundle": "^1.14",
         "symfony/profiler-pack": "^1.0"

@@ -70,13 +70,6 @@ services:
     App\EventListener\HashPasswordListener:
         tags: ['doctrine.event_subscriber']
 
-    App\EventListener\UserResolveListener:
-        arguments:
-            - '@security.user.provider.concrete.app_user_provider'
-            - '@security.password_encoder'
-        tags:
-            - { name: 'kernel.event_listener', event: 'trikoder.oauth2.user_resolve', method: 'onUserResolve' }
-
     # allow DI of CryptKey into CookieAccessTokenProvider
     League\OAuth2\Server\CryptKey:
         arguments:

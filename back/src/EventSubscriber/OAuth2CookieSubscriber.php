@@ -2,19 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final class OAuth2CookieListener implements EventSubscriberInterface
+final class OAuth2CookieSubscriber implements EventSubscriberInterface
 {
     public const OAUTH2_COOKIE_NAME = 'colllect_oauth2';
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

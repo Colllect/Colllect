@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\EventListener\OAuth2CookieListener;
+use App\EventSubscriber\OAuth2CookieSubscriber;
 use App\Repository\UserRepository;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
@@ -142,7 +142,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         $response->headers->clearCookie(self::CSRF_TOKEN_COOKIE_NAME, '/login');
         $response->headers->setCookie(
             new Cookie(
-                OAuth2CookieListener::OAUTH2_COOKIE_NAME,
+                OAuth2CookieSubscriber::OAUTH2_COOKIE_NAME,
                 $jwtAccessToken,
                 $expire,
                 '/',

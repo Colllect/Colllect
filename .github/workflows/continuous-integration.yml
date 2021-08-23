@@ -1,12 +1,15 @@
 name: Continuous Integration
 
 on:
-    push: ~
+    push:
+        branches:
+            - develop
+            - main
     pull_request: ~
 
 jobs:
-    back-phpstan:
-        name: "Back / PHPStan"
+    back-rector:
+        name: "Back / Rector"
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v2
@@ -21,9 +24,9 @@ jobs:
                 working-directory: ./back
                 run: composer install --prefer-dist --no-progress --no-suggest
 
-            -   name: PHPStan
+            -   name: Rector
                 working-directory: ./back
-                run: composer phpstan
+                run: composer rector -- --dry-run
 
     back-phpcsfixer:
         name: "Back / PHP CS fixer"

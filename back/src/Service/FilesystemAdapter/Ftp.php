@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFtpAdapter;
-use League\Flysystem\Config;
+use League\Flysystem\Ftp\FtpConnectionOptions;
 
 class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
@@ -22,16 +22,12 @@ class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterIn
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
-        string $fsCacheRoot,
-        int $fsCacheDuration,
         string $fsFtpHost,
         int $fsFtpPort,
         string $fsFtpUsername,
         string $fsFtpPassword,
         string $fsFtpRootPath
     ) {
-        parent::__construct($fsCacheRoot, $fsCacheDuration);
-
         $this->host = $fsFtpHost;
         $this->port = $fsFtpPort;
         $this->username = $fsFtpUsername;
@@ -55,24 +51,22 @@ class Ftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterIn
         if ($this->filesystem === null) {
             $adapter = $this->cacheAdapter(
                 new EnhancedFtpAdapter(
-                    [
-                        'host' => $this->host,
-                        'port' => $this->port,
-                        'username' => $this->username,
-                        'password' => $this->password,
-                        'root' => $this->rootPath,
-                    ]
+                    new FtpConnectionOptions(
+                        $this->host,
+                        $this->rootPath,
+                        $this->username,
+                        $this->password,
+                        $this->port,
+                    ),
                 ),
                 $user
             );
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,
-                new Config(
-                    [
-                        'disable_asserts' => true,
-                    ]
-                )
+                [
+                    'disable_asserts' => true,
+                ]
             );
         }
 

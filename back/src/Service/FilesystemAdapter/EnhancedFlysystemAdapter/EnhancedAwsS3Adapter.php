@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Config;
 
-class EnhancedAwsS3Adapter extends AwsS3Adapter implements EnhancedFlysystemAdapterInterface
+class EnhancedAwsS3Adapter extends AwsS3V3Adapter implements EnhancedFlysystemAdapterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function renameDir(string $path, string $newPath): bool
+    public function renameDir(string $path, string $newPath, Config $config): void
     {
-        return $this->rename($path, $newPath);
+        $this->move($path, $newPath, $config);
     }
 }

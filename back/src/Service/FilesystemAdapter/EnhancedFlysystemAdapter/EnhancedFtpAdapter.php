@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
+use League\Flysystem\Config;
+use League\Flysystem\Ftp\FtpAdapter;
 
 class EnhancedFtpAdapter extends FtpAdapter implements EnhancedFlysystemAdapterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function renameDir(string $path, string $newPath): bool
+    public function renameDir(string $path, string $newPath, Config $config): void
     {
-        return $this->rename($path, $newPath);
+        $this->move($path, $newPath, $config);
     }
 }

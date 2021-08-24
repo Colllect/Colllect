@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 
-/**
- * @method array listWith(array $keys = [], string $directory = '', bool $recursive = false) List with plugin adapter
- */
-interface EnhancedFilesystemInterface extends FilesystemInterface
+interface EnhancedFilesystemInterface extends FilesystemOperator
 {
     /*
      * Rename a directory.
      */
-    public function renameDir(string $path, string $newPath): bool;
+    public function renameDir(string $path, string $newPath): void;
 }

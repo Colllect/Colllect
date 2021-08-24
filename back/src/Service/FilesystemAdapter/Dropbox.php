@@ -9,7 +9,6 @@ use App\Exception\DropboxAccessTokenMissingException;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
-use League\Flysystem\Config;
 use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
@@ -47,12 +46,10 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,
-                new Config(
-                    [
-                        'case_sensitive' => false,
-                        'disable_asserts' => true,
-                    ]
-                )
+                [
+                    'case_sensitive' => false,
+                    'disable_asserts' => true,
+                ]
             );
         }
 

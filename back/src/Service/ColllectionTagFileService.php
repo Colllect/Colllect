@@ -62,7 +62,7 @@ class ColllectionTagFileService
         $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
 
         // If tags file does not exists, return an empty array
-        if (!$this->filesystem->has($tagsFilePath)) {
+        if (!$this->filesystem->fileExists($tagsFilePath)) {
             $this->tagsFilesCache[$encodedColllectionPath] = [];
 
             return [];
@@ -172,7 +172,7 @@ class ColllectionTagFileService
         $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
 
         // Put new tag list info Colllection tags file
-        if (!$this->filesystem->put($tagsFilePath, $tagsFileContent)) {
+        if (!$this->filesystem->write($tagsFilePath, $tagsFileContent)) {
             throw new FilesystemCannotWriteException();
         }
     }

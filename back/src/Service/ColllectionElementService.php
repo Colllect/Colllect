@@ -7,7 +7,6 @@ namespace App\Service;
 use App\Entity\User;
 use App\Exception\EmptyFileException;
 use App\Exception\FilesystemCannotRenameException;
-use App\Exception\FilesystemCannotWriteException;
 use App\Exception\InvalidElementLinkException;
 use App\Exception\NotSupportedElementTypeException;
 use App\Form\ElementType;
@@ -24,8 +23,10 @@ use Closure;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\StorageAttributes;
+use League\Flysystem\UnableToReadFile;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -74,20 +75,17 @@ class ColllectionElementService
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         try {
-            $filesMetadata = $this->filesystem->listWith(['timestamp', 'size'], $colllectionPath);
-        } catch (Exception) {
+            $filesMetadata = $this->filesystem->listContents($colllectionPath)
+                ->filter(fn (StorageAttributes $attributes): bool => $attributes->isFile())
+                ->toArray()
+            ;
+        } catch (FilesystemException) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             $this->stopwatch?->stop('colllection_element_list');
 
             return [];
         }
-
-        // Keep only files
-        $filesMetadata = array_filter(
-            $filesMetadata,
-            fn ($fileMetadata): bool => $fileMetadata['type'] === 'file'
-        );
 
         if ($filesMetadata === []) {
             $this->stopwatch?->stop('colllection_element_list');
@@ -98,9 +96,9 @@ class ColllectionElementService
         // Sort files by last updated date
         uasort(
             $filesMetadata,
-            function ($a, $b): int {
-                $aTimestamp = $a['timestamp'];
-                $bTimestamp = $b['timestamp'];
+            function (FileAttributes $a, FileAttributes $b): int {
+                $aTimestamp = $a->lastModified();
+                $bTimestamp = $b->lastModified();
 
                 if ($aTimestamp === $bTimestamp) {
                     return 0;
@@ -112,9 +110,16 @@ class ColllectionElementService
 
         // Get typed element for each file
         $elements = [];
+        /** @var FileAttributes $fileMetadata */
         foreach ($filesMetadata as $fileMetadata) {
             try {
-                $fileMetadata = Metadata::standardize($fileMetadata);
+                $fileMetadata = Metadata::standardize([
+                    'path' => $fileMetadata->path(),
+                    'type' => $fileMetadata->type(),
+                    'size' => $fileMetadata->fileSize(),
+                    'mimetype' => $fileMetadata->mimeType(),
+                    'timestamp' => $fileMetadata->lastModified(),
+                ]);
                 $element = AbstractElement::get($fileMetadata, $encodedColllectionPath);
                 $elements[] = $element;
             } catch (NotSupportedElementTypeException) {
@@ -133,9 +138,7 @@ class ColllectionElementService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
      * @throws EmptyFileException
-     * @throws FileExistsException
-     * @throws FileNotFoundException
-     * @throws FilesystemCannotWriteException
+     * @throws FilesystemException
      * @throws InvalidElementLinkException
      * @throws NotSupportedElementTypeException
      */
@@ -160,14 +163,22 @@ class ColllectionElementService
         if ($content === null) {
             throw new EmptyFileException();
         }
-        if (!$this->filesystem->write($path, $content)) {
-            throw new FilesystemCannotWriteException();
-        }
 
-        $elementMetadata = $this->filesystem->getMetadata($path);
-        if ($elementMetadata === false) {
+        $this->filesystem->write($path, $content);
+
+        if (!$this->filesystem->fileExists($path)) {
+            $this->stopwatch?->stop('colllection_element_create');
+
             throw new NotFoundHttpException('error.element_not_found');
         }
+
+        $elementMetadata = [
+            'path' => $path,
+            'type' => 'file',
+            'size' => $this->filesystem->fileSize($path),
+            'mimetype' => $this->filesystem->mimeType($path),
+            'timestamp' => $this->filesystem->lastModified($path),
+        ];
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         $this->stopwatch?->stop('colllection_element_create');
@@ -181,10 +192,9 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @throws FileExistsException
-     * @throws FileNotFoundException
      * @throws FilesystemCannotRenameException
      * @throws NotSupportedElementTypeException
+     * @throws FilesystemException
      */
     public function update(string $encodedElementBasename, string $encodedColllectionPath, Request $request): ElementInterface|FormInterface
     {
@@ -193,10 +203,21 @@ class ColllectionElementService
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
-        $elementMetadata = $this->filesystem->getMetadata($path);
-        if ($elementMetadata === false) {
+
+        if (!$this->filesystem->fileExists($path)) {
+            $this->stopwatch?->stop('colllection_element_update');
+
             throw new NotFoundHttpException('error.element_not_found');
         }
+
+        $elementMetadata = [
+            'path' => $path,
+            'type' => 'file',
+            'size' => $this->filesystem->fileSize($path),
+            'mimetype' => $this->filesystem->mimeType($path),
+            'timestamp' => $this->filesystem->lastModified($path),
+        ];
+
         $element = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         $elementFile = new ElementFile($element);
@@ -211,25 +232,41 @@ class ColllectionElementService
         $newPath = $colllectionPath . '/' . $elementFile->getCleanedBasename();
 
         // Rename if necessary
-        if ($path !== $newPath && !$this->filesystem->rename($path, $newPath)) {
-            $this->stopwatch?->stop('colllection_element_update');
-            throw new FilesystemCannotRenameException();
+        if ($path !== $newPath) {
+            try {
+                $this->filesystem->move($path, $newPath);
+            } catch (FilesystemException) {
+                $this->stopwatch?->stop('colllection_element_update');
+                throw new FilesystemCannotRenameException();
+            }
         }
 
         // Update content if necessary
         if ($element::shouldLoadContent()) {
             $content = $elementFile->getContent();
-            if ($content !== null && !$this->filesystem->update($newPath, $content)) {
-                $this->stopwatch?->stop('colllection_element_update');
-                throw new NotFoundHttpException('error.element_not_found');
+            if ($content !== null) {
+                try {
+                    $this->filesystem->write($newPath, $content);
+                } catch (FilesystemException) {
+                    $this->stopwatch?->stop('colllection_element_update');
+                    throw new NotFoundHttpException('error.element_not_found');
+                }
             }
         }
 
         // Get fresh data about updated element
-        $elementMetadata = $this->filesystem->getMetadata($newPath);
-        if ($elementMetadata === false) {
-            throw new FileNotFoundException($path);
+        if (!$this->filesystem->fileExists($newPath)) {
+            $this->stopwatch?->stop('colllection_element_update');
+
+            throw new NotFoundHttpException('error.element_not_found');
         }
+        $elementMetadata = [
+            'path' => $newPath,
+            'type' => 'file',
+            'size' => $this->filesystem->fileSize($newPath),
+            'mimetype' => $this->filesystem->mimeType($newPath),
+            'timestamp' => $this->filesystem->lastModified($newPath),
+        ];
         $updatedElement = AbstractElement::get($elementMetadata, $encodedColllectionPath);
 
         $this->stopwatch?->stop('colllection_element_update');
@@ -243,8 +280,8 @@ class ColllectionElementService
      * @param string $encodedElementBasename Base 64 encoded basename
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @throws FileNotFoundException
      * @throws NotSupportedElementTypeException
+     * @throws FilesystemException
      */
     public function get(string $encodedElementBasename, string $encodedColllectionPath): ElementInterface
     {
@@ -253,19 +290,26 @@ class ColllectionElementService
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
-        $elementMetadata = $this->filesystem->getMetadata($path);
-        if ($elementMetadata === false) {
+        if (!$this->filesystem->fileExists($path)) {
             $this->stopwatch?->stop('colllection_element_get');
 
             throw new NotFoundHttpException('error.element_not_found');
         }
 
+        $elementMetadata = [
+            'path' => $path,
+            'type' => 'file',
+            'size' => $this->filesystem->fileSize($path),
+            'mimetype' => $this->filesystem->mimeType($path),
+            'timestamp' => $this->filesystem->lastModified($path),
+        ];
         $standardizedMeta = Metadata::standardize($elementMetadata, $path);
         $element = AbstractElement::get($standardizedMeta, $encodedColllectionPath);
 
         if ($element::shouldLoadContent()) {
-            $content = $this->filesystem->read($path);
-            if ($content === false) {
+            try {
+                $content = $this->filesystem->read($path);
+            } catch (UnableToReadFile|FilesystemException) {
                 $this->stopwatch?->stop('colllection_element_get');
 
                 throw new NotFoundHttpException('error.element_not_found');
@@ -298,17 +342,19 @@ class ColllectionElementService
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
 
         try {
-            $meta = $this->filesystem->getMetadata($path);
-
-            if (!$meta) {
+            if (!$this->filesystem->fileExists($path)) {
                 $this->stopwatch?->stop('colllection_element_get_content');
 
                 throw new NotFoundHttpException('error.element_not_found');
             }
 
+            // FIXME: normalize mimetype
+            $mimeType = $this->filesystem->mimeType($path);
+            $lastModified = $this->filesystem->lastModified($path);
+
             if ($requestHeaders->has('if-modified-since')) {
                 $modified = (new DateTime($requestHeaders->get('if-modified-since') ?? 'now'))->getTimestamp();
-                if ($meta['timestamp'] <= $modified) {
+                if ($lastModified <= $modified) {
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
 
@@ -318,19 +364,17 @@ class ColllectionElementService
                 }
             }
 
-            $standardizedMeta = Metadata::standardize($meta, $path);
-
             $content = $this->filesystem->read($path);
 
             $response = new Response();
             $response->setContent($content);
-            $response->headers->set('Content-Type', (string) $standardizedMeta['mimetype']);
-            $response->setLastModified((new DateTime())->setTimestamp((int) $standardizedMeta['timestamp']));
+            $response->headers->set('Content-Type', $mimeType);
+            $response->setLastModified((new DateTime())->setTimestamp($lastModified));
 
             $this->stopwatch?->stop('colllection_element_get_content');
 
             return $response;
-        } catch (FileNotFoundException) {
+        } catch (UnableToReadFile|FilesystemException) {
             $this->stopwatch?->stop('colllection_element_get_content');
 
             throw new NotFoundHttpException();
@@ -354,7 +398,7 @@ class ColllectionElementService
 
         try {
             $this->filesystem->delete($path);
-        } catch (FileNotFoundException) {
+        } catch (UnableToReadFile|FilesystemException) {
             // If file does not exists or was already deleted, it's OK
         }
 
@@ -365,8 +409,7 @@ class ColllectionElementService
      * @param Closure $matches Should return true if the element need to be process
      * @param Closure $process The process applied to element file
      *
-     * @throws FileNotFoundException
-     * @throws FileExistsException
+     * @throws FilesystemException
      */
     public function batchRename(string $encodedColllectionPath, Closure $matches, Closure $process): void
     {
@@ -381,7 +424,7 @@ class ColllectionElementService
                 $process($elementFile);
                 $newPath = $colllectionPath . '/' . $elementFile->getCleanedBasename();
 
-                $this->filesystem->rename($path, $newPath);
+                $this->filesystem->move($path, $newPath);
             }
         }
 

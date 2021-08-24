@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedSftpAdapter;
-use League\Flysystem\Config;
 
 class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
@@ -22,16 +21,12 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
-        string $fsCacheRoot,
-        int $fsCacheDuration,
         string $fsSftpHost,
         int $fsSftpPort,
         string $fsSftpUsername,
         string $fsSftpPassword,
         string $fsSftpRootPath
     ) {
-        parent::__construct($fsCacheRoot, $fsCacheDuration);
-
         $this->host = $fsSftpHost;
         $this->port = $fsSftpPort;
         $this->username = $fsSftpUsername;
@@ -68,11 +63,9 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,
-                new Config(
-                    [
-                        'disable_asserts' => true,
-                    ]
-                )
+                [
+                    'disable_asserts' => true,
+                ]
             );
         }
 

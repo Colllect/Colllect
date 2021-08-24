@@ -5,23 +5,11 @@ declare(strict_types=1);
 namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedCachedAdapter;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedCachedStorageAdapter;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFlysystemAdapterInterface;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 use Exception;
 
 abstract class AbstractCachedFilesystemAdapter
 {
-    private string $cacheRoot;
-    private int $cacheDuration;
-
-    public function __construct(string $fsCacheRoot, int $fsCacheDuration)
-    {
-        $this->cacheRoot = rtrim($fsCacheRoot, '/') . '/'; // Ensure trailing slash
-        $this->cacheDuration = $fsCacheDuration;
-    }
-
     /**
      * Decorate an adapter with a local cached adapter.
      *
@@ -37,16 +25,7 @@ abstract class AbstractCachedFilesystemAdapter
             throw new \Exception('user_not_logged_id');
         }
 
-        $adapter = new EnhancedCachedAdapter(
-            $adapter,
-            new EnhancedCachedStorageAdapter(
-                new EnhancedLocalAdapter(
-                    $this->cacheRoot . $this::getName()
-                ),
-                sha1($userEmail),
-                $this->cacheDuration
-            )
-        );
+        // TODO: add EnhancedCachedAdapter
 
         return $adapter;
     }

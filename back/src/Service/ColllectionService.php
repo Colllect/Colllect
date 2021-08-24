@@ -12,7 +12,8 @@ use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\ColllectionPath;
 use App\Util\Metadata;
 use Exception;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\StorageAttributes;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,8 +55,12 @@ class ColllectionService
         $this->stopwatch?->start('colllection_list');
 
         try {
-            $colllectionsMetadata = $this->filesystem->listContents(ColllectionPath::COLLLECTIONS_FOLDER);
-        } catch (Exception) {
+            $colllectionsMetadata = $this->filesystem->listContents(ColllectionPath::COLLLECTIONS_FOLDER)
+                ->filter(fn (StorageAttributes $attributes): bool => $attributes->isDir())
+                ->sortByPath()
+                ->toArray()
+            ;
+        } catch (FilesystemException) {
             // We can't catch 'not found'-like exception for each adapter,
             // so we normalize the result
             $this->stopwatch?->stop('colllection_list');
@@ -72,19 +77,13 @@ class ColllectionService
         // Get typed colllection for each folder
         $colllections = [];
         foreach ($colllectionsMetadata as $colllectionMetadata) {
-            if ($colllectionMetadata['type'] !== 'dir') {
-                continue;
-            }
-
-            $colllectionMetadata = Metadata::standardize($colllectionMetadata);
+            $colllectionMetadata = Metadata::standardize([
+                'path' => $colllectionMetadata->path(),
+                'type' => $colllectionMetadata->type(),
+                'timestamp' => $colllectionMetadata->lastModified(),
+            ]);
             $colllections[] = new Colllection($colllectionMetadata);
         }
-
-        // Sort colllections by name
-        uasort(
-            $colllections,
-            fn (Colllection $a, Colllection $b): int => $a->getName() < $b->getName() ? -1 : 1
-        );
 
         $colllectionList = array_values($colllections);
 
@@ -95,6 +94,8 @@ class ColllectionService
 
     /**
      * Create a colllection.
+     *
+     * @throws FilesystemException
      */
     public function create(Request $request): Colllection|FormInterface
     {
@@ -111,7 +112,7 @@ class ColllectionService
         }
 
         $path = ColllectionPath::COLLLECTIONS_FOLDER . '/' . $colllection->getName();
-        $this->filesystem->createDir($path);
+        $this->filesystem->createDirectory($path);
 
         $this->stopwatch?->stop('colllection_create');
 
@@ -122,8 +123,6 @@ class ColllectionService
      * Update a colllection by path.
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
-     *
-     * @throws FileNotFoundException
      */
     public function update(string $encodedColllectionPath, Request $request): Colllection|FormInterface
     {
@@ -154,8 +153,6 @@ class ColllectionService
      * Get a colllection by path.
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
-     *
-     * @throws FileNotFoundException
      */
     public function get(string $encodedColllectionPath): Colllection
     {
@@ -163,13 +160,17 @@ class ColllectionService
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
-        $meta = $this->filesystem->getMetadata($colllectionPath);
+        // FIXME: check if Colllection actually exists
+//        if (!$this->filesystem->fileExists($colllectionPath)) {
+//            $this->stopwatch?->stop('colllection_get');
+//
+//            throw new NotFoundHttpException('error.colllection_not_found');
+//        }
 
-        if (!$meta) {
-            $this->stopwatch?->stop('colllection_get');
-
-            throw new NotFoundHttpException('error.colllection_not_found');
-        }
+        $meta = [
+            'path' => $colllectionPath,
+            'type' => 'dir',
+        ];
 
         $standardizedMeta = Metadata::standardize($meta, $colllectionPath);
 
@@ -184,6 +185,8 @@ class ColllectionService
      * Delete a colllection based on base 64 encoded basename.
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
+     *
+     * @throws FilesystemException
      */
     public function delete(string $encodedColllectionPath): void
     {
@@ -191,7 +194,7 @@ class ColllectionService
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
 
-        $this->filesystem->deleteDir($colllectionPath);
+        $this->filesystem->deleteDirectory($colllectionPath);
 
         $this->stopwatch?->stop('colllection_delete');
     }

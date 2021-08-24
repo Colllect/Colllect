@@ -6,7 +6,6 @@ namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
-use League\Flysystem\Plugin\ListWith;
 
 class FilesystemAdapterManager
 {
@@ -35,7 +34,6 @@ class FilesystemAdapterManager
         }
 
         $filesystem = $adapter->getFilesystem($user);
-        $filesystem->addPlugin(new ListWith());
 
         return $filesystem;
     }

@@ -10,7 +10,6 @@ use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use Aws\S3\S3Client;
 use Exception;
-use League\Flysystem\Config;
 
 class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
@@ -23,15 +22,11 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
-        string $fsCacheRoot,
-        int $fsCacheDuration,
         string $fsAwsKey,
         string $fsAwsSecret,
         string $fsAwsRegion,
         string $fsAwsBucket
     ) {
-        parent::__construct($fsCacheRoot, $fsCacheDuration);
-
         $this->key = $fsAwsKey;
         $this->secret = $fsAwsSecret;
         $this->region = $fsAwsRegion;
@@ -73,11 +68,9 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,
-                new Config(
-                    [
-                        'disable_asserts' => true,
-                    ]
-                )
+                [
+                    'disable_asserts' => true,
+                ]
             );
         }
 

@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter;
 
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemException;
 
 class EnhancedFilesystem extends Filesystem implements EnhancedFilesystemInterface
 {
     /**
      * Rename a directory.
      *
-     * @throws FileExistsException
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
-    public function renameDir(string $path, string $newPath): bool
+    public function renameDir(string $path, string $newPath): void
     {
-        return $this->rename($path, $newPath);
+        $this->move($path, $newPath);
     }
 }

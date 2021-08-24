@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Security;
@@ -336,7 +337,7 @@ class ColllectionElementService
         string $encodedColllectionPath,
         HeaderBag $requestHeaders
     ): Response {
-        $this->stopwatch?->start('colllection_element_get_content');
+        $this->stopwatch?->start('colllection_element_get_content_meta', 'colllection_element_service');
 
         $colllectionPath = ColllectionPath::decode($encodedColllectionPath);
         $path = $this->getElementPath($encodedElementBasename, $colllectionPath);
@@ -353,7 +354,7 @@ class ColllectionElementService
             $lastModified = $this->filesystem->lastModified($path);
 
             if ($requestHeaders->has('if-modified-since')) {
-                $modified = (new DateTime($requestHeaders->get('if-modified-since') ?? 'now'))->getTimestamp();
+                $modified = (new DateTime($requestHeaders->get('if-modified-since')))->getTimestamp();
                 if ($lastModified <= $modified) {
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
@@ -363,20 +364,21 @@ class ColllectionElementService
                     return $response;
                 }
             }
+            $this->stopwatch?->stop('colllection_element_get_content_meta');
 
-            $content = $this->filesystem->read($path);
+            $this->stopwatch?->start('colllection_element_get_content_read', 'colllection_element_service');
+            $content = $this->filesystem->readStream($path);
 
-            $response = new Response();
-            $response->setContent($content);
+            $response = new StreamedResponse();
+            $response->setCallback(fn (): int => fpassthru($content));
             $response->headers->set('Content-Type', $mimeType);
+            $response->headers->set('X-Accel-Buffering', 'no');
             $response->setLastModified((new DateTime())->setTimestamp($lastModified));
 
-            $this->stopwatch?->stop('colllection_element_get_content');
+            $this->stopwatch?->stop('colllection_element_get_content_read');
 
             return $response;
         } catch (UnableToReadFile|FilesystemException) {
-            $this->stopwatch?->stop('colllection_element_get_content');
-
             throw new NotFoundHttpException();
         }
     }

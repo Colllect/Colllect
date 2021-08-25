@@ -6,7 +6,6 @@
 parameters:
     # default env
     env(FS_DEFAULT_ADAPTER): 'local'
-    env(FS_CACHE_ROOT): '%kernel.cache_dir%/colllect/'
     env(FS_CACHE_DURATION_IN_SECONDS): 180
     env(FS_LOCAL_ROOT_PATH): '%kernel.project_dir%/uploads/'
 
@@ -17,7 +16,6 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             # filesystem Cache
-            string $fsCacheRoot: '%env(resolve:FS_CACHE_ROOT)%'
             int $fsCacheDuration: '%env(int:FS_CACHE_DURATION_IN_SECONDS)%'
 
             # filesystem Local

@@ -100,7 +100,7 @@ class DropboxController extends AbstractController
                 ],
             ]
         );
-        $decodedResponse = \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
+        $decodedResponse = \GuzzleHttp\Utils::jsonDecode($response->getBody()->getContents(), true);
         $accessToken = $decodedResponse['access_token'];
 
         $user = $this->getUser();

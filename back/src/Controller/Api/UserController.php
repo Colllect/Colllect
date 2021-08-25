@@ -53,7 +53,7 @@ final class UserController extends AbstractController
             ->find($userId)
         ;
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
 
@@ -148,7 +148,7 @@ final class UserController extends AbstractController
             ->find($userId)
         ;
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
 
@@ -199,7 +199,7 @@ final class UserController extends AbstractController
             ->find($userId)
         ;
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
 

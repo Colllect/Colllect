@@ -6,12 +6,10 @@ namespace App\Controller\Api;
 
 use App\Exception\EmptyFileException;
 use App\Exception\FilesystemCannotRenameException;
-use App\Exception\FilesystemCannotWriteException;
 use App\Exception\InvalidElementLinkException;
 use App\Exception\NotSupportedElementTypeException;
 use App\Service\ColllectionElementService;
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemException;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -101,14 +99,10 @@ final class ColllectionElementController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      *
-     * @throws FilesystemCannotWriteException
-     * @throws NotSupportedElementTypeException
-     * @throws FileExistsException
-     * @throws FileNotFoundException
-     * @throws FilesystemCannotWriteException
-     * @throws NotSupportedElementTypeException
      * @throws EmptyFileException
      * @throws InvalidElementLinkException
+     * @throws NotSupportedElementTypeException
+     * @throws FilesystemException
      */
     public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
     {
@@ -178,8 +172,8 @@ final class ColllectionElementController extends AbstractController
      *     description="Returned when Colllection file is not found"
      * )
      *
+     * @throws FilesystemException
      * @throws NotSupportedElementTypeException
-     * @throws FileNotFoundException
      */
     public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
@@ -241,10 +235,8 @@ final class ColllectionElementController extends AbstractController
      * )
      *
      * @throws FilesystemCannotRenameException
-     * @throws FilesystemCannotWriteException
+     * @throws FilesystemException
      * @throws NotSupportedElementTypeException
-     * @throws FileExistsException
-     * @throws FileNotFoundException
      */
     public function updateColllectionElement(
         Request $request,

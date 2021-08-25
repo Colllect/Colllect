@@ -9,7 +9,7 @@ use App\Service\ElementFileHandler;
 class Metadata
 {
     /**
-     * @param array<string, string> $meta
+     * @param array<string, string|int|null> $meta
      *
      * @return array<string, string|int>
      */
@@ -22,7 +22,7 @@ class Metadata
 
         // Add filename as it is not returned sometimes
         if (isset($meta['path']) && !isset($meta['filename'])) {
-            $pathParts = explode('/', $meta['path']);
+            $pathParts = explode('/', (string) $meta['path']);
             $meta['basename'] = end($pathParts);
 
             if (!str_contains($meta['basename'], '.')) {
@@ -52,6 +52,15 @@ class Metadata
             }
         }
 
-        return $meta;
+        return [
+            'path' => (string) $meta['path'],
+            'type' => (string) $meta['type'],
+            'size' => $meta['size'] ?? 0,
+            'mimetype' => $meta['mimetype'] ?? '',
+            'timestamp' => $meta['timestamp'] ?? 0,
+            'basename' => (string) $meta['basename'],
+            'extension' => $meta['extension'] ?? '',
+            'filename' => (string) $meta['filename'],
+        ];
     }
 }

@@ -6,9 +6,9 @@ namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
 use App\Exception\DropboxAccessTokenMissingException;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedDropboxAdapter;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
@@ -42,7 +42,7 @@ class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapt
 
             $accessToken = $userFilesystemCredentials->getCredentials();
             $client = new DropboxClient($accessToken);
-            $adapter = $this->cacheAdapter(new EnhancedDropboxAdapter($client), $user);
+            $adapter = $this->cachedAdapter(new EnhancedDropboxAdapter($client), $user);
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,

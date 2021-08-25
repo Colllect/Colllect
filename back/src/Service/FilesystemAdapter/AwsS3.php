@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedAwsS3Adapter;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
 use Aws\S3\S3Client;
 use Exception;
 
@@ -22,11 +22,14 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
+        int $fsCacheDuration,
         string $fsAwsKey,
         string $fsAwsSecret,
         string $fsAwsRegion,
         string $fsAwsBucket
     ) {
+        parent::__construct($fsCacheDuration);
+
         $this->key = $fsAwsKey;
         $this->secret = $fsAwsSecret;
         $this->region = $fsAwsRegion;
@@ -64,7 +67,7 @@ class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapter
                 throw new Exception('aws_s3.not_logged_in');
             }
 
-            $adapter = $this->cacheAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, (string) $userId), $user);
+            $adapter = $this->cachedAdapter(new EnhancedAwsS3Adapter($client, $this->bucket, (string) $userId), $user);
 
             $this->filesystem = new EnhancedFilesystem(
                 $adapter,

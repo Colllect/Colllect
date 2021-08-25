@@ -73,7 +73,7 @@ abstract class AbstractElement implements ElementInterface
     /**
      * {@inheritdoc}
      *
-     * @return \DateTime|\DateTimeImmutable
+     * @return DateTime|\DateTimeImmutable
      */
     public function getUpdated(): DateTimeInterface
     {

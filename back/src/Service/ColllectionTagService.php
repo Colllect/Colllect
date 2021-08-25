@@ -11,8 +11,7 @@ use App\Model\Element\AbstractElement;
 use App\Model\ElementFile;
 use App\Model\Tag;
 use App\Util\Base64;
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +33,7 @@ class ColllectionTagService
      *
      * @return Tag[]
      *
-     * @throws FileNotFoundException
+     * @throws \Exception
      */
     public function list(string $encodedColllectionPath): array
     {
@@ -46,7 +45,6 @@ class ColllectionTagService
      *
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      *
-     * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
      * @throws TagAlreadyExistsException
      */
@@ -73,7 +71,7 @@ class ColllectionTagService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName         Base 64 encoded tag name
      *
-     * @throws FileNotFoundException
+     * @throws \Exception
      */
     public function get(string $encodedColllectionPath, string $encodedTagName): Tag
     {
@@ -93,10 +91,10 @@ class ColllectionTagService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $encodedTagName         Base 64 encoded tag name
      *
-     * @throws FileExistsException
-     * @throws FileNotFoundException
      * @throws FilesystemCannotWriteException
+     * @throws FilesystemException
      * @throws TagAlreadyExistsException
+     * @throws \Exception
      */
     public function update(string $encodedColllectionPath, string $encodedTagName, Request $request): Tag|FormInterface
     {
@@ -145,8 +143,8 @@ class ColllectionTagService
      * @param string $encodedTagName         Base 64 encoded tag name
      *
      * @throws FilesystemCannotWriteException
-     * @throws FileExistsException
-     * @throws FileNotFoundException
+     * @throws FilesystemException
+     * @throws \Exception
      */
     public function delete(string $encodedColllectionPath, string $encodedTagName): void
     {

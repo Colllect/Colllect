@@ -6,7 +6,6 @@ namespace App\Controller\Api;
 
 use App\Model\Colllection;
 use App\Service\ColllectionService;
-use League\Flysystem\FileNotFoundException;
 use Nelmio\ApiDocBundle\Annotation as ApiDoc;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -114,11 +113,7 @@ final class ColllectionController extends AbstractController
      */
     public function getColllection(string $encodedColllectionPath): JsonResponse
     {
-        try {
-            $colllection = $this->colllectionService->get($encodedColllectionPath);
-        } catch (FileNotFoundException $exception) {
-            throw $this->createNotFoundException('Colllection not found', $exception);
-        }
+        $colllection = $this->colllectionService->get($encodedColllectionPath);
 
         return $this->json($colllection);
     }
@@ -155,11 +150,7 @@ final class ColllectionController extends AbstractController
      */
     public function updateColllection(Request $request, string $encodedColllectionPath): JsonResponse
     {
-        try {
-            $response = $this->colllectionService->update($encodedColllectionPath, $request);
-        } catch (FileNotFoundException $exception) {
-            throw $this->createNotFoundException('Colllection not found', $exception);
-        }
+        $response = $this->colllectionService->update($encodedColllectionPath, $request);
 
         return $this->json($response);
     }

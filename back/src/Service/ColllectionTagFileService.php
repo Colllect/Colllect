@@ -8,11 +8,12 @@ use App\Entity\User;
 use App\Exception\FilesystemCannotWriteException;
 use App\Exception\TagAlreadyExistsException;
 use App\Model\Tag;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\ColllectionPath;
 use Exception;
-use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Security;
 
@@ -50,8 +51,7 @@ class ColllectionTagFileService
      *
      * @return Tag[]
      *
-     * @throws FileNotFoundException
-     * @throws Exception
+     * @throws FilesystemException
      */
     public function getAll(string $encodedColllectionPath): array
     {
@@ -70,12 +70,9 @@ class ColllectionTagFileService
 
         $tagsFileContent = $this->filesystem->read($tagsFilePath);
 
-        if ($tagsFileContent === false) {
-            throw new Exception('Cannon read file: ' . $tagsFilePath);
-        }
-
         try {
-            $flatTags = \GuzzleHttp\json_decode($tagsFileContent, true);
+            /** @var array<string, array<string, string>> $flatTags */
+            $flatTags = \GuzzleHttp\Utils::jsonDecode($tagsFileContent, true);
         } catch (Exception) {
             return [];
         }
@@ -96,7 +93,7 @@ class ColllectionTagFileService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param string $tagName                The searched tag name
      *
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
     public function get(string $encodedColllectionPath, string $tagName): Tag
     {
@@ -115,7 +112,7 @@ class ColllectionTagFileService
         /** @var Tag|null $tag */
         $tag = clone array_shift($filteredTags);
 
-        if (!$tag instanceof \App\Model\Tag) {
+        if (!$tag instanceof Tag) {
             throw new NotFoundHttpException('error.tag_not_found');
         }
 
@@ -124,7 +121,7 @@ class ColllectionTagFileService
 
     /**
      * @throws TagAlreadyExistsException
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
     public function add(string $encodedColllectionPath, Tag $tag): void
     {
@@ -138,7 +135,7 @@ class ColllectionTagFileService
     }
 
     /**
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
     public function remove(string $encodedColllectionPath, Tag $tag): void
     {
@@ -156,7 +153,7 @@ class ColllectionTagFileService
 
     /**
      * @throws FilesystemCannotWriteException
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
     public function save(string $encodedColllectionPath): void
     {
@@ -167,12 +164,14 @@ class ColllectionTagFileService
             ],
             $this->getall($encodedColllectionPath)
         );
-        $tagsFileContent = \GuzzleHttp\json_encode($flatTags);
+        $tagsFileContent = \GuzzleHttp\Utils::jsonEncode($flatTags);
 
         $tagsFilePath = $this->getTagsFilePath($encodedColllectionPath);
 
         // Put new tag list info Colllection tags file
-        if (!$this->filesystem->write($tagsFilePath, $tagsFileContent)) {
+        try {
+            $this->filesystem->write($tagsFilePath, $tagsFileContent);
+        } catch (UnableToWriteFile|FilesystemException) {
             throw new FilesystemCannotWriteException();
         }
     }
@@ -183,7 +182,7 @@ class ColllectionTagFileService
      * @param string $encodedColllectionPath Base 64 encoded colllection path
      * @param Tag    $tag                    Colllection tag to find
      *
-     * @throws FileNotFoundException
+     * @throws FilesystemException
      */
     public function has(string $encodedColllectionPath, Tag $tag): bool
     {

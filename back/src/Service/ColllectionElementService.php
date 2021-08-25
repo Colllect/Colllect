@@ -13,7 +13,7 @@ use App\Form\ElementType;
 use App\Model\Element\AbstractElement;
 use App\Model\Element\ElementInterface;
 use App\Model\ElementFile;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\Base64;
 use App\Util\ColllectionPath;
@@ -354,7 +354,9 @@ class ColllectionElementService
             $lastModified = $this->filesystem->lastModified($path);
 
             if ($requestHeaders->has('if-modified-since')) {
-                $modified = (new DateTime($requestHeaders->get('if-modified-since')))->getTimestamp();
+                /** @var string $ifModifiedSince */
+                $ifModifiedSince = $requestHeaders->get('if-modified-since');
+                $modified = (new DateTime($ifModifiedSince))->getTimestamp();
                 if ($lastModified <= $modified) {
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);

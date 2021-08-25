@@ -92,7 +92,7 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
         $userRepository = $this->entityManager->getRepository(User::class);
         $user = $userRepository->findOneBy(['email' => $credentials['email']]);
 
-        if (!$user instanceof \App\Entity\User) {
+        if (!$user instanceof User) {
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 

@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Form\ColllectionType;
 use App\Model\Colllection;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\FilesystemAdapterManager;
 use App\Util\ColllectionPath;
 use App\Util\Metadata;
@@ -17,7 +17,6 @@ use League\Flysystem\StorageAttributes;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Stopwatch\Stopwatch;
 

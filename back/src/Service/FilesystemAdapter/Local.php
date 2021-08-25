@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedLocalAdapter;
 
 class Local implements FilesystemAdapterInterface

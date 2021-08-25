@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Service\FilesystemAdapter;
 
 use App\Entity\User;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystem;
-use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFilesystemInterface;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystem;
+use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface;
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedSftpAdapter;
+use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
 
 class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
@@ -21,12 +22,15 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(
+        int $fsCacheDuration,
         string $fsSftpHost,
         int $fsSftpPort,
         string $fsSftpUsername,
         string $fsSftpPassword,
         string $fsSftpRootPath
     ) {
+        parent::__construct($fsCacheDuration);
+
         $this->host = $fsSftpHost;
         $this->port = $fsSftpPort;
         $this->username = $fsSftpUsername;
@@ -48,7 +52,7 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
     public function getFilesystem(User $user): EnhancedFilesystemInterface
     {
         if ($this->filesystem === null) {
-            $adapter = $this->cacheAdapter(
+            $adapter = $this->cachedAdapter(
                 new EnhancedSftpAdapter(
                     new SftpConnectionProvider(
                         $this->host,

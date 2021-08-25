@@ -50,13 +50,15 @@ class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterI
         if ($this->filesystem === null) {
             $adapter = $this->cacheAdapter(
                 new EnhancedSftpAdapter(
-                    [
-                        'host' => $this->host,
-                        'port' => $this->port,
-                        'username' => $this->username,
-                        'password' => $this->password,
-                        'root' => $this->rootPath,
-                    ]
+                    new SftpConnectionProvider(
+                        $this->host,
+                        $this->username,
+                        $this->password,
+                        null,
+                        null,
+                        $this->port,
+                    ),
+                    $this->rootPath,
                 ),
                 $user
             );

@@ -4,14 +4,31 @@ declare(strict_types=1);
 
 namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\Cache;
 
+use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
+use League\Flysystem\StorageAttributes;
 
 class FileMetadataCache
 {
+    private ?string $type = null;
     private ?int $lastModified = null;
     private ?string $mimeType = null;
     private ?int $fileSize = null;
     private ?string $visibility = null;
+    /** @var array<string>|null */
+    private ?array $listContents = null;
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
 
     public function getLastModified(): ?int
     {
@@ -61,10 +78,30 @@ class FileMetadataCache
         return $this;
     }
 
+    /**
+     * @return array<string>|null
+     */
+    public function getListContents(): ?array
+    {
+        return $this->listContents;
+    }
+
+    /**
+     * @param array<string> $listContents
+     */
+    public function setListContents(array $listContents): self
+    {
+        $this->listContents = $listContents;
+
+        return $this;
+    }
+
     public function setFromFileAttributes(FileAttributes $fileAttributes): self
     {
-        if ($lastModifier = $fileAttributes->lastModified()) {
-            $this->lastModified = $lastModifier;
+        $this->type = StorageAttributes::TYPE_FILE;
+
+        if ($lastModified = $fileAttributes->lastModified()) {
+            $this->lastModified = $lastModified;
         }
 
         if ($mimeType = $fileAttributes->mimeType()) {
@@ -82,6 +119,21 @@ class FileMetadataCache
         return $this;
     }
 
+    public function setFromDirectoryAttributes(DirectoryAttributes $directoryAttributes): self
+    {
+        $this->type = StorageAttributes::TYPE_DIRECTORY;
+
+        if ($lastModified = $directoryAttributes->lastModified()) {
+            $this->lastModified = $lastModified;
+        }
+
+        if ($visibility = $directoryAttributes->visibility()) {
+            $this->visibility = $visibility;
+        }
+
+        return $this;
+    }
+
     public function buildFileAttributes(string $path): FileAttributes
     {
         return new FileAttributes(
@@ -91,5 +143,18 @@ class FileMetadataCache
             $this->lastModified,
             $this->mimeType
         );
+    }
+
+    public function buildStorageAttributes(string $path): DirectoryAttributes|FileAttributes
+    {
+        if ($this->type === StorageAttributes::TYPE_DIRECTORY) {
+            return new DirectoryAttributes(
+                $path,
+                $this->visibility,
+                $this->lastModified,
+            );
+        }
+
+        return $this->buildFileAttributes($path);
     }
 }

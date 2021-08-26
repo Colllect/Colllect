@@ -6,6 +6,7 @@ namespace App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\Cache;
 
 use App\Service\FilesystemAdapter\EnhancedFlysystemAdapter\EnhancedFlysystemAdapterInterface;
 use League\Flysystem\Config;
+use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\UnableToReadFile;
@@ -27,24 +28,6 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         $this->cachePool = $cachePool;
     }
 
-    private function getCacheItem(string $path): FilesystemCacheItem
-    {
-        if (isset($this->cacheItems[$path])) {
-            return $this->cacheItems[$path];
-        }
-
-        $key = hash('md4', $path);
-        try {
-            return $this->cacheItems[$path] = new FilesystemCacheItem(
-                $this->cachePool,
-                $this->cachePool->getItem($key),
-                $path
-            );
-        } catch (InvalidArgumentException $exception) {
-            throw InvalidCacheItemException::withPathAndKey($path, $key);
-        }
-    }
-
     public function fileExists(string $path): bool
     {
         $item = $this->getCacheItem($path);
@@ -59,6 +42,24 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         return $fileExists;
     }
 
+    private function getCacheItem(string $path): FilesystemCacheItem
+    {
+        if (isset($this->cacheItems[$path])) {
+            return $this->cacheItems[$path];
+        }
+
+        $key = hash('md4', $path);
+        try {
+            return $this->cacheItems[$path] = new FilesystemCacheItem(
+                $this->cachePool,
+                $this->cachePool->getItem($key),
+                $path
+            );
+        } catch (InvalidArgumentException) {
+            throw InvalidCacheItemException::withPathAndKey($path, $key);
+        }
+    }
+
     public function write(string $path, string $contents, Config $config): void
     {
         $this->adapter->write($path, $contents, $config);
@@ -67,7 +68,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         $metadata = $item->getMetadata();
         $metadata->setLastModified(time());
         if ($visibility = $config->get(Config::OPTION_VISIBILITY)) {
-            $metadata->setVisibility($config->get(Config::OPTION_VISIBILITY));
+            $metadata->setVisibility($visibility);
         }
         $item->save();
     }
@@ -80,7 +81,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         $metadata = $item->getMetadata();
         $metadata->setLastModified(time());
         if ($visibility = $config->get(Config::OPTION_VISIBILITY)) {
-            $metadata->setVisibility($config->get(Config::OPTION_VISIBILITY));
+            $metadata->setVisibility($visibility);
         }
         $item->save();
     }
@@ -148,6 +149,42 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         }
 
         $this->adapter->deleteDirectory($path);
+    }
+
+    public function listContents(string $path, bool $deep): iterable
+    {
+        $directoryItem = $this->getCacheItem($path);
+        $directoryMetadata = $directoryItem->getMetadata();
+
+        if ($directoryMetadata->getListContents() !== null) {
+            $items = array_map(
+                fn ($itemPath): DirectoryAttributes|FileAttributes => $this->getCacheItem($itemPath)->getMetadata()->buildStorageAttributes($itemPath),
+                $directoryMetadata->getListContents()
+            );
+
+            return $items;
+        }
+
+        $paths = [];
+        $items = [];
+        /** @var DirectoryAttributes|FileAttributes $storageAttributes */
+        foreach ($this->adapter->listContents($path, $deep) as $storageAttributes) {
+            $item = $this->getCacheItem($storageAttributes->path());
+            if ($storageAttributes instanceof FileAttributes) {
+                $item->getMetadata()->setFromFileAttributes($storageAttributes);
+            } else {
+                $item->getMetadata()->setFromDirectoryAttributes($storageAttributes);
+            }
+            $item->save();
+
+            $paths[] = $storageAttributes->path();
+            $items[] = $storageAttributes;
+        }
+
+        $directoryItem->getMetadata()->setListContents($paths);
+        $directoryItem->save();
+
+        return $items;
     }
 
     public function createDirectory(string $path, Config $config): void
@@ -226,20 +263,6 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         $item->save();
 
         return $fileAttributes;
-    }
-
-    public function listContents(string $path, bool $deep): iterable
-    {
-        /** @var FileAttributes $storageAttributes */
-        foreach ($this->adapter->listContents($path, $deep) as $storageAttributes) {
-            if ($storageAttributes->isFile()) {
-                $item = $this->getCacheItem($storageAttributes->path());
-                $item->getMetadata()->setFromFileAttributes($storageAttributes);
-                $item->save();
-            }
-
-            yield $storageAttributes;
-        }
     }
 
     public function move(string $source, string $destination, Config $config): void

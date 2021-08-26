@@ -13,7 +13,7 @@ class FilesystemCacheItem
     private CacheItemPoolInterface $cachePool;
     private CacheItemInterface $item;
     private string $path;
-    private ?FileMetadataCache $metadata = null;
+    private FileMetadataCache|null $metadata = null;
     private bool $isHit;
 
     public function __construct(
@@ -70,7 +70,7 @@ class FilesystemCacheItem
             $this->cachePool->deleteItem($this->item->getKey());
             $this->isHit = false;
             unset($this->metadata);
-        } catch (InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException) {
             throw InvalidCacheItemException::withPathAndKey($this->path, $this->item->getKey());
         }
 
@@ -83,7 +83,10 @@ class FilesystemCacheItem
             $this->loadOrInitialize();
         }
 
-        return $this->metadata;
+        /** @var FileMetadataCache $metadata */
+        $metadata = $this->metadata;
+
+        return $metadata;
     }
 
     public function setMetadata(FileMetadataCache $metadata): self

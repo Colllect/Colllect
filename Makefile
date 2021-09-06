@@ -1,13 +1,17 @@
 .PHONY: init
 init: .env upd install back/var/oauth2/public.key init-db create-default-client down
 
+.PHONY: build
+build:
+	docker-compose build --parallel
+
 .PHONY: upd
-upd:
+upd: build
 	docker-compose up -d
 
 .PHONY: up
-up:
-	docker-compose up --build
+up: build
+	docker-compose up
 
 .PHONY: down
 down:

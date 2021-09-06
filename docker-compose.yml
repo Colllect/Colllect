@@ -28,7 +28,6 @@ services:
   blackfire:
     image: blackfire/blackfire:2.4.3
     environment:
-      BLACKFIRE_LOG_LEVEL: 4
       BLACKFIRE_DISABLE_LEGACY_PORT: 1
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID}
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN}

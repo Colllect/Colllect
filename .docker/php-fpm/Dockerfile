@@ -1,16 +1,12 @@
-ARG COMPOSER_VERSION=2.1.5
-
-FROM composer:${COMPOSER_VERSION} as composer
+FROM composer:2.1.5 as composer
 
 # See https://github.com/docker-library/php/blob/master/8.0/alpine3.14/fpm/Dockerfile
 FROM php:8.0.9-fpm-alpine3.14
 
-MAINTAINER Alexandre DEMODE <contact@alex-d.fr>
-
+ARG APCU_VERSION=5.1.20
 ARG TIMEZONE
 ARG DOCKER_HOST_IP
 ARG IDE_KEY
-ARG APCU_VERSION=5.1.20
 
 RUN apk add --no-cache \
     openssl \

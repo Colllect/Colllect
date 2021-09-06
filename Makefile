@@ -1,5 +1,10 @@
+.PHONY: help
+help:
+	@printf "\033[33mUsage:\033[0m\n  make [target] [arg=\"val\"...]\n\n\033[33mTargets:\033[0m\n"
+	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
+
 .PHONY: init
-init: .env upd install back/var/oauth2/public.key init-db create-default-client down
+init: .env upd install back/var/oauth2/public.key init-db create-default-client down ## Initialize project dependencies, database, keys, etc.
 
 .PHONY: build
 build:
@@ -10,18 +15,18 @@ upd: build
 	docker-compose up -d
 
 .PHONY: up
-up: build
+up: build ## Launch the app
 	docker-compose up
 
 .PHONY: down
-down:
+down: ## Stop the app
 	docker-compose down
 
 .env:
 	cp .env.dist .env
 
 .PHONY: install
-install:
+install: ## Install back and front dependencies
 	docker-compose exec php composer install
 	cd front && npm install
 

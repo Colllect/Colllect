@@ -4,3 +4,4 @@
 /dist
 /generated
 /yarn.lock
+/*.local

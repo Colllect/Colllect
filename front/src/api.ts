@@ -1,10 +1,10 @@
-import * as HttpStatus from 'http-status-codes'
+import {StatusCodes} from 'http-status-codes'
 
 import Api from '../generated/api'
 
 const api = new Api()
 api.addErrorHandler((err) => {
-  if (err.hasOwnProperty('status') && err.status === HttpStatus.UNAUTHORIZED) {
+  if (err.hasOwnProperty('status') && err.status === StatusCodes.UNAUTHORIZED) {
     window.location.replace('/login')
   }
 })

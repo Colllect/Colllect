@@ -33,6 +33,11 @@ nelmio_api_doc:
                         type: string
                     type:
                         type: string
+                        enum:
+                            - 'image'
+                            - 'link'
+                            - 'note'
+                            - 'colors'
                     tags:
                         items:
                             type: string

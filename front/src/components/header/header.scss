@@ -1,5 +1,5 @@
 $header-height: 70px;
-$header-logo-padding: 20px;
+$header-logo-padding: 25px;
 $header-menu-item-border-width: 3px;
 
 .c-colllect-header {
@@ -53,8 +53,8 @@ $header-menu-item-border-width: 3px;
   }
 
   &-image {
-    width: 35px;
-    margin-right: 7px;
+    --colllect-logo-text-color: currentColor;
+    width: 95px;
   }
 }
 
@@ -76,7 +76,7 @@ $header-menu-item-border-width: 3px;
     display: inline-block;
     padding-top: $header-menu-item-border-width;
     margin: 0 $header-logo-padding;
-    font-weight: bold;
+    font-weight: $font-weight-source-sans-pro-semibold;
     line-height: $header-height - $header-menu-item-border-width * 2;
     color: $color-gull-gray;
     text-decoration: none;

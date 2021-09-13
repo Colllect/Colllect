@@ -21,3 +21,14 @@ strong {
   height: calc(100vh - 70px);
   overflow: auto;
 }
+
+.m-app--svg-symbols {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}

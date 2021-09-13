@@ -1,6 +1,7 @@
 import {Throttle} from 'lodash-decorators'
 import * as md5 from 'md5'
 import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+import ElementTypes from '../../models/ElementTypes'
 import WithRender from './Element.html'
 
 import {Element} from './../../api'
@@ -11,12 +12,6 @@ import windowStore from '../../store/modules/window'
 @WithRender
 @Component
 export default class ColllectElement extends Vue {
-  private static readonly TYPES = {
-    COLORS: 'colors',
-    IMAGE: 'image',
-    LINK: 'link',
-    NOTE: 'note',
-  }
   private static readonly VERTICAL_DELTA = 200 // In pixels
 
   @Prop({required: true})
@@ -50,6 +45,10 @@ export default class ColllectElement extends Vue {
     return this.element.fileUrl
   }
 
+  get isImage(): boolean {
+    return this.type === ElementTypes.Image
+  }
+
   get watchableWindowScrollAndHeight(): string {
     return [
       windowStore.state.scrollTop,
@@ -61,10 +60,10 @@ export default class ColllectElement extends Vue {
     return {
       'c-colllect-element__loaded': this.isLoaded,
       'c-colllect-element__show': this.show,
-      'c-colllect-element__type-colors': this.type === ColllectElement.TYPES.COLORS,
-      'c-colllect-element__type-image': this.type === ColllectElement.TYPES.IMAGE,
-      'c-colllect-element__type-link': this.type === ColllectElement.TYPES.LINK,
-      'c-colllect-element__type-note': this.type === ColllectElement.TYPES.NOTE,
+      'c-colllect-element__type-colors': this.type === ElementTypes.Colors,
+      'c-colllect-element__type-image': this.type === ElementTypes.Image,
+      'c-colllect-element__type-link': this.type === ElementTypes.Link,
+      'c-colllect-element__type-note': this.type === ElementTypes.Note,
     }
   }
 
@@ -147,7 +146,7 @@ export default class ColllectElement extends Vue {
   }
 
   private mounted(): void {
-    if (this.type !== ColllectElement.TYPES.IMAGE) {
+    if (!this.isImage) {
       this.isLoaded = true
     }
 

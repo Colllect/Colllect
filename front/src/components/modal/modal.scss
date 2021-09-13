@@ -16,7 +16,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background: linear-gradient(to bottom right, #ffcfa9, #e671a5);
+  background: linear-gradient(to bottom right, $color-cold-purple, $color-cornflower-blue);
   transform: skewX(-70deg) scaleX(1) translateX(25%);
   transition: transform 200ms;
 }
@@ -28,6 +28,7 @@
 
 .c-colllect-modal__transition-enter::before,
 .c-colllect-modal__transition-leave-to::before {
+  will-change: transform;
   transform: skewX(-70deg) scaleX(0) translateX(20%);
 }
 
@@ -38,7 +39,7 @@
   color: $color-shark;
   background: $color-white;
   border-radius: $border-radius;
-  box-shadow: 0 0 3px rgba($color-shark, 0.3), 0 5px 5px rgba($color-shark, 0.2);
+  box-shadow: 0 0 3px rgba($color-shark, 0.2), 0 5px 5px rgba($color-shark, 0.15);
   transform: scale(1);
   transition: transform 200ms;
 }
@@ -52,13 +53,14 @@
   position: absolute;
   top: 59px;
   right: 60px;
-  width: 42px;
-  height: 42px;
+  width: 43px;
+  height: 43px;
+  line-height: 39px;
   font-size: 28px;
   text-align: center;
   color: $color-shark;
   background: none;
-  border: 1px solid rgba($color-shark, 0.5);
+  border: 2px solid rgba($color-shark, 0.2);
   border-radius: 100%;
   transition: border 150ms, background-color 150ms;
 }
@@ -67,5 +69,5 @@
   color: $color-chetwode-blue;
   font-weight: bold;
   background: $color-catskill-white;
-  border: 2px solid $color-chetwode-blue;
+  border-color: $color-chetwode-blue;
 }

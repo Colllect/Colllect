@@ -6,7 +6,7 @@
       {{ '#' + tags.join(' #') }}
     </template>
     -->
-    <img v-if="type === 'image'"
+    <img v-if="isImage"
          @load="imageLoaded"
          :src="(show || isLoaded) ? fileUrl : ''"
          alt="">

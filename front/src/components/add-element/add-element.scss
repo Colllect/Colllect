@@ -1,0 +1,405 @@
+@import "../../../assets/scss/variables/colors";
+@import "../../../assets/scss/variables/fonts";
+@import "../../../assets/scss/variables/others";
+
+$add-element-form-width: 570px;
+$add-element-form-padding: 60px;
+$add-element-type-switch-shadow-margin: 25px;
+
+.c-colllect-add-element--modal {
+  padding-left: 70px;
+}
+
+.c-colllect-add-element {
+  position: relative;
+  display: flex;
+}
+
+/* Type switch left panel */
+
+.c-colllect-add-element--type-switch-mask {
+  position: absolute;
+  top: -$add-element-type-switch-shadow-margin;
+  right: calc(100% - #{$border-radius});
+  bottom: -$add-element-type-switch-shadow-margin;
+  width: 200px;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: $add-element-type-switch-shadow-margin;
+    right: $border-radius;
+    bottom: $add-element-type-switch-shadow-margin;
+    width: 10px;
+    background-image: linear-gradient(to left, rgba($color-shark, 0.15), ease, transparent);
+    pointer-events: none;
+  }
+}
+
+.c-colllect-add-element--type-switch {
+  position: absolute;
+  top: $add-element-type-switch-shadow-margin;
+  right: 0;
+  bottom: $add-element-type-switch-shadow-margin;
+  background: $color-rhino;
+  border-radius: $border-radius 0 0 $border-radius;
+  box-shadow: 0 0 3px rgba(29, 31, 33, 0.35), 0 2px 5px rgba(29, 31, 33, 0.2);
+  z-index: 0;
+  user-select: none;
+  transform: translateX(70px);
+  transition: transform 350ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch-logo-container {
+  overflow: hidden;
+}
+
+.c-colllect-add-element--type-switch-logo {
+  --colllect-logo-text-color: #{$color-white};
+  margin: 58px 30px 0 25px;
+  overflow: visible;
+  transform: translateX(-30px);
+  transition: transform 350ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch-logo-name,
+.c-colllect-add-element--type-switch-logo-paperclip {
+  opacity: 0;
+  transition: opacity 350ms ease 100ms, transform 350ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch-logo-paperclip {
+  transform: translate(-10px, -15px);
+}
+
+.c-colllect-add-element--type-switch-logo-lll {
+  transform: translate(120px, 55px) rotate(90deg) translate(-120px, -55px);
+  transition: transform 350ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch-label {
+  opacity: 0;
+  transform: translate(40px, -5px);
+  transition: opacity 500ms ease 100ms, transform 500ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch-icon {
+  transition: fill 300ms ease 100ms;
+}
+
+.c-colllect-add-element--type-switch:hover {
+  transform: translateX(0);
+
+  /* Logo */
+
+  .c-colllect-add-element--type-switch-logo {
+    transform: translateX(0);
+  }
+
+  .c-colllect-add-element--type-switch-logo-lll {
+    transform: translate(120px, 55px) rotate(0deg) translate(-120px, -55px);
+  }
+
+  .c-colllect-add-element--type-switch-logo-name,
+  .c-colllect-add-element--type-switch-logo-paperclip {
+    opacity: 1;
+  }
+
+  .c-colllect-add-element--type-switch-logo-paperclip {
+    transform: translate(0, 0);
+  }
+
+  /* Menu items */
+
+  .c-colllect-add-element--type-switch-label {
+    opacity: 1;
+    transform: translate(0, -5px);
+  }
+
+  @for $i from 1 through 10 {
+    li:nth-child(#{$i}) button {
+      $_delay: 250ms + $i * $i * 25;
+
+      .c-colllect-add-element--type-switch-label {
+        transition: transform $_delay, opacity $_delay;
+      }
+    }
+  }
+}
+
+.c-colllect-add-element--type-switch {
+  ul {
+    list-style: none;
+    margin: 42px 0;
+    padding: 0;
+  }
+
+  button {
+    position: relative;
+    width: 152px;
+    height: 55px;
+    padding-top: 5px;
+    padding-left: 25px;
+    margin-bottom: 4px;
+    border: 0;
+    color: $color-catskill-white;
+    background: transparent;
+    text-align: left;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      opacity: 0;
+      border-radius: $border-radius 0 0 $border-radius;
+      z-index: -1;
+      transition: transform 250ms, opacity 250ms;
+    }
+    &::before {
+      background: $color-chetwode-blue;
+      box-shadow: 0 0 3px rgba($color-scampi, 0.3), 0 4px 15px rgba($color-scampi, 0.2);
+    }
+    &::after {
+      background: $color-white;
+      transform: translateX(100%);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.c-colllect-add-element--type-switch__current {
+      color: $color-rhino;
+
+      &::after {
+        opacity: 1;
+        transform: translateX(-4px);
+      }
+
+      .c-colllect-add-element--type-switch-icon {
+        opacity: 0.85 !important;
+      }
+    }
+
+    border-radius: $border-radius 0 0 $border-radius;
+
+    &:not(.c-colllect-add-element--type-switch__current) {
+      text-shadow: 0 1px 2px $color-rhino;
+
+      .c-colllect-add-element--type-switch-icon {
+        filter: drop-shadow(0 1px 1.5px rgba($color-rhino, 0.7));
+      }
+
+      &:hover {
+        &::before {
+          opacity: 1;
+          transform: translateX(-4px);
+        }
+
+        .c-colllect-add-element--type-switch-icon {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .c-colllect-add-element--type-switch-label {
+      display: inline-block;
+      font-weight: $font-weight-source-sans-pro-semibold;
+      padding-left: 10px;
+    }
+
+    .c-colllect-add-element--type-switch-icon {
+      width: 22px;
+      opacity: 0.5;
+    }
+  }
+}
+
+/* Form */
+
+.c-colllect-add-element--form-column {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 100%;
+  min-height: 100%;
+  width: $add-element-form-width;
+  padding: $add-element-form-padding;
+  z-index: 1;
+  background: $color-white;
+  border-radius: $border-radius 0 0 $border-radius;
+}
+
+.c-colllect-add-element--title {
+  position: relative;
+  margin-top: -7px;
+  margin-bottom: 80px;
+  height: 38px;
+  font-size: 32px;
+  font-family: $font-family-cocogoose;
+  z-index: 1;
+  color: $color-shark;
+}
+
+.c-colllect-add-element--tags-column-background {
+  position: absolute;
+  width: 200px;
+  bottom: -22px;
+  right: 0;
+  opacity: 0.07;
+  color: $color-gull-gray;
+  user-select: none;
+  pointer-events: none;
+}
+
+.c-colllect-add-element--buttons {
+  height: 53px;
+  margin-top: $add-element-form-padding;
+}
+
+.c-colllect-add-element--buttons .c-colllect-add-element--cancel {
+  float: left;
+  margin-left: 0;
+}
+
+.c-colllect-add-element--tags-column {
+  position: relative;
+  width: calc(100% - #{$add-element-form-width});
+  padding: 169px $add-element-form-padding $add-element-form-padding * 2;
+  background: #edf2fa;
+  border-radius: 0 $border-radius $border-radius 0;
+  overflow: hidden;
+}
+
+.c-colllect-add-element--tags-column::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  background-image: linear-gradient(to right, rgba($color-gull-gray, 0.05), ease, transparent);
+  border-left: 1px solid rgba($color-gull-gray, 0.08);
+}
+
+.c-colllect-add-element--tags-column-label {
+  display: block;
+  padding: 0 $border-radius * 1.5;
+  font: $font-label;
+  color: $color-rhino;
+  user-select: none;
+}
+
+.c-colllect-add-element--tags-column-tag-list {
+  margin: 0 -7px;
+}
+
+.c-colllect-input + .c-colllect-add-element--tags-column-tag-list {
+  transform: translateY(-25px);
+  margin-bottom: -25px;
+}
+
+.c-colllect-add-element--tags-column-tag-list::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.c-colllect-add-element--tags-column-tag-item {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 10px 0 0 7px;
+  padding: 8px 32px 8px 36px;
+  color: $color-rhino;
+  border: 1px solid var(--tag-color, #e671a5);
+  border-radius: 50px;
+  transition: background 150ms, color 150ms;
+}
+
+.c-colllect-add-element--tags-column-tag-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  background-image: linear-gradient(to top right, var(--tag-color, #e671a5), transparent);
+  opacity: 0.02;
+  pointer-events: none;
+}
+
+.c-colllect-add-element--tags-column-tag-item svg {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 18px;
+  transform: translateY(-50%);
+  color: var(--tag-color, #e671a5);
+  opacity: 0.7;
+}
+
+.c-colllect-add-element--tags-column-tag-remove {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: block;
+  height: 20px;
+  width: 20px;
+  color: currentColor;
+  text-align: center;
+  opacity: 0.5;
+  background: transparent;
+  border: none;
+  border-radius: 100%;
+  user-select: none;
+  transform: translateY(-50%);
+  transition: background 150ms, color 150ms;
+}
+
+.c-colllect-add-element--tags-column-tag-remove:hover,
+.c-colllect-add-element--tags-column-tag-remove:focus {
+  outline: none;
+  background: $color-white;
+  opacity: 1;
+}
+
+.c-colllect-add-element--tags-column-suggested {
+  padding-top: 30px;
+}
+
+.c-colllect-add-element--tags-column-suggested .c-colllect-add-element--tags-column-tag-item {
+  padding-left: 20px;
+  padding-right: 20px;
+  color: $color-shark;
+  background: lighten($color-gull-gray, 25%);
+  background: $color-white;
+  box-shadow: 0 0 3px rgba($color-scampi, 0.2), 0 4px 10px rgba($color-scampi, 0.15);
+  border: none;
+  text-shadow: none;
+  font-weight: normal;
+}
+
+.c-colllect-add-element--tags-column-suggested .c-colllect-add-element--tags-column-tag-item:hover,
+.c-colllect-add-element--tags-column-suggested .c-colllect-add-element--tags-column-tag-item:focus {
+  outline: none;
+  color: $color-catskill-white;
+  background-color: $color-shark;
+}
+
+.c-colllect-add-element--tags-column-suggested .c-colllect-add-element--tags-column-tag-item::before {
+  content: "+";
+  display: inline-block;
+  margin-right: 5px;
+  color: var(--tag-color, $color-chetwode-blue);
+  font-weight: $font-weight-source-sans-pro-semibold;
+  transform: scale(1.4);
+  opacity: 0.8;
+}

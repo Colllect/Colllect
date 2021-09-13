@@ -37,7 +37,13 @@ export default class A11yFocusTrap extends Vue {
   public open() {
     const prevTarget = document.activeElement as HTMLElement
     A11yFocusTrap.trapStack.push({vm: this, prevTarget})
-    this.goFirst()
+
+    const autofocusElement = this.$el.querySelector('[autofocus]') as HTMLElement
+    if (autofocusElement) {
+      autofocusElement.focus()
+    } else {
+      this.goFirst()
+    }
   }
 
   public replace() {

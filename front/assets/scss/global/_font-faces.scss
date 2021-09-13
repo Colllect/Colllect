@@ -4,9 +4,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: fallback;
-  src: local('Cocogoose'),
-       local('Cocogoose-Regular'),
-       url('../fonts/cocogoose.woff2') format('woff2');
+  src: url('../fonts/cocogoose.woff2') format('woff2');
 }
 
 /* Source Sans Pro regular */
@@ -15,19 +13,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: fallback;
-  src: local('Source Sans Pro'),
-       local('Source Sans Pro-Regular'),
-       url('../fonts/source-sans-pro.woff2') format('woff2');
-}
-
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  @font-face {
-    font-family: 'Source Sans Pro';
-    font-weight: 400;
-    font-style: normal;
-    font-display: fallback;
-    src: url('../fonts/source-sans-pro.svg') format('svg');
-  }
+  src: url('../fonts/source-sans-pro.woff2') format('woff2');
 }
 
 /* Source Sans Pro bold */
@@ -36,19 +22,16 @@
   font-weight: 600;
   font-style: normal;
   font-display: fallback;
-  src: local('Source Sans Pro SemiBold'),
-       local('Source Sans Pro-SemiBold'),
-       url('../fonts/source-sans-pro-semibold.woff2') format('woff2');
+  src: url('../fonts/source-sans-pro-semibold.woff2') format('woff2');
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  @font-face {
-    font-family: 'Source Sans Pro';
-    font-weight: 600;
-    font-style: normal;
-    font-display: fallback;
-    src: url('../fonts/source-sans-pro-semibold.svg') format('svg');
-  }
+/* Source Sans Pro black */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 900;
+  font-style: normal;
+  font-display: fallback;
+  src: url('../fonts/source-sans-pro-black.woff2') format('woff2');
 }
 
 /* Custom normalized dot for password fields */

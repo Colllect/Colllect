@@ -1,5 +1,8 @@
+/* eslint-env node, browser:false */
+
 const fs = require('fs')
 const path = require('path')
+
 const needle = require('needle')
 const CodeGen = require('swagger-typescript-codegen').CodeGen
 
@@ -14,7 +17,7 @@ const swaggerUrlOptions = {
   },
 }
 
-console.log('Fetching swagger description file from', swaggerUrl)
+console.info('Fetching swagger description file from', swaggerUrl)
 needle('get', swaggerUrl, swaggerUrlOptions)
   .then((response) => {
     swaggerCodeGen(response.body)
@@ -30,7 +33,7 @@ function getTemplate(templateName) {
 }
 
 function swaggerCodeGen (swagger) {
-  console.log('Generating TypeScript code...')
+  console.info('Generating TypeScript code...')
   const tsSourceCode = CodeGen.getTypescriptCode({
     isES6: true,
     className: 'Api',
@@ -67,5 +70,5 @@ function swaggerCodeGen (swagger) {
   }
   fs.writeFileSync(generatedApiFilePath, tsSourceCode)
 
-  console.log(generatedApiFilePath, 'was successfully updated!')
+  console.info(generatedApiFilePath, 'was successfully updated!')
 }

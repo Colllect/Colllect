@@ -1,10 +1,10 @@
 import {getStoreBuilder} from 'vuex-typex'
 
-import api, * as ApiInterfaces from '../../api'
-import {RootState} from '../state'
+import api, * as ApiInterfaces from '@/src/api'
+import {RootState} from '@/src/store/state'
 
 export interface ColllectionsState {
-  colllections: ApiInterfaces.Colllection[],
+  colllections: ApiInterfaces.Colllection[]
 }
 
 const colllectionsState: ColllectionsState = {

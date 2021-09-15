@@ -28,6 +28,7 @@
     "*.ts",
     "src/**/*.ts",
     "tests/**/*.ts",
-    "**.js"
+    "**.js",
+    "scripts/**.js",
   ]
 }

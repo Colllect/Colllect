@@ -1,12 +1,12 @@
 import {getStoreBuilder} from 'vuex-typex'
 
-import api from '../../api'
-import {RootState} from '../state'
+import api from '@/src/api'
+import {RootState} from '@/src/store/state'
 
 export interface AuthState {
-  id: number | null,
-  nickname: string | null,
-  roles: string[],
+  id: number | null
+  nickname: string | null
+  roles: string[]
 }
 
 const authState: AuthState = {

@@ -1,16 +1,17 @@
-import {getStoreBuilder} from 'vuex-typex'
-import {Colllection} from '../../api'
+import {BareActionContext, getStoreBuilder} from 'vuex-typex'
 
-import api, * as ApiInterfaces from '../../api'
-import {base64UriDecode} from '../../helpers/base64Uri'
-import {RootState} from '../state'
+import {Colllection} from '@/src/api'
+import api, * as ApiInterfaces from '@/src/api'
+import base64UriDecode from '@/src/functions/base64Uri'
+import {WindowState} from '@/src/store/modules/window'
+import {RootState} from '@/src/store/state'
 
 export interface ColllectionState {
-  name?: string,
-  encodedColllectionPath?: string,
-  elements: ApiInterfaces.Element[],
-  elementWidth: number,
-  isLoaded: boolean,
+  name?: string
+  encodedColllectionPath?: string
+  elements: ApiInterfaces.Element[]
+  elementWidth: number
+  isLoaded: boolean
 }
 
 const colllectionState: ColllectionState = {
@@ -42,8 +43,10 @@ const mutations = {
   },
 }
 
+type Context = BareActionContext<WindowState, RootState>
+
 const actions = {
-  loadColllection: ({}, encodedColllectionPath: string) => {
+  loadColllection: (_: Context, encodedColllectionPath: string) => {
     const name = base64UriDecode(encodedColllectionPath).split('/').pop()
     colllectionStore.commitSetName(name)
     colllectionStore.commitSetElements([])

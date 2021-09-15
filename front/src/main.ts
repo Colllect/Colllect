@@ -1,14 +1,15 @@
-import Vue from 'vue'
+import '@/src/assets/scss/main.scss'
 
-import App from './App'
-import router from './router'
-import store from './store'
+import {createApp} from 'vue'
 
-new Vue({
-  store,
-  router,
-  render: h => h(App),
-}).$mount('#app')
+import App from '@/src/App.vue'
+import router from '@/src/router'
+import store from '@/src/store'
+
+const app = createApp(App)
+app.use(router)
+app.use(store)
+app.mount('#app')
 
 // Hack for dev only
 if (window.location.hostname === 'localhost') {

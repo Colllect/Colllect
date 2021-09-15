@@ -1,10 +1,9 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
-import Colllection from './pages/colllection'
-import Colllections from './pages/colllections'
-import Inbox from './pages/inbox'
-import Styleguide from './pages/styleguide'
+import Colllection from '@/src/pages/colllection/ColllectionPage.vue'
+import Colllections from '@/src/pages/colllections/ColllectionsPage.vue'
+import Inbox from '@/src/pages/inbox/InboxPage.vue'
+import Styleguide from '@/src/pages/styleguide/StyleguidePage.vue'
 
 const routes = [
   {path: '/', redirect: {name: 'inbox'}},
@@ -14,10 +13,8 @@ const routes = [
   {name: 'styleguide', path: '/styleguide', component: Styleguide},
 ]
 
-Vue.use(VueRouter)
-
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+	history: createWebHistory(),
   routes,
 })
 

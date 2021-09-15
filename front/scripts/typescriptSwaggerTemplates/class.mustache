@@ -4,8 +4,9 @@
  * This file was generated via `yarn generate-api-client` command
  */
 
-/* tslint:disable:prefer-const */
-/* tslint:disable:no-string-literal */
+/* eslint @typescript-eslint/no-explicit-any: off */
+/* eslint @typescript-eslint/ban-types: off */
+/* eslint prefer-const: off */
 
 import * as request from 'superagent'
 import {
@@ -34,7 +35,7 @@ export interface ResponseWithBody<S extends number, T> extends  Omit<keyof Respo
 * @param {(string)} [domainOrOptions] - The project domain.
 */
 export default class {{&className}} {
-  private domain: string = '{{&domain}}'
+  private domain = '{{&domain}}'
   private errorHandlers: CallbackHandler[] = []
   private requestHandlers: RequestHandler[] = []
 
@@ -44,15 +45,15 @@ export default class {{&className}} {
     }
   }
 
-  public getDomain() {
+  public getDomain(): string {
     return this.domain
   }
 
-  public addErrorHandler(handler: CallbackHandler) {
+  public addErrorHandler(handler: CallbackHandler): void {
     this.errorHandlers.push(handler)
   }
 
-  public addRequestHandler(handler: RequestHandler) {
+  public addRequestHandler(handler: RequestHandler): void {
     this.requestHandlers.push(handler)
   }
 

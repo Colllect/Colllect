@@ -1,11 +1,11 @@
-import {getStoreBuilder} from 'vuex-typex'
+import {BareActionContext, getStoreBuilder} from 'vuex-typex'
 
-import {RootState} from '../state'
+import {RootState} from '@/src/store/state'
 
 export interface WindowState {
-  scrollTop: number,
-  width: number,
-  height: number,
+  scrollTop: number
+  width: number
+  height: number
 }
 
 const windowState: WindowState = {
@@ -28,11 +28,13 @@ const mutations = {
   },
 }
 
+type Context = BareActionContext<WindowState, RootState>
+
 const actions = {
-  windowScroll: ({}, scrollTop: number) => {
+  windowScroll: (_: Context, scrollTop: number) => {
     windowStore.commitSetScrollTop(scrollTop)
   },
-  windowResize: ({}, payload: { width: number, height: number }) => {
+  windowResize: (_: Context, payload: { width: number; height: number }) => {
     windowStore.commitSetWidth(payload.width)
     windowStore.commitSetHeight(payload.height)
   },

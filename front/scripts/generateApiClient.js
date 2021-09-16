@@ -6,8 +6,8 @@ const path = require('path')
 const needle = require('needle')
 const CodeGen = require('swagger-typescript-codegen').CodeGen
 
-const generatedFolderPath = 'generated'
-const generatedApiFilePath = `${generatedFolderPath}/api.ts`
+const generatedFolderPath = path.normalize('src/generated')
+const generatedApiFilePath = path.normalize(`${generatedFolderPath}/api.ts`)
 const templatesPath = 'typescriptSwaggerTemplates'
 
 const swaggerUrl = 'https://127.0.0.1/api/doc.json'

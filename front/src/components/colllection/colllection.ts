@@ -3,8 +3,8 @@ import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
 import {Element} from '@/src/api'
 import ColllectElement from '@/src/components/element/Element.vue'
-import colllectionStore from '@/src/store/modules/colllection'
-import windowStore from '@/src/store/modules/window'
+import useColllectionStore from '@/src/stores/colllection'
+import useWindowStore from '@/src/stores/window'
 
 export default defineComponent({
 	name: 'ColllectColllection',
@@ -21,24 +21,27 @@ export default defineComponent({
 		'updateGrid',
 	],
 	setup(props, {emit}) {
+		const colllectionStore = useColllectionStore()
+		const windowStore = useWindowStore()
+
 		const container = ref<HTMLElement>()
 		const grid = ref<MiniGrid>()
 		const mustRecreateTheGrid = ref(false)
 
 		const name = computed<string | undefined>(() => {
-			return colllectionStore.state.name
+			return colllectionStore.name
 		})
 
 		const isLoaded = computed<boolean>(() => {
-			return colllectionStore.state.isLoaded
+			return colllectionStore.isLoaded
 		})
 
 		const elements = computed<Element[]>(() => {
-			return colllectionStore.state.elements
+			return colllectionStore.elements
 		})
 
 		const watchableWindowWidth = computed<number>(() => {
-			return windowStore.state.width
+			return windowStore.width
 		})
 
 		const classes = computed(() => {
@@ -100,13 +103,13 @@ export default defineComponent({
 
 			const firstElement = container.value.querySelector('.c-colllect-element')
 			if (firstElement) {
-				colllectionStore.commitSetElementWidth(firstElement.getBoundingClientRect().width)
+				colllectionStore.elementWidth = firstElement.getBoundingClientRect().width
 			}
 		}
 
 		onMounted(async () => {
 			await nextTick()
-			colllectionStore.dispatchLoadColllection(props.encodedColllectionPath)
+			colllectionStore.loadColllection(props.encodedColllectionPath)
 		})
 
 		return {

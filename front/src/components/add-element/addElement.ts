@@ -1,9 +1,9 @@
-import {defineComponent} from 'vue'
+import {defineComponent, ref} from 'vue'
 
-import {Tag} from '@/src/../generated/api'
 import ColllectButton from '@/src/components/button/Button.vue'
 import ColllectInput from '@/src/components/input/Input.vue'
 import ColllectModal from '@/src/components/modal/Modal.vue'
+import {Tag} from '@/src/generated/api'
 import ElementTypes from '@/src/models/ElementTypes'
 
 interface EnhancedTag extends Tag {
@@ -27,22 +27,23 @@ export default defineComponent({
 		'close',
 	],
 	setup(_props,  {emit}) {
-		const elementTypes= Object.values(ElementTypes)
-		const currentElementType = ElementTypes.Image
-		const url = ''
-		const name = ''
-		const tags: EnhancedTag[] = [
+		const elementTypes = Object.values(ElementTypes)
+		const currentElementType = ref(ElementTypes.Image)
+		const url = ref('')
+		const name = ref('')
+		const tag = ref('')
+		const tags = ref<EnhancedTag[]>([
 			// {name: 'Landing', encodedName: ''},
 			// {name: 'Red', encodedName: ''},
 			// {name: 'UI', encodedName: ''},
 			// {name: 'Typography', encodedName: ''},
 			// {name: 'User experience', encodedName: ''},
-		]
-		const suggestedTags: EnhancedTag[] = [
+		])
+		const suggestedTags = ref<EnhancedTag[]>([
 			// {name: 'Shapes', encodedName: ''},
 			// {name: 'Purple', encodedName: ''},
 			// {name: 'Round', encodedName: ''},
-		]
+		])
 
 		const hideAddElementModal = (): void => {
 			// TODO: add AddElement modal state to store and switch it to false
@@ -54,6 +55,7 @@ export default defineComponent({
 			currentElementType,
 			url,
 			name,
+			tag,
 			tags,
 			suggestedTags,
 			hideAddElementModal,

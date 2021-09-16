@@ -1,12 +1,13 @@
-import {computed, defineComponent, onMounted, ref} from 'vue'
+import {computed, defineComponent, getCurrentInstance, onMounted, ref} from 'vue'
 
 import ColllectRadioGroup from '@/src/components/radio-group/RadioGroup.vue'
 
 export default defineComponent({
 	name: 'ColllectRadio',
 	props: {
-		modelValue: {
+		value: {
 			type: String as () => string,
+			required: true,
 		},
 		errored: {
 			type: Boolean as () => boolean,
@@ -28,7 +29,7 @@ export default defineComponent({
 
 		const groupValue = computed<string>({
 			get() {
-				return radioGroup.value.value
+				return radioGroup.value.ctx.modelValue
 			},
 			set(newValue) {
 				radioGroup.value.emit('update:modelValue', newValue)
@@ -36,11 +37,11 @@ export default defineComponent({
 		})
 
 		const isDisabled = computed(() => {
-			return props.disabled || radioGroup.value.disabled
+			return props.disabled || radioGroup.value.ctx.disabled
 		})
 
-		const radioGroup = computed(() => {
-			return $parent.value as typeof ColllectRadioGroup
+		const radioGroup = computed<typeof ColllectRadioGroup>(() => {
+			return getCurrentInstance()?.parent as unknown as typeof ColllectRadioGroup
 		})
 
 		const classes = computed(() => {
@@ -69,6 +70,7 @@ export default defineComponent({
 		})
 
 		return {
+			id,
 			classes,
 			groupValue,
 			radioGroupId,

@@ -3,8 +3,8 @@ import {computed, defineComponent, onMounted, ref} from 'vue'
 
 import ColllectAddElement from '@/src/components/add-element/AddElement.vue'
 import ColllectHeader from '@/src/components/header/Header.vue'
-import authStore from '@/src/store/modules/auth'
-import windowStore from '@/src/store/modules/window'
+import useAuthStore from '@/src/stores/auth'
+import useWindowStore from '@/src/stores/window'
 
 export default defineComponent({
 	name: 'App',
@@ -13,7 +13,9 @@ export default defineComponent({
 		ColllectHeader,
 	},
 	setup() {
-		const showAddElementModal = ref(true)
+		const showAddElementModal = ref(false)
+		const authStore = useAuthStore()
+		const windowStore = useWindowStore()
 
 		const isAuthenticated = computed<boolean>(() => {
 			return authStore.isAuthenticated
@@ -24,18 +26,18 @@ export default defineComponent({
 		})
 
 		const handleScroll = () => {
-			windowStore.dispatchWindowScroll(scrollableNode.value.scrollTop)
+			windowStore.windowScroll(scrollableNode.value.scrollTop)
 		}
 
 		const handleResize = () => {
-			windowStore.dispatchWindowResize({
+			windowStore.windowResize({
 				width: window.innerWidth,
 				height: window.innerHeight,
 			})
 		}
 
 		onMounted(() => {
-			authStore.dispatchGetCurrentUser()
+			authStore.getCurrentUser()
 
 			scrollableNode.value.addEventListener('scroll', throttle(handleScroll, 300, {leading: false}))
 			window.addEventListener('resize', debounce(handleResize, 300, {leading: true}))

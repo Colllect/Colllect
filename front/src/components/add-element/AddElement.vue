@@ -1,5 +1,5 @@
 <template>
-	<colllect-modal :width="'980px'" @close="hideAddElementModal" v-if="show" class="c-colllect-add-element--modal">
+	<colllect-modal :width="'980px'" @close="hideAddElementModal" :show="show" class="c-colllect-add-element--modal">
 		<div class="c-colllect-add-element">
 			<div class="c-colllect-add-element--type-switch-mask">
 				<div class="c-colllect-add-element--type-switch">
@@ -42,7 +42,7 @@
 						<path d="M84.293 39.797a8.461 8.461 0 1 0 0-16.923 8.461 8.461 0 0 0 0 16.923z"/>
 					</g>
 				</svg>
-				<colllect-input>Tag</colllect-input>
+				<colllect-input v-model="tag">Tag</colllect-input>
 				<div class="c-colllect-add-element--tags-column-tag-list">
 					<div class="c-colllect-add-element--tags-column-tag-item" v-for="tag in tags" :style="{'--tag-color': tag.color }">
 						<svg viewBox="0 0 126 106" xmlns="http://www.w3.org/2000/svg">

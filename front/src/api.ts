@@ -1,6 +1,6 @@
 import {StatusCodes} from 'http-status-codes'
 
-import Api from '@/src/../generated/api'
+import Api from '@/src/generated/api'
 
 const api = new Api()
 api.addErrorHandler((err) => {
@@ -9,5 +9,5 @@ api.addErrorHandler((err) => {
   }
 })
 
-export * from '@/src/../generated/api'
+export * from '@/src/generated/api'
 export default api

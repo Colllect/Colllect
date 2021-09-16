@@ -22,6 +22,9 @@ export default defineComponent({
 			default: false,
 		},
 	},
+	emits: [
+		'update:modelValue',
+	],
 	setup(props, {emit}) {
 		const id = ref('')
 		const focused = ref(false)
@@ -32,7 +35,7 @@ export default defineComponent({
 				return props.modelValue
 			},
 			set(newValue) {
-				emit('change', newValue)
+				emit('update:modelValue', newValue)
 
 				// Manage the visual focus state when selecting a value
 				if (wasOpenByMouse.value && document.activeElement instanceof HTMLElement) {

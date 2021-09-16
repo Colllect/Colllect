@@ -33,7 +33,7 @@
 		<colllect-header></colllect-header>
 		<main class="m-app--main">
 			<button @click="showAddElementModal = true">Show modal</button>
-			<router-view v-if="isAuthenticated"></router-view>
+			<router-view></router-view>
 			<colllect-add-element @close="showAddElementModal = false" :show="showAddElementModal"></colllect-add-element>
 		</main>
 	</div>

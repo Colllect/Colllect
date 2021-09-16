@@ -3,7 +3,7 @@ import {computed, defineComponent, onMounted, ref} from 'vue'
 export default defineComponent({
 	name: 'ColllectCheckbox',
 	props: {
-		checked: {
+		modelValue: {
 			type: Boolean as () => boolean,
 			default: false,
 		},
@@ -19,7 +19,7 @@ export default defineComponent({
 		},
 	},
 	emits: [
-		'change',
+		'update:modelValue',
 	],
 	setup(props, {emit}) {
 		const id = ref('')
@@ -27,10 +27,10 @@ export default defineComponent({
 
 		const checked = computed<boolean>({
 			get() {
-				return props.checked
+				return props.modelValue
 			},
 			set(value) {
-				emit('change', value)
+				emit('update:modelValue', value)
 			},
 		})
 
@@ -60,6 +60,7 @@ export default defineComponent({
 		})
 
 		return {
+			id,
 			checked,
 			classes,
 			focus,

@@ -8,6 +8,10 @@ export default defineComponent({
 		A11yFocusTrap,
 	},
 	props: {
+		show: {
+			type: Boolean as () => boolean,
+			required: true,
+		},
 		width: {
 			type: String as () => string,
 		},
@@ -44,5 +48,9 @@ export default defineComponent({
 		onBeforeUnmount(() => {
 			window.removeEventListener('keydown', close, false)
 		})
+
+		return {
+			close,
+		}
 	},
 })

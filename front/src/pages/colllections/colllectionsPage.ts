@@ -1,18 +1,20 @@
 import {computed, defineComponent, nextTick, onMounted} from 'vue'
 
 import {Colllection} from '@/src/api'
-import colllectionsStore from '@/src/store/modules/colllections'
+import useColllectionsStore from '@/src/stores/colllections'
 
 export default defineComponent({
 	name: 'ColllectionsPage',
 	setup() {
+		const colllectionsStore = useColllectionsStore()
+
 		const colllections = computed<Colllection[]>(() => {
-			return colllectionsStore.state.colllections
+			return colllectionsStore.colllections
 		})
 
 		onMounted(async () => {
 			await nextTick()
-			await colllectionsStore.dispatchLoadColllections()
+			await colllectionsStore.loadColllections()
 		})
 
 		return {

@@ -3,8 +3,8 @@ import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
 import {Element} from '@/src/api'
 import ElementTypes from '@/src/models/ElementTypes'
-import colllectionStore from '@/src/store/modules/colllection'
-import windowStore from '@/src/store/modules/window'
+import useColllectionStore from '@/src/stores/colllection'
+import useWindowStore from '@/src/stores/window'
 
 const VERTICAL_DELTA = 200 // In pixels
 
@@ -20,6 +20,9 @@ export default defineComponent({
 		'load',
 	],
 	setup(props, {emit}) {
+		const colllectionStore = useColllectionStore()
+		const windowStore = useWindowStore()
+
 		const domElement = ref<HTMLElement>()
 		const isLoaded = ref(false)
 		const show = ref(false)
@@ -55,8 +58,8 @@ export default defineComponent({
 
 		const watchableWindowScrollAndHeight = computed<string>(() => {
 			return [
-				windowStore.state.scrollTop,
-				windowStore.state.height,
+				windowStore.scrollTop,
+				windowStore.height,
 			].join('|')
 		})
 
@@ -73,7 +76,7 @@ export default defineComponent({
 
 		const style = computed(() => {
 			return {
-				minHeight: Math.ceil(colllectionStore.state.elementWidth * ratio.value) + 'px',
+				minHeight: Math.ceil(colllectionStore.elementWidth * ratio.value) + 'px',
 			}
 		})
 

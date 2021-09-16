@@ -1,6 +1,6 @@
 <template>
 	<transition name="c-colllect-modal__transition" role="dialog" aria-modal="true" aria-labelledby="c-colllect-modal--title">
-		<div class="c-colllect-modal" @click.self="close">
+		<div class="c-colllect-modal" v-if="show" @click.self="close">
 			<div class="c-colllect-modal--box" role="dialog" :style="{ width, height }">
 				<a11y-focus-trap ref="focusTrap">
 					<slot></slot>

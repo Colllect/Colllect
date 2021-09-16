@@ -1,11 +1,13 @@
 import {computed, defineComponent} from 'vue'
 
-import authStore from '@/src/store/modules/auth'
+import useAuthStore from '@/src/stores/auth'
 
 export default defineComponent({
 	setup() {
+		const authStore = useAuthStore()
+
 		const nickname = computed<string>(() => {
-			return authStore.state.nickname ?? ''
+			return authStore.nickname ?? ''
 		})
 
 		const isAuthenticated = computed<boolean>(() => {

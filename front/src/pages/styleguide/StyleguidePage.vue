@@ -7,7 +7,7 @@
 			<div class="p-colllect-styleguide--form">
 				<div class="p-colllect-styleguide--form-fields-column">
 					<colllect-input type="email" v-model="inputEmailValue" placeholder="john.doe@example.com" :errored="isEmailErrored" error-message="Please enter a valid email address">Email address</colllect-input>
-					<colllect-input type="email" placeholder="Disabled" :errored="isEmailErrored" error-message="Please enter a valid email address" disabled="disabled">Disabled field</colllect-input>
+					<colllect-input type="email" v-model="inputEmailValue" placeholder="Disabled" :errored="isEmailErrored" error-message="Please enter a valid email address" disabled="disabled">Disabled field</colllect-input>
 					<colllect-input type="password" autocomplete="new-password" v-model="inputPasswordValue">Account password</colllect-input>
 					<colllect-checkbox v-model="checkboxRememberMeValue">Remember me</colllect-checkbox>
 					<colllect-checkbox disabled="disabled">Remember me</colllect-checkbox>
@@ -53,7 +53,7 @@
 
 			<div class="p-colllect-styleguide--colors">
 				<div class="p-colllect-styleguide--color-group" v-for="colors in colorLists">
-					<div class="p-colllect-styleguide--color" v-for="sassVariableName, color in colors" :style="{backgroundColor: color}">
+					<div class="p-colllect-styleguide--color" v-for="{sassVariableName, color} in colors" :style="{backgroundColor: color}">
 						<span class="p-colllect-styleguide--color-value">{{ color }}</span>
 						<span class="p-colllect-styleguide--color-name">{{ sassVariableName }}</span>
 					</div>

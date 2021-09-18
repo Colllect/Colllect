@@ -23,12 +23,12 @@
   transition: transform 200ms;
 }
 
-.c-colllect-modal__transition-enter,
+.c-colllect-modal__transition-enter-active,
 .c-colllect-modal__transition-leave-to {
   opacity: 0;
 }
 
-.c-colllect-modal__transition-enter::before,
+.c-colllect-modal__transition-enter-active::before,
 .c-colllect-modal__transition-leave-to::before {
   will-change: transform;
   transform: skewX(-70deg) scaleX(0) translateX(20%);
@@ -46,7 +46,7 @@
   transition: transform 200ms;
 }
 
-.c-colllect-modal__transition-enter .c-colllect-modal--box,
+.c-colllect-modal__transition-enter-active .c-colllect-modal--box,
 .c-colllect-modal__transition-leave-to .c-colllect-modal--box {
   transform: scale(0.8);
 }

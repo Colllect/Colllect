@@ -53,7 +53,7 @@
 
 			<div class="p-colllect-styleguide--colors">
 				<div class="p-colllect-styleguide--color-group" v-for="colors in colorLists">
-					<div class="p-colllect-styleguide--color" v-for="{sassVariableName, color} in colors" :style="{backgroundColor: color}">
+					<div class="p-colllect-styleguide--color" v-for="(sassVariableName, color) in colors" :style="{backgroundColor: color}">
 						<span class="p-colllect-styleguide--color-value">{{ color }}</span>
 						<span class="p-colllect-styleguide--color-name">{{ sassVariableName }}</span>
 					</div>

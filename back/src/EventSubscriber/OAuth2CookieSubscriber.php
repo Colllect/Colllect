@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class OAuth2CookieSubscriber implements EventSubscriberInterface
@@ -16,6 +18,7 @@ final class OAuth2CookieSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [['onKernelRequest', 255]],
+            KernelEvents::RESPONSE => [['onKernelResponse', 255]],
         ];
     }
 
@@ -23,13 +26,30 @@ final class OAuth2CookieSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if (!$request->headers->has('Authorization') && $request->cookies->has(self::OAUTH2_COOKIE_NAME)) {
-            $jwt = $request->cookies->get(self::OAUTH2_COOKIE_NAME);
-            $request->headers->add(
-                [
-                    'Authorization' => 'Bearer ' . $jwt,
-                ]
-            );
+        if ($request->headers->has('Authorization') || !$request->cookies->has(self::OAUTH2_COOKIE_NAME)) {
+            return;
+        }
+
+        $jwt = $request->cookies->get(self::OAUTH2_COOKIE_NAME);
+        $request->headers->add(
+            [
+                'Authorization' => 'Bearer ' . $jwt,
+            ]
+        );
+    }
+
+    public function onKernelResponse(ResponseEvent $event): void
+    {
+        $response = $event->getResponse();
+
+        if ($response->getStatusCode() !== Response::HTTP_UNAUTHORIZED) {
+            return;
+        }
+
+        // Clear OAuth2 cookie from response on 401
+        $request = $event->getRequest();
+        if ($request->cookies->has(self::OAUTH2_COOKIE_NAME)) {
+            $response->headers->clearCookie(self::OAUTH2_COOKIE_NAME, '/');
         }
     }
 }

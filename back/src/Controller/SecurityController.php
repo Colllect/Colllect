@@ -77,10 +77,6 @@ class SecurityController extends AbstractController
      */
     public function logout(): Response
     {
-        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute('app_security_login');
-        }
-
         /** @var TokenInterface $token */
         $token = $this->security->getToken();
         $tokenId = $token->getAttribute('server_request')->getAttribute('oauth_access_token_id');

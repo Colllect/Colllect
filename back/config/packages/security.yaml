@@ -30,16 +30,10 @@ security:
             anonymous: ~
             stateless: true
             oauth2: true
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
         app:
             security: true
             stateless: true
             oauth2: true
-            guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

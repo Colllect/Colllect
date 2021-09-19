@@ -1,5 +1,5 @@
 <template>
-	<div class="c-colllect-element" :class="classes" :style="style" ref="elementNode">
+	<div class="c-colllect-element" :class="classes" :style="style" ref="domElement">
 		<div class="c-colllect-element--content">
 			<!--
 			{{ name }}
@@ -8,8 +8,8 @@
 			</template>
 			-->
 			<img v-if="isImage"
-					 @load="imageLoaded"
-					 :src="(show || isLoaded) ? fileUrl : ''"
+					 @load="onImageLoaded"
+					 :src="(show || isLoaded) ? element.fileUrl : ''"
 					 alt="">
 		</div>
 	</div>

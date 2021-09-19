@@ -8,8 +8,8 @@
 		<div class="c-colllect-colllection--empty-state" v-else-if="elements.length === 0">
 			Nothing there. Consider add something :)
 		</div>
-		<div class="c-colllect-colllection--elements" ref="container">
-			<colllect-element :element="element" v-for="element in elements" @load="updateGrid"></colllect-element>
+		<div class="c-colllect-colllection--elements" ref="domContainer">
+			<colllect-element :element="element" :element-width="elementWidth" v-for="element in elements" @load="updateGrid"></colllect-element>
 		</div>
 	</div>
 </template>

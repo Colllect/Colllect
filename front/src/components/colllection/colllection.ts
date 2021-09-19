@@ -1,9 +1,8 @@
 import MiniGrid from 'minigrid'
 import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
-import {Element} from '@/src/api'
+import useColllection from '@/src/components/composables/useColllection'
 import ColllectElement from '@/src/components/element/Element.vue'
-import useColllectionStore from '@/src/stores/colllection'
 import useWindowStore from '@/src/stores/window'
 
 export default defineComponent({
@@ -21,28 +20,19 @@ export default defineComponent({
 		'updateGrid',
 	],
 	setup(props, {emit}) {
-		const colllectionStore = useColllectionStore()
-		const windowStore = useWindowStore()
+		const ELEMENT_SELECTOR = '.c-colllect-element'
 
-		const container = ref<HTMLElement>()
+		const domContainer = ref<HTMLElement>()
 		const grid = ref<MiniGrid>()
 		const mustRecreateTheGrid = ref(false)
+		const elementWidth = ref(130)
 
-		const name = computed<string | undefined>(() => {
-			return colllectionStore.name
-		})
-
-		const isLoaded = computed<boolean>(() => {
-			return colllectionStore.isLoaded
-		})
-
-		const elements = computed<Element[]>(() => {
-			return colllectionStore.elements
-		})
-
-		const watchableWindowWidth = computed<number>(() => {
-			return windowStore.width
-		})
+		const {
+			name,
+			isLoaded,
+			elements,
+			loadColllection,
+		} = useColllection()
 
 		const classes = computed(() => {
 			return {
@@ -51,7 +41,7 @@ export default defineComponent({
 		})
 
 		const updateGrid = (): void => {
-			if (container.value === undefined) {
+			if (domContainer.value === undefined) {
 				return
 			}
 
@@ -61,8 +51,8 @@ export default defineComponent({
 
 				// Create a new grid
 				grid.value = new MiniGrid({
-					container: container.value,
-					item: container.value.childNodes,
+					container: domContainer.value,
+					item: domContainer.value?.querySelectorAll(ELEMENT_SELECTOR),
 					gutter: 20,
 				})
 			}
@@ -71,6 +61,17 @@ export default defineComponent({
 			grid.value.mount()
 
 			emit('updateGrid')
+		}
+
+		const updateColllectionElementWidth = () => {
+			if (domContainer.value === undefined) {
+				return
+			}
+
+			const firstElement = domContainer.value.querySelector(ELEMENT_SELECTOR)
+			if (firstElement) {
+				elementWidth.value = firstElement.getBoundingClientRect().width
+			}
 		}
 
 		watch(
@@ -87,6 +88,10 @@ export default defineComponent({
 			}
 		)
 
+		const windowStore = useWindowStore()
+		const watchableWindowWidth = computed<number>(() => {
+			return windowStore.width
+		})
 		watch(
 			watchableWindowWidth,
 			async () => {
@@ -96,27 +101,18 @@ export default defineComponent({
 			}
 		)
 
-		const updateColllectionElementWidth = () => {
-			if (container.value === undefined) {
-				return
-			}
-
-			const firstElement = container.value.querySelector('.c-colllect-element')
-			if (firstElement) {
-				colllectionStore.elementWidth = firstElement.getBoundingClientRect().width
-			}
-		}
-
 		onMounted(async () => {
 			await nextTick()
-			colllectionStore.loadColllection(props.encodedColllectionPath)
+			loadColllection(props.encodedColllectionPath)
 		})
 
 		return {
+			domContainer,
 			classes,
 			name,
 			isLoaded,
 			elements,
+			elementWidth,
 			updateGrid,
 		}
 	},

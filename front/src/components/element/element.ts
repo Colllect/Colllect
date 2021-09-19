@@ -1,9 +1,9 @@
+import {throttle} from 'lodash-es'
 import md5 from 'md5'
 import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
 
 import {Element} from '@/src/api'
 import ElementTypes from '@/src/models/ElementTypes'
-import useColllectionStore from '@/src/stores/colllection'
 import useWindowStore from '@/src/stores/window'
 
 const VERTICAL_DELTA = 200 // In pixels
@@ -15,12 +15,15 @@ export default defineComponent({
 			type: Object as () => Element,
 			required: true,
 		},
+		elementWidth: {
+			type: Number as () => number,
+			required: true,
+		},
 	},
 	emits: [
 		'load',
 	],
 	setup(props, {emit}) {
-		const colllectionStore = useColllectionStore()
 		const windowStore = useWindowStore()
 
 		const domElement = ref<HTMLElement>()
@@ -28,69 +31,38 @@ export default defineComponent({
 		const show = ref(false)
 		const ratio = ref(1)
 
-		const type = computed<string | undefined>(() => {
-			return props.element.type
-		})
-
-		const name = computed<string | undefined>(() => {
-			return props.element.name
-		})
-
-		const tags = computed<string[] | undefined>(() => {
-			return props.element.tags
-		})
-
-		const updatedDate = computed<string | undefined>(() => {
-			return props.element.updated
-		})
-
-		const size = computed<number | undefined>(() => {
-			return props.element.size
-		})
-
-		const fileUrl = computed<string | undefined>(() => {
-			return props.element.fileUrl
-		})
-
 		const isImage = computed<boolean>(() => {
-			return type.value === ElementTypes.Image
-		})
-
-		const watchableWindowScrollAndHeight = computed<string>(() => {
-			return [
-				windowStore.scrollTop,
-				windowStore.height,
-			].join('|')
+			return props.element.type === ElementTypes.Image
 		})
 
 		const classes = computed(() => {
 			return {
 				'c-colllect-element__loaded': isLoaded.value,
 				'c-colllect-element__show': show.value,
-				'c-colllect-element__type-colors': type.value === ElementTypes.Colors,
-				'c-colllect-element__type-image': type.value === ElementTypes.Image,
-				'c-colllect-element__type-link': type.value === ElementTypes.Link,
-				'c-colllect-element__type-note': type.value === ElementTypes.Note,
+				'c-colllect-element__type-colors': props.element.type === ElementTypes.Colors,
+				'c-colllect-element__type-image': props.element.type === ElementTypes.Image,
+				'c-colllect-element__type-link': props.element.type === ElementTypes.Link,
+				'c-colllect-element__type-note': props.element.type === ElementTypes.Note,
 			}
 		})
 
 		const style = computed(() => {
 			return {
-				minHeight: Math.ceil(colllectionStore.elementWidth * ratio.value) + 'px',
+				minHeight: Math.ceil(props.elementWidth * ratio.value) + 'px',
 			}
 		})
 
 		const localStorageRatioKey = computed<string | undefined>(() => {
-			if (fileUrl.value === undefined) {
+			const fileUrl = props.element.fileUrl
+			if (fileUrl === undefined) {
 				return
 			}
 
-			return 'elmtRatio.' + md5(fileUrl.value)
+			return 'elmtRatio.' + md5(fileUrl)
 		})
 
-		// @Throttle(300, {leading: true, trailing: true})
-		const updateShow = (): void => {
-			if (!domElement.value) {
+		const updateShow = throttle((): void => {
+			if (domElement.value === undefined) {
 				return
 			}
 
@@ -106,7 +78,10 @@ export default defineComponent({
 			const bottomLimit = windowHeight + delta
 
 			show.value = elementBottom > topLimit && elementTop < bottomLimit
-		}
+		}, 300, {
+			leading: true,
+			trailing: true,
+		})
 
 		/**
 		 * Lets the browser recompute the layer in Colllection
@@ -117,7 +92,7 @@ export default defineComponent({
 			updateShow()
 		}
 
-		const imageLoaded = async (e: Event) => {
+		const onImageLoaded = async (e: Event) => {
 			isLoaded.value = true
 
 			if (e.currentTarget) {
@@ -145,11 +120,21 @@ export default defineComponent({
 			emit('load')
 		}
 
+		const watchableWindow = computed<string>(() => {
+			return [
+				windowStore.scrollTop,
+				windowStore.width,
+				windowStore.height,
+			].join('|')
+		})
 		watch(
-			watchableWindowScrollAndHeight,
+			watchableWindow,
 			(): void => {
 				updateShowOnNextTick()
-			}
+			},
+			{
+				immediate: true,
+			},
 		)
 
 		onMounted((): void => {
@@ -163,26 +148,16 @@ export default defineComponent({
 			}
 
 			ratio.value = parseFloat(cachedRatio)
-
-			// FIXME
-			domElement.value?.parentNode?.$on('updateGrid', () => {
-				updateShowOnNextTick()
-			})
 		})
 
 		return {
 			domElement,
 			classes,
 			style,
-			name,
-			tags,
-			updatedDate,
-			size,
 			isImage,
 			show,
 			isLoaded,
-			fileUrl,
-			imageLoaded,
+			onImageLoaded,
 		}
 	},
 })

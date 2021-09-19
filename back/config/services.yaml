@@ -106,3 +106,4 @@ services:
 
     # aliases
     App\Service\FilesystemAdapter\FilesystemAdapterManager: '@app.filesystem_adapter_manager'
+    Nelmio\ApiDocBundle\ApiDocGenerator: '@nelmio_api_doc.generator.default'

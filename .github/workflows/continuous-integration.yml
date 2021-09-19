@@ -65,3 +65,41 @@ jobs:
             -   name: Lint
                 working-directory: ./front
                 run: npm run lint
+
+    front-typecheck:
+        name: "Front / TypeCheck"
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.0'
+                    tools: composer:v2
+
+            -   name: Install dependencies
+                working-directory: ./back
+                run: composer install --prefer-dist --no-progress --no-suggest
+
+            -   name: Dump OpenAPI definition
+                working-directory: ./back
+                run: |
+                    mkdir -p ../front/src/generated
+                    bin/console colllect:openapi:dump > ../front/src/generated/api.json
+
+            -   uses: actions/setup-node@v2
+                with:
+                    node-version: 16
+
+            -   name: Install dependencies
+                working-directory: ./front
+                run: npm ci
+
+            -   name: Prepare generated files for typecheck
+                working-directory: ./front
+                run: npm run generate-api-client
+
+            -   name: Typecheck
+                working-directory: ./front
+                run: npm run typecheck

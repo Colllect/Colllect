@@ -1,5 +1,12 @@
 .PHONY: install
-install: vendor assets
+install: var/oauth2/private.key vendor assets
+
+var/oauth2/private.key:
+	mkdir -p var/oauth2
+	openssl genrsa -out var/oauth2/private.key 2048
+
+var/oauth2/public.key: var/oauth2/private.key
+	openssl rsa -in var/oauth2/private.key -pubout -out var/oauth2/public.key
 
 vendor: composer.json $(wildcard composer.lock)
 	composer install

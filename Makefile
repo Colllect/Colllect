@@ -14,7 +14,7 @@ help:
 	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: init
-init: .env ssl-renew upd back/var/oauth2/public.key down ## Initialize project dependencies, database, keys, etc.
+init: .env ssl-renew upd down ## Initialize project
 
 .PHONY: ssl-renew
 ssl-renew: $(SSL_KEYS)
@@ -55,10 +55,3 @@ reset: down ## Remove all networks, images and volumes
 
 .env:
 	cp .env.dist .env
-
-back/var/oauth2/private.key:
-	docker-compose exec php mkdir -p var/oauth2
-	docker-compose exec php openssl genrsa -out var/oauth2/private.key 2048
-
-back/var/oauth2/public.key: back/var/oauth2/private.key
-	docker-compose exec php openssl rsa -in var/oauth2/private.key -pubout -out var/oauth2/public.key

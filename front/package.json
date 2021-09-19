@@ -17,7 +17,7 @@
     "lodash-es": "4.17.21",
     "md5": "2.3.0",
     "minigrid": "3.1.1",
-    "pinia": "^2.0.0-rc.9",
+    "pinia": "2.0.0-rc.9",
     "vue": "3.2.11",
     "vue-router": "4.0.11"
   },
@@ -25,10 +25,9 @@
     "@alex-d/eslint-config": "^1.0.3",
     "@types/lodash-es": "^4.17.5",
     "@types/md5": "^2.3.1",
-    "@types/superagent": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
-    "@vitejs/plugin-vue": "^1.6.2",
+    "@vitejs/plugin-vue": "^1.8.1",
     "autoprefixer": "^10.3.4",
     "cross-env": "^7.0.2",
     "eslint": "^7.32.0",
@@ -38,9 +37,9 @@
     "npm-run-all": "^4.1.5",
     "openapi-typescript-codegen": "^0.9.3",
     "postcss-easing-gradients": "^3.0.1",
-    "sass": "^1.41.0",
+    "sass": "^1.41.1",
     "typescript": "^4.4.3",
-    "vite": "^2.5.7"
+    "vite": "^2.5.10"
   },
   "browserslist": [
     "defaults",

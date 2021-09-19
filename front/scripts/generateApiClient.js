@@ -10,20 +10,15 @@ const generatedFolderPath = path.normalize('src/generated')
 const generatedApiFilePath = path.normalize(`${generatedFolderPath}/api.ts`)
 const templatesPath = 'typescriptSwaggerTemplates'
 
-const swaggerUrl = 'https://127.0.0.1/api/doc.json'
-const swaggerUrlOptions = {
-  headers: {
-    host: 'colllect.localhost',
-  },
-}
+const swaggerUrl = 'https://dev.colllect.io/api/doc.json'
 
 console.info('Fetching swagger description file from', swaggerUrl)
-needle('get', swaggerUrl, swaggerUrlOptions)
+needle('get', swaggerUrl)
   .then((response) => {
     swaggerCodeGen(response.body)
   })
   .catch((err) => {
-    console.error('Unable to fetch swagger description file. Did you run the `docker-compose up` command?')
+    console.error('Unable to fetch swagger description file. Did you run the `make up` command?')
     console.error(err)
     process.exit(1)
   })

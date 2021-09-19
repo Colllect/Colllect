@@ -14,7 +14,7 @@ help:
 	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: init
-init: .env ssl-renew upd install back/var/oauth2/public.key init-db create-default-client down ## Initialize project dependencies, database, keys, etc.
+init: .env ssl-renew upd back/var/oauth2/public.key down ## Initialize project dependencies, database, keys, etc.
 
 .PHONY: ssl-renew
 ssl-renew: $(SSL_KEYS)
@@ -55,19 +55,6 @@ reset: down ## Remove all networks, images and volumes
 
 .env:
 	cp .env.dist .env
-
-.PHONY: install
-install: ## Install back and front dependencies
-	docker-compose exec php composer install
-	cd front && npm install
-
-.PHONY: init-db
-init-db: install
-	docker-compose exec php bin/console doctrine:schema:create; true
-
-.PHONY: create-default-client
-create-default-client: init-db
-	docker-compose exec php bin/console trikoder:oauth2:create-client default "" --scope superadmin --grant-type client_credentials; true
 
 back/var/oauth2/private.key:
 	docker-compose exec php mkdir -p var/oauth2

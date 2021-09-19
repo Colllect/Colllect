@@ -12,6 +12,9 @@ app.use(stores)
 app.mount('#app')
 
 // Hack for dev only
-if (window.location.hostname === 'localhost') {
-  window.location.hostname = 'colllect.localhost'
+if (window.location.hostname.includes('localhost')) {
+	const newUrl = new URL(window.location.href)
+	newUrl.hostname = 'dev.colllect.io'
+	newUrl.port = ''
+  window.location.href = newUrl.toString()
 }

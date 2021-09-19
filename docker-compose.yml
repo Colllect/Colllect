@@ -30,7 +30,7 @@ services:
       - back-database:/var/lib/mysql
 
   back-php:
-    image: colllect/php-fpm
+    image: colllect/back-php
     build:
       context: .docker/back-php
       network: host
@@ -39,7 +39,9 @@ services:
         - DOCKER_HOST_IP
         - IDE_KEY
     volumes:
-      - ./back:/var/www/colllect
+      - ./back:/var/www/back
+    depends_on:
+      - back-database
 
   back-blackfire:
     image: blackfire/blackfire:2.4.3
@@ -51,7 +53,7 @@ services:
       BLACKFIRE_CLIENT_TOKEN: ${BLACKFIRE_CLIENT_TOKEN}
 
   back-nginx:
-    image: colllect/nginx
+    image: colllect/back-nginx
     build:
       context: .docker/back-nginx
       network: host
@@ -60,8 +62,26 @@ services:
       - SERVER_NAME
     volumes:
       - ./.docker/.ssl:/etc/nginx/ssl
-      - ./back:/var/www/colllect:ro
+      - ./back:/var/www/back:ro
       - ./logs/nginx/:/var/log/nginx
+    depends_on:
+      - back-php
+
+  front:
+    image: colllect/front
+    build:
+      context: .docker/front
+      network: host
+    environment:
+      SSL_KEY_PATH: '/var/www/.ssl/dev-colllect-io.key.pem'
+      SSL_CERT_PATH: '/var/www/.ssl/dev-colllect-io.cert.pem'
+    volumes:
+      - ./.docker/.ssl:/var/www/.ssl
+      - ./front:/var/www/front
+    ports:
+      - '8080:8080'
+    depends_on:
+      - back-nginx
 
 volumes:
   back-database:

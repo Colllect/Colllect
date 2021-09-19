@@ -9,6 +9,7 @@ ARG DOCKER_HOST_IP
 ARG IDE_KEY
 
 RUN apk add --no-cache \
+    make \
     openssl \
     git \
     zip \
@@ -46,6 +47,10 @@ RUN apk add --no-cache --virtual .build-deps \
 # Install Composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+# Install wait-for
+RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for \
+    && chmod +x /usr/bin/wait-for
+
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini
@@ -77,11 +82,11 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 #    echo "xdebug.remote_host=${DOCKER_HOST_IP}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
 #    echo "xdebug.idekey=\"${IDE_KEY}\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
 #    echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-#    echo "xdebug.remote_log=\"/var/www/colllect/var/logs/xdebug.log\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#    echo "xdebug.remote_log=\"/var/www/back/var/logs/xdebug.log\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Install Xdebug profiler
 #RUN echo "xdebug.profiler_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-#    echo "xdebug.profiler_output_dir=\"/var/www/colllect/var/logs/xdebug_profiler\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#    echo "xdebug.profiler_output_dir=\"/var/www/back/var/logs/xdebug_profiler\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY php-fpm.conf /usr/local/etc/
 
@@ -91,4 +96,9 @@ RUN usermod -u 1000 www-data \
 
 USER www-data
 
-WORKDIR /var/www/colllect
+WORKDIR /var/www/back
+
+COPY entrypoint.sh /opt/
+
+ENTRYPOINT ["/opt/entrypoint.sh", "docker-php-entrypoint"]
+CMD ["php-fpm"]

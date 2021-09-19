@@ -56,11 +56,11 @@ jobs:
 
             -   uses: actions/setup-node@v2
                 with:
-                    node-version: 14
+                    node-version: 16
 
             -   name: Install dependencies
                 working-directory: ./front
-                run: npm install
+                run: npm ci
 
             -   name: Lint
                 working-directory: ./front

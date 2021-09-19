@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  proxy:
+  ingress:
     image: colllect/ingress
     build:
       context: .docker/ingress

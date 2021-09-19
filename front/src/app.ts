@@ -37,7 +37,7 @@ export default defineComponent({
 		}
 
 		onMounted(() => {
-			authStore.getCurrentUser()
+			authStore.loadCurrentUser()
 
 			scrollableNode.value.addEventListener('scroll', throttle(handleScroll, 300, {leading: false}))
 			window.addEventListener('resize', debounce(handleResize, 300, {leading: true}))

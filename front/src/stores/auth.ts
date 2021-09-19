@@ -23,7 +23,7 @@ const useAuthStore = defineStore({
 		},
 	},
 	actions: {
-		getCurrentUser() {
+		async loadCurrentUser() {
 			return api.getApiUsersCurrent({})
 				.then((currentUserResponse) => {
 					if (currentUserResponse.status !== 200) {

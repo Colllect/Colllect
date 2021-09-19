@@ -20,9 +20,7 @@ assets:
 .PHONY: init-db
 init-db:
 	bin/console doctrine:database:create --if-not-exists
-	# TODO: create all migrations needed
-	# bin/console doctrine:migrations:migrate
-	bin/console doctrine:schema:update --force
+	bin/console doctrine:migrations:migrate --no-interaction
 
 	# Create default OAuth client if not exists
 	bin/console trikoder:oauth2:list-clients | grep -q default || bin/console trikoder:oauth2:create-client default "" --scope superadmin --grant-type client_credentials

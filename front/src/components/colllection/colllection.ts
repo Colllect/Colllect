@@ -1,8 +1,8 @@
 import MiniGrid from 'minigrid'
 import {computed, defineComponent, nextTick, onMounted, provide, ref, watch} from 'vue'
 
-import useColllection from '@/src/components/composables/useColllection'
 import ColllectElement from '@/src/components/element/Element.vue'
+import useColllection from '@/src/composables/useColllection'
 import useWindowStore from '@/src/stores/window'
 
 export default defineComponent({

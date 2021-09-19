@@ -1,9 +1,9 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 
-import api, * as ApiInterfaces from '@/src/api'
+import {Colllection, ColllectionsService} from '@/src/api'
 
 export interface ColllectionsState {
-  colllections: ApiInterfaces.Colllection[]
+  colllections: Colllection[]
 }
 
 const useColllectionsStore = defineStore({
@@ -15,13 +15,9 @@ const useColllectionsStore = defineStore({
 	},
 	actions: {
 		loadColllections() {
-			api.getApiColllections({})
-				.then((colllectionsResponse) => {
-					if (colllectionsResponse.status !== 200) {
-						return
-					}
-
-					this.colllections = colllectionsResponse.body
+			ColllectionsService.getColllections()
+				.then((colllections) => {
+					this.colllections = colllections
 				})
 		},
 	},

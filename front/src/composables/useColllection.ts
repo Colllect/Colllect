@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 
-import api, {Element} from '@/src/api'
+import {ColllectionElementsService, ColllectionsService, Element} from '@/src/api'
 import base64UriDecode from '@/src/functions/base64Uri'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -13,24 +13,14 @@ const useColllection = () => {
 		name.value = base64UriDecode(encodedColllectionPath).split('/').pop() ?? ''
 		isLoaded.value = false
 
-		const loadColllectionPromise = api
-			.getApiColllectionsByEncodedColllectionPath({encodedColllectionPath})
-			.then((colllectionResponse) => {
-				if (colllectionResponse.status !== 200) {
-					return
-				}
-
-				name.value = colllectionResponse.body.name ?? ''
+		const loadColllectionPromise = ColllectionsService.getColllection(encodedColllectionPath)
+			.then((colllection) => {
+				name.value = colllection.name ?? ''
 			})
 
-		const loadColllectionElementsPromise = api
-			.getApiColllectionsByEncodedColllectionPathElements({encodedColllectionPath})
-			.then((elementsResponse) => {
-				if (elementsResponse.status !== 200) {
-					return
-				}
-
-				elements.value = elementsResponse.body
+		const loadColllectionElementsPromise = ColllectionElementsService.getColllectionElements(encodedColllectionPath)
+			.then((elementsList) => {
+				elements.value = elementsList
 			})
 
 		await Promise.all([

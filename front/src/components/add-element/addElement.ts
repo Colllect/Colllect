@@ -1,10 +1,9 @@
 import {defineComponent, ref} from 'vue'
 
+import {Element, Tag} from '@/src/api'
 import ColllectButton from '@/src/components/button/Button.vue'
 import ColllectInput from '@/src/components/input/Input.vue'
 import ColllectModal from '@/src/components/modal/Modal.vue'
-import {Tag} from '@/src/generated/api'
-import ElementTypes from '@/src/models/ElementTypes'
 
 interface EnhancedTag extends Tag {
   color?: string
@@ -27,8 +26,8 @@ export default defineComponent({
 		'close',
 	],
 	setup(_props,  {emit}) {
-		const elementTypes = Object.values(ElementTypes)
-		const currentElementType = ref(ElementTypes.Image)
+		const elementTypes = Object.values(Element.type)
+		const currentElementType = ref(Element.type.IMAGE)
 		const url = ref('')
 		const name = ref('')
 		const tag = ref('')

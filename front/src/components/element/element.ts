@@ -3,7 +3,6 @@ import md5 from 'md5'
 import {computed, defineComponent, inject, nextTick, onMounted, ref, watch} from 'vue'
 
 import {Element} from '@/src/api'
-import ElementTypes from '@/src/models/ElementTypes'
 import useWindowStore from '@/src/stores/window'
 
 const VERTICAL_DELTA = 200 // In pixels
@@ -32,17 +31,17 @@ export default defineComponent({
 		const ratio = ref(1)
 
 		const isImage = computed<boolean>(() => {
-			return props.element.type === ElementTypes.Image
+			return props.element.type === Element.type.IMAGE
 		})
 
 		const classes = computed(() => {
 			return {
 				'c-colllect-element__loaded': isLoaded.value,
 				'c-colllect-element__show': show.value,
-				'c-colllect-element__type-colors': props.element.type === ElementTypes.Colors,
-				'c-colllect-element__type-image': props.element.type === ElementTypes.Image,
-				'c-colllect-element__type-link': props.element.type === ElementTypes.Link,
-				'c-colllect-element__type-note': props.element.type === ElementTypes.Note,
+				'c-colllect-element__type-colors': props.element.type === Element.type.COLORS,
+				'c-colllect-element__type-image': props.element.type === Element.type.IMAGE,
+				'c-colllect-element__type-link': props.element.type === Element.type.LINK,
+				'c-colllect-element__type-note': props.element.type === Element.type.NOTE,
 			}
 		})
 

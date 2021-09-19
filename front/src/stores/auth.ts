@@ -1,6 +1,6 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 
-import api from '@/src/api'
+import {UsersService} from '@/src/api'
 
 interface AuthState {
 	id: number | null
@@ -24,15 +24,11 @@ const useAuthStore = defineStore({
 	},
 	actions: {
 		async loadCurrentUser() {
-			return api.getApiUsersCurrent({})
-				.then((currentUserResponse) => {
-					if (currentUserResponse.status !== 200) {
-						return
-					}
-
-					this.id = currentUserResponse.body.id as number
-					this.nickname = currentUserResponse.body.nickname
-					this.roles = currentUserResponse.body.roles as string[]
+			return UsersService.getCurrentUser()
+				.then((currentUser) => {
+					this.id = currentUser.id as number
+					this.nickname = currentUser.nickname
+					this.roles = currentUser.roles as string[]
 				})
 		},
 	},

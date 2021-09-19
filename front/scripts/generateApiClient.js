@@ -1,69 +1,25 @@
 /* eslint-env node, browser:false */
 
-const fs = require('fs')
 const path = require('path')
 
+const OpenAPI = require('openapi-typescript-codegen')
 const needle = require('needle')
-const CodeGen = require('swagger-typescript-codegen').CodeGen
 
-const generatedFolderPath = path.normalize('src/generated')
-const generatedApiFilePath = path.normalize(`${generatedFolderPath}/api.ts`)
-const templatesPath = 'typescriptSwaggerTemplates'
+const generatedFolderPath = path.normalize('src/generated/api')
 
 const swaggerUrl = 'https://dev.colllect.io/api/doc.json'
 
 console.info('Fetching swagger description file from', swaggerUrl)
 needle('get', swaggerUrl)
-  .then((response) => {
-    swaggerCodeGen(response.body)
-  })
-  .catch((err) => {
-    console.error('Unable to fetch swagger description file. Did you run the `make up` command?')
-    console.error(err)
-    process.exit(1)
-  })
-
-function getTemplate(templateName) {
-  return fs.readFileSync(path.join(__dirname, templatesPath, `${templateName}.mustache`), 'utf-8')
-}
-
-function swaggerCodeGen (swagger) {
-  console.info('Generating TypeScript code...')
-  const tsSourceCode = CodeGen.getTypescriptCode({
-    isES6: true,
-    className: 'Api',
-    swagger,
-    template: {
-      class: getTemplate('class'),
-      method: getTemplate('method'),
-      type: getTemplate('type'),
-    },
-    beautify: true,
-    beautifyOptions: {
-      indent_size: 2,
-    },
-  })
-    .replace(/\r\n/g, '\n')
-    .replace(/"/g, '\'')
-    .replace(/\s\?\s:/g, '?:')
-    .replace(/ >/g, '>')
-    .replace(/< /g, '<')
-    .replace(/(\/\*\*\n)(\s+)(\*[^\n]+)([^*]+)\*\n\s+\*/g, (match, commentStart, indentSpaces, firstLine, otherLines) => {
-      return [
-        commentStart.replace('\n', ''),
-        indentSpaces + ' ' + firstLine,
-        ...otherLines.split('\n').map((line) => indentSpaces + ' * ' + line.replace(indentSpaces, '')),
-        indentSpaces + ' *',
-      ].join('\n')
-    })
-    .replace(/ {2,}\*/g, '   *')
-    .replace(/[ ]+$/gm, '')
-    .replace(/( {3}\*\n){2,}/g, '   *\n') + '\n'
-
-  if (!fs.existsSync(generatedFolderPath)) {
-    fs.mkdirSync(generatedFolderPath)
-  }
-  fs.writeFileSync(generatedApiFilePath, tsSourceCode)
-
-  console.info(generatedApiFilePath, 'was successfully updated!')
-}
+	.then(async (response) => {
+		await OpenAPI.generate({
+			input: response.body,
+			output: generatedFolderPath,
+		})
+		console.info(generatedFolderPath, 'was successfully updated!')
+	})
+	.catch((err) => {
+		console.error('Unable to fetch swagger description file. Did you run the `make up` command?')
+		console.error(err)
+		process.exit(1)
+	})

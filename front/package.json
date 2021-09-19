@@ -8,7 +8,7 @@
     "build": "vite build",
     "dev": "npm-run-all generate-api-client vite-dev",
     "vite-dev": "vite --host",
-    "generate-api-client": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node ./scripts/generateApiClient.js",
+    "generate-api-client": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node scripts/generateApiClient.js",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -17,7 +17,6 @@
     "md5": "2.3.0",
     "minigrid": "3.1.1",
     "pinia": "^2.0.0-rc.9",
-    "superagent": "6.1.0",
     "vue": "3.2.11",
     "vue-router": "4.0.11"
   },
@@ -36,9 +35,9 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "needle": "^3.0.0",
     "npm-run-all": "^4.1.5",
+    "openapi-typescript-codegen": "^0.9.3",
     "postcss-easing-gradients": "^3.0.1",
     "sass": "^1.41.0",
-    "swagger-typescript-codegen": "^3.2.3",
     "typescript": "^4.4.3",
     "vite": "^2.5.7"
   },

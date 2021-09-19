@@ -1,4 +1,4 @@
-FROM composer:2.1.5 as composer
+FROM composer:2.1.8 as composer
 
 # See https://github.com/docker-library/php/blob/master/8.0/alpine3.14/fpm/Dockerfile
 FROM php:8.0.9-fpm-alpine3.14
@@ -63,7 +63,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && mkdir -p /tmp/blackfire \
     && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
     && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
+    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://back-blackfire:8307\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
     && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
 
 # Install Xdebug

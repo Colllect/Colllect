@@ -1,8 +1,23 @@
-version: '3'
+version: '3.9'
 
 services:
-  database:
-    image: mariadb:10.4
+  proxy:
+    image: colllect/ingress
+    build:
+      context: .docker/ingress
+      network: host
+    volumes:
+      - ./.docker/.ssl:/etc/nginx/ssl
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      default:
+        aliases:
+          - dev.colllect.io
+
+  back-database:
+    image: mariadb:10.6.4
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MARIADB_DATABASE}
@@ -12,12 +27,13 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - database:/var/lib/mysql
+      - back-database:/var/lib/mysql
 
-  php:
+  back-php:
     image: colllect/php-fpm
     build:
-      context: .docker/php-fpm
+      context: .docker/back-php
+      network: host
       args:
         - TIMEZONE
         - DOCKER_HOST_IP
@@ -25,7 +41,7 @@ services:
     volumes:
       - ./back:/var/www/colllect
 
-  blackfire:
+  back-blackfire:
     image: blackfire/blackfire:2.4.3
     environment:
       BLACKFIRE_DISABLE_LEGACY_PORT: 1
@@ -33,21 +49,19 @@ services:
       BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN}
       BLACKFIRE_CLIENT_ID: ${BLACKFIRE_CLIENT_ID}
       BLACKFIRE_CLIENT_TOKEN: ${BLACKFIRE_CLIENT_TOKEN}
-    ports:
-      - '8307:8307'
 
-  nginx:
+  back-nginx:
     image: colllect/nginx
-    build: ./.docker/nginx
+    build:
+      context: .docker/back-nginx
+      network: host
     environment:
       - ENVIRONMENT
       - SERVER_NAME
-    ports:
-      - '80:80'
-      - '443:443'
     volumes:
+      - ./.docker/.ssl:/etc/nginx/ssl
       - ./back:/var/www/colllect:ro
       - ./logs/nginx/:/var/log/nginx
 
 volumes:
-  database:
+  back-database:

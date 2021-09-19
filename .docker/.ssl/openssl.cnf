@@ -1,0 +1,5 @@
+[dn]
+CN=dev.colllect.io
+
+[req]
+distinguished_name=dn

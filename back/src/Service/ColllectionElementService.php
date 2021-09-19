@@ -344,7 +344,7 @@ class ColllectionElementService
 
         try {
             if (!$this->filesystem->fileExists($path)) {
-                $this->stopwatch?->stop('colllection_element_get_content');
+                $this->stopwatch?->stop('colllection_element_get_content_meta');
 
                 throw new NotFoundHttpException('error.element_not_found');
             }
@@ -361,7 +361,7 @@ class ColllectionElementService
                     $response = new Response();
                     $response->setStatusCode(Response::HTTP_NOT_MODIFIED);
 
-                    $this->stopwatch?->stop('colllection_element_get_content');
+                    $this->stopwatch?->stop('colllection_element_get_content_meta');
 
                     return $response;
                 }

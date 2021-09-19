@@ -1,5 +1,5 @@
 import MiniGrid from 'minigrid'
-import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
+import {computed, defineComponent, nextTick, onMounted, provide, ref, watch} from 'vue'
 
 import useColllection from '@/src/components/composables/useColllection'
 import ColllectElement from '@/src/components/element/Element.vue'
@@ -16,10 +16,7 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	emits: [
-		'updateGrid',
-	],
-	setup(props, {emit}) {
+	setup(props) {
 		const ELEMENT_SELECTOR = '.c-colllect-element'
 
 		const domContainer = ref<HTMLElement>()
@@ -40,6 +37,8 @@ export default defineComponent({
 			}
 		})
 
+		const gridUpdatesCount = ref(0)
+		provide('gridUpdatesCount', gridUpdatesCount)
 		const updateGrid = (): void => {
 			if (domContainer.value === undefined) {
 				return
@@ -60,7 +59,7 @@ export default defineComponent({
 			// (Re)compute the grid element positions
 			grid.value.mount()
 
-			emit('updateGrid')
+			gridUpdatesCount.value += 1
 		}
 
 		const updateColllectionElementWidth = () => {

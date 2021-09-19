@@ -1,6 +1,6 @@
 import {throttle} from 'lodash-es'
 import md5 from 'md5'
-import {computed, defineComponent, nextTick, onMounted, ref, watch} from 'vue'
+import {computed, defineComponent, inject, nextTick, onMounted, ref, watch} from 'vue'
 
 import {Element} from '@/src/api'
 import ElementTypes from '@/src/models/ElementTypes'
@@ -52,15 +52,6 @@ export default defineComponent({
 			}
 		})
 
-		const localStorageRatioKey = computed<string | undefined>(() => {
-			const fileUrl = props.element.fileUrl
-			if (fileUrl === undefined) {
-				return
-			}
-
-			return 'elmtRatio.' + md5(fileUrl)
-		})
-
 		const updateShow = throttle((): void => {
 			if (domElement.value === undefined) {
 				return
@@ -92,6 +83,34 @@ export default defineComponent({
 			updateShow()
 		}
 
+		const watchableWindow = computed<string>(() => {
+			return [
+				windowStore.scrollTop,
+				windowStore.height,
+			].join('|')
+		})
+		const gridUpdatesCount = inject('gridUpdatesCount')
+		watch(
+			[
+				watchableWindow,
+				gridUpdatesCount,
+			],
+			(): void => {
+				updateShowOnNextTick()
+			},
+			{
+				immediate: true,
+			},
+		)
+
+		const localStorageRatioKey = computed<string | undefined>(() => {
+			const fileUrl = props.element.fileUrl
+			if (fileUrl === undefined) {
+				return
+			}
+
+			return 'elmtRatio.' + md5(fileUrl)
+		})
 		const onImageLoaded = async (e: Event) => {
 			isLoaded.value = true
 
@@ -119,23 +138,6 @@ export default defineComponent({
 			await nextTick()
 			emit('load')
 		}
-
-		const watchableWindow = computed<string>(() => {
-			return [
-				windowStore.scrollTop,
-				windowStore.width,
-				windowStore.height,
-			].join('|')
-		})
-		watch(
-			watchableWindow,
-			(): void => {
-				updateShowOnNextTick()
-			},
-			{
-				immediate: true,
-			},
-		)
 
 		onMounted((): void => {
 			if (!isImage.value) {

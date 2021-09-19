@@ -98,15 +98,12 @@ export default class {{&className}} {
     this.requestHandlers.forEach(handler => handler(req))
 
     req.end((error, response) => {
-      if (!response.ok) {
-        reject(response)
-        this.errorHandlers.forEach(handler => handler(response))
-      } else if (error) {
-        reject(error)
-        this.errorHandlers.forEach(handler => handler(error))
-      } else {
-        resolve(response)
+      if (error || !response.ok) {
+        reject(error ?? response)
+        return this.errorHandlers.forEach(handler => handler(error ?? response))
       }
+
+			resolve(response)
     })
   }
 }

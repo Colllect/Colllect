@@ -9,7 +9,8 @@
     "dev": "npm-run-all generate-api-client vite-dev",
     "vite-dev": "vite --host",
     "generate-api-client": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node scripts/generateApiClient.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "http-status-codes": "2.1.4",

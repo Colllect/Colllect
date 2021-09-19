@@ -1,24 +1,24 @@
 import {computed, defineComponent, onMounted, ref} from 'vue'
 
-const TYPES = {
-	TEXT: 'text',
-	EMAIL: 'email',
-	PASSWORD: 'password',
+enum InputTypes {
+	Text = 'text',
+	Email = 'email',
+	Password = 'password',
 }
 
-const AUTOCOMPLETE = {
-	OFF: 'off',
-	NEW_PASSWORD: 'new-password',
+enum InputAutocomplete {
+	Off = 'off',
+	NewPassword = 'new-password',
 }
 
 export default defineComponent({
 	name: 'ColllectInput',
 	props: {
 		type: {
-			type: String as () => string,
-			default: TYPES.TEXT,
-			validator(value: string) {
-				return [TYPES.TEXT, TYPES.EMAIL, TYPES.PASSWORD].includes(value)
+			type: String as () => InputTypes,
+			default: InputTypes.Text,
+			validator: (value: InputTypes) => {
+				return [InputTypes.Text, InputTypes.Email, InputTypes.Password].includes(value)
 			},
 		},
 		modelValue: {
@@ -41,10 +41,10 @@ export default defineComponent({
 			type: Boolean as () => boolean,
 		},
 		autocomplete: {
-			type: String as () => string,
-			default: AUTOCOMPLETE.OFF,
-			validator(value: string) {
-				return [AUTOCOMPLETE.OFF, AUTOCOMPLETE.NEW_PASSWORD].includes(value)
+			type: String as () => InputAutocomplete,
+			default: InputAutocomplete.Off,
+			validator: (value: InputAutocomplete) => {
+				return [InputAutocomplete.Off, InputAutocomplete.NewPassword].includes(value)
 			},
 		},
 	},
@@ -70,7 +70,7 @@ export default defineComponent({
 				'c-colllect-input__disabled': props.disabled,
 				'c-colllect-input__focused': focused.value,
 				'c-colllect-input__errored': props.errored,
-				'c-colllect-input__autocomplete-off': props.autocomplete === 'off',
+				'c-colllect-input__autocomplete-off': props.autocomplete === InputAutocomplete.Off,
 			}
 		})
 

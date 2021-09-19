@@ -1,4 +1,4 @@
-import {defineComponent, onBeforeUnmount, onMounted, ref} from 'vue'
+import {defineComponent, onBeforeUnmount, onMounted} from 'vue'
 
 import A11yFocusTrap from '@/src/components/a11y-focus-trap/A11yFocusTrap.vue'
 
@@ -23,8 +23,6 @@ export default defineComponent({
 		'close',
 	],
 	setup(_props, {emit}) {
-		const focusTrap = ref<HTMLElement>()
-
 		const close = (e?: KeyboardEvent): void => {
 			if (e && e.type === 'keydown') {
 				if (e.key !== 'Escape') {
@@ -34,15 +32,12 @@ export default defineComponent({
 				e.stopPropagation()
 			}
 
-			focusTrap.value?.close()
-
 			emit('close')
 		}
 
 		onMounted(() => {
 			// Listen for escape keydown event to close the popup
 			window.addEventListener('keydown', close, false)
-			focusTrap.value?.open()
 		})
 
 		onBeforeUnmount(() => {

@@ -20,12 +20,6 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]',
 ].map((selector) => selector + ':not([tabindex^="-"]):not([disabled])').join(',')
 
-/**
- * <A11yFocusTrap>
- * - methods: open(), replace(), close(returnFocus)
- * - events: open, gofirst, golast
- * - slots: default slot
- */
 export default defineComponent({
 	name: 'A11yFocusTrap',
 	setup() {
@@ -34,7 +28,6 @@ export default defineComponent({
 		const endElement = ref<HTMLElement>()
 		const focusableContainer = ref<HTMLElement>()
 		const trapStack: TrapInfo[] = []
-		let isMounted = false
 
 		const open = (): void => {
 			if (rootContainer.value === undefined) {
@@ -93,21 +86,22 @@ export default defineComponent({
 			if (!rootContainer.value?.contains(target as HTMLElement) || target === endElement.value) {
 				event.preventDefault()
 				goFirst()
-			} else if (target === startElement.value) {
+				return
+			}
+			if (target === startElement.value) {
 				event.preventDefault()
 				goLast()
 			}
 		}
 
 		onMounted(() => {
-			isMounted = true
 			document.addEventListener('focus', trapFocus, true)
+			open()
 		})
 
 		onUnmounted(() => {
-			if (isMounted) {
-				document.removeEventListener('focus', trapFocus, true)
-			}
+			close()
+			document.removeEventListener('focus', trapFocus, true)
 		})
 
 		return {
@@ -115,8 +109,6 @@ export default defineComponent({
 			startElement,
 			focusableContainer,
 			endElement,
-			open,
-			close,
 		}
 	},
 })

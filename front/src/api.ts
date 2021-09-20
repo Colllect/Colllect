@@ -1,6 +1,7 @@
 import {
 	ColllectionElementsService as GeneratedColllectionElementsService,
-	ColllectionsService as GeneratedColllectionsService, OpenAPI,
+	ColllectionsService as GeneratedColllectionsService,
+	OpenAPI,
 	UsersService as GeneratedUsersService,
 } from '@/src/generated/api'
 

@@ -14,7 +14,7 @@ help:
 	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: init
-init: .env ssl-renew upd down ## Initialize project
+init: .env ssl-renew build ## Initialize project
 
 .PHONY: ssl-renew
 ssl-renew: $(SSL_KEYS)
@@ -29,10 +29,6 @@ $(SSL_KEYS): $(OPENSSL_CNF)
 .PHONY: build
 build:
 	docker-compose build --parallel
-
-.PHONY: upd
-upd: build
-	docker-compose up --remove-orphans -d
 
 .PHONY: up
 up: build ## Launch the app
@@ -49,8 +45,8 @@ down: ## Down the app
 .PHONY: reset
 reset: down ## Remove all networks, images and volumes
 	@docker network prune -f
-	@docker rmi -f $(docker images -qa) 2>/dev/null || true
-	@docker volume rm $(docker volume ls -q) 2>/dev/null || true
+	@docker rmi -f $(shell docker images -qa) 2>/dev/null || true
+	@docker volume rm $(shell docker volume ls -q) 2>/dev/null || true
 	@echo Done
 
 .env:

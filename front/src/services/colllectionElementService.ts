@@ -1,14 +1,14 @@
 import fetchApi, {ApiRequestBody} from '@/src/functions/fetchApi'
-import {Element, ElementList} from '@/src/types/api/definitions'
+import {Element} from '@/src/types/api/definitions'
 
 type ElementFormDataBody =
 	Omit<ApiRequestBody<'/api/colllections/{encodedColllectionPath}/elements', 'post'>, 'file'>
 	& { file?: File }
 
-export class ColllectionElementsService {
+export class ColllectionElementService {
 	public static getColllectionElements = (
 		encodedColllectionPath: string,
-	): Promise<ElementList> => {
+	): Promise<Element[]> => {
 		return fetchApi(
 			'/api/colllections/{encodedColllectionPath}/elements',
 			{
@@ -85,4 +85,4 @@ export class ColllectionElementsService {
 	}
 }
 
-export default ColllectionElementsService
+export default ColllectionElementService

@@ -1,8 +1,8 @@
 import fetchApi, {ApiRequestBody} from '@/src/functions/fetchApi'
-import {Colllection, ColllectionList} from '@/src/types/api/definitions'
+import {Colllection} from '@/src/types/api/definitions'
 
 class ColllectionService {
-	public static getColllections = (): Promise<ColllectionList> => {
+	public static getColllections = (): Promise<Colllection[]> => {
 		return fetchApi(
 			'/api/colllections'
 		)
@@ -20,9 +20,16 @@ class ColllectionService {
 		)
 	}
 
-	public static getColllection = (): Promise<Colllection> => {
+	public static getColllection = (
+		encodedColllectionPath: string,
+	): Promise<Colllection> => {
 		return fetchApi(
-			'/api/colllections/{encodedColllectionPath}'
+			'/api/colllections/{encodedColllectionPath}',
+			{
+				params: {
+					encodedColllectionPath,
+				},
+			}
 		)
 	}
 

@@ -2,8 +2,9 @@ import {throttle} from 'lodash-es'
 import md5 from 'md5'
 import {computed, defineComponent, inject, nextTick, onMounted, ref, watch} from 'vue'
 
-import {Element} from '@/src/api'
+import ElementType from '@/src/enums/elementType'
 import useWindowStore from '@/src/stores/window'
+import {Element} from '@/src/types/api/definitions'
 
 const VERTICAL_DELTA = 200 // In pixels
 
@@ -31,17 +32,17 @@ export default defineComponent({
 		const ratio = ref(1)
 
 		const isImage = computed<boolean>(() => {
-			return props.element.type === Element.type.IMAGE
+			return props.element.type === ElementType.Image
 		})
 
 		const classes = computed(() => {
 			return {
 				'c-colllect-element__loaded': isLoaded.value,
 				'c-colllect-element__show': show.value,
-				'c-colllect-element__type-colors': props.element.type === Element.type.COLORS,
-				'c-colllect-element__type-image': props.element.type === Element.type.IMAGE,
-				'c-colllect-element__type-link': props.element.type === Element.type.LINK,
-				'c-colllect-element__type-note': props.element.type === Element.type.NOTE,
+				'c-colllect-element__type-colors': props.element.type === ElementType.Colors,
+				'c-colllect-element__type-image': props.element.type === ElementType.Image,
+				'c-colllect-element__type-link': props.element.type === ElementType.Link,
+				'c-colllect-element__type-note': props.element.type === ElementType.Note,
 			}
 		})
 

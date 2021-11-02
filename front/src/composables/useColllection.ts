@@ -1,7 +1,9 @@
 import {ref} from 'vue'
 
-import {ColllectionElementsService, ColllectionsService, Element} from '@/src/api'
 import base64UriDecode from '@/src/functions/base64Uri'
+import ColllectionElementService from '@/src/services/colllectionElementService'
+import ColllectionService from '@/src/services/colllectionService'
+import {Element} from '@/src/types/api/definitions'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useColllection = () => {
@@ -13,12 +15,12 @@ const useColllection = () => {
 		name.value = base64UriDecode(encodedColllectionPath).split('/').pop() ?? ''
 		isLoaded.value = false
 
-		const loadColllectionPromise = ColllectionsService.getColllection(encodedColllectionPath)
+		const loadColllectionPromise = ColllectionService.getColllection(encodedColllectionPath)
 			.then((colllection) => {
 				name.value = colllection.name ?? ''
 			})
 
-		const loadColllectionElementsPromise = ColllectionElementsService.getColllectionElements(encodedColllectionPath)
+		const loadColllectionElementsPromise = ColllectionElementService.getColllectionElements(encodedColllectionPath)
 			.then((elementsList) => {
 				elements.value = elementsList
 			})

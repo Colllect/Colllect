@@ -6,9 +6,9 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "npm-run-all generate-api-client vite-dev",
+    "dev": "npm-run-all dump-api-types vite-dev",
     "vite-dev": "vite --host",
-    "generate-api-client": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node scripts/generateApiClient.js",
+    "dump-api-types": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node scripts/dumpApiTypes.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
@@ -33,9 +33,8 @@
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "needle": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "openapi-typescript-codegen": "^0.9.3",
+    "openapi-typescript": "^4.4.0",
     "postcss-easing-gradients": "^3.0.1",
     "sass": "^1.41.1",
     "typescript": "^4.4.3",
@@ -49,5 +48,9 @@
     "not Baidu 0",
     "not Android < 67",
     "not Samsung < 9"
-  ]
+  ],
+  "volta": {
+    "node": "16.12.0",
+    "npm": "8.1.0"
+  }
 }

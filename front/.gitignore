@@ -2,6 +2,5 @@
 /npm-debug.log
 /yarn-error.log
 /dist
-/src/generated
 /yarn.lock
 /*.local

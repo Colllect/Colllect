@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 function buildUrl(
 	baseUrl: string,
 	path: string,

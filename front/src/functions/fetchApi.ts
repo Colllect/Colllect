@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import buildUrl from '@/src/functions/buildUrl'
 import {paths} from '@/src/generated/apiTypes'
 import Get from '@/src/types/utilities/get'

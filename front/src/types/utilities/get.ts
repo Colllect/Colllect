@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * Deep find value type
  * e.g. Get<obj, ["user", "firstname"]>

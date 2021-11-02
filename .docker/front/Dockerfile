@@ -1,11 +1,13 @@
-FROM node:16.9.1-alpine3.14
+FROM node:16.12.0-alpine3.14
 
 ARG NODE_ENV=development
 ENV NODE_ENV="${NODE_ENV}"
 
 ENV NPM_CONFIG_PREFIX=/home/node/.npm
 ENV PATH="/home/node/.npm/bin:${PATH}"
-RUN npm install -g npm@7.24.0
+RUN mkdir -p ${NPM_CONFIG_PREFIX} \
+    && chown -R node:node ${NPM_CONFIG_PREFIX} \
+    && npm install -g npm@8
 
 RUN apk add --no-cache \
     make \

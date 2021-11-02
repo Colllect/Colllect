@@ -98,7 +98,7 @@ jobs:
 
             -   name: Prepare generated files for typecheck
                 working-directory: ./front
-                run: npm run generate-api-client
+                run: npm run dump-api-types
 
             -   name: Typecheck
                 working-directory: ./front

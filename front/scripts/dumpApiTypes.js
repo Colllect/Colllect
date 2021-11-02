@@ -6,12 +6,15 @@ const path = require('path')
 const openapiTS = require('openapi-typescript').default
 
 const openApiUrl = 'https://dev.colllect.io/api/doc.json'
-const openApiDefinitionPath = path.join(__dirname, '..', 'src', 'generated', 'apiTypes.ts')
+const openApiJsonPath = path.join(__dirname, '..', 'src', 'generated', 'api.json')
+const apiTypesOutputPath = path.join(__dirname, '..', 'src', 'generated', 'apiTypes.ts')
+
+const openApiInputPath = fs.existsSync(openApiJsonPath) ? openApiJsonPath : openApiUrl
 
 console.info('Fetching OpenAPI definition file from', openApiUrl)
-openapiTS(openApiUrl)
+openapiTS(openApiInputPath)
 	.then((apiTypes) => {
-		return fs.writeFileSync(openApiDefinitionPath, apiTypes)
+		return fs.writeFileSync(apiTypesOutputPath, apiTypes)
 	})
 	.catch((err) => {
 		console.error('Unable to fetch OpenAPI definition file. Did you run the `make up` command?')

@@ -1,7 +1,7 @@
 Colllect
 ========
 
-[![Continuous Integration](https://github.com/Colllect/Colllect/workflows/Continuous%20Integration/badge.svg)](https://github.com/Colllect/Colllect/actions) [![SymfonyInsight](https://insight.symfony.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d/mini.png)](https://insight.symfony.com/projects/bad0374e-bf29-4ec5-b409-0aa444af152d) [![MIT Licence](https://img.shields.io/github/license/Colllect/Colllect.svg)](LICENSE)
+[![Continuous Integration](https://github.com/Colllect/Colllect/workflows/Continuous%20Integration/badge.svg)](https://github.com/Colllect/Colllect/actions) [![SymfonyInsight](https://insight.symfony.com/projects/24a8b34c-1059-401c-88ed-4dc7a7be6543/mini.svg)](https://insight.symfony.com/projects/24a8b34c-1059-401c-88ed-4dc7a7be6543) [![MIT Licence](https://img.shields.io/github/license/Colllect/Colllect.svg)](LICENSE)
 
 
 Introduction

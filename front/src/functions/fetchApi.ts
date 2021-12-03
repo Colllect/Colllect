@@ -45,7 +45,7 @@ function fetchApi<Path extends Paths, Method extends Methods = 'get'>(
 	}
 
 	const url = buildUrl(
-		'/',
+		'',
 		path,
 		fetchOptions.query,
 		fetchOptions.params,

@@ -1,4 +1,4 @@
-import {definitions} from '@/src/generated/apiTypes'
+import { definitions } from '@/src/generated/apiTypes'
 
 export type CurrentUser = definitions['CurrentUser']
 export type User = definitions['User']

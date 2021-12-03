@@ -1,5 +1,5 @@
-import {computed, defineComponent} from 'vue'
-import {useRoute} from 'vue-router'
+import { computed, defineComponent } from 'vue'
+import { useRoute } from 'vue-router'
 
 import ColllectColllection from '@/src/components/colllection/Colllection.vue'
 
@@ -8,7 +8,7 @@ export default defineComponent({
 	components: {
 		ColllectColllection,
 	},
-  setup() {
+	setup() {
 		const route = useRoute()
 
 		const encodedColllectionPath = computed<string>(() => {

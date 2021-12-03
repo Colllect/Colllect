@@ -1,5 +1,5 @@
-import fetchApi, {ApiRequestBody} from '@/src/functions/fetchApi'
-import {Element} from '@/src/types/api/definitions'
+import fetchApi, { ApiRequestBody } from '@/src/functions/fetchApi'
+import { Element } from '@/src/types/api/definitions'
 
 type ElementFormDataBody =
 	Omit<ApiRequestBody<'/api/colllections/{encodedColllectionPath}/elements', 'post'>, 'file'>

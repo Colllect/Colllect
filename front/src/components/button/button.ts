@@ -1,4 +1,4 @@
-import {computed, defineComponent} from 'vue'
+import { computed, defineComponent } from 'vue'
 
 enum ButtonType {
   Default = 'default',
@@ -20,7 +20,7 @@ export default defineComponent({
 	emits: [
 		'click',
 	],
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const classes = computed(() => {
 			return {
 				'c-colllect-button__disabled': props.disabled,

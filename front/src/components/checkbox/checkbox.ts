@@ -1,4 +1,4 @@
-import {computed, defineComponent, onMounted, ref} from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
 	name: 'ColllectCheckbox',
@@ -21,7 +21,7 @@ export default defineComponent({
 	emits: [
 		'update:modelValue',
 	],
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const id = ref('')
 		const focused = ref(false)
 

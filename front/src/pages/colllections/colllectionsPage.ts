@@ -1,7 +1,7 @@
-import {computed, defineComponent, nextTick, onMounted} from 'vue'
+import { computed, defineComponent, nextTick, onMounted } from 'vue'
 
 import useColllectionsStore from '@/src/stores/colllections'
-import {Colllection} from '@/src/types/api/definitions'
+import { Colllection } from '@/src/types/api/definitions'
 
 export default defineComponent({
 	name: 'ColllectionsPage',

@@ -1,4 +1,4 @@
-import {computed, defineComponent, ref} from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 import ColllectButton from '@/src/components/button/Button.vue'
 import ColllectCheckbox from '@/src/components/checkbox/Checkbox.vue'

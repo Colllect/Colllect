@@ -1,5 +1,5 @@
-import {debounce, throttle} from 'lodash-es'
-import {computed, defineComponent, onMounted, ref} from 'vue'
+import { debounce, throttle } from 'lodash-es'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
 import ColllectAddElement from '@/src/components/add-element/AddElement.vue'
 import ColllectHeader from '@/src/components/header/Header.vue'
@@ -39,8 +39,8 @@ export default defineComponent({
 		onMounted(() => {
 			authStore.loadCurrentUser()
 
-			scrollableNode.value.addEventListener('scroll', throttle(handleScroll, 300, {leading: false}))
-			window.addEventListener('resize', debounce(handleResize, 300, {leading: true}))
+			scrollableNode.value.addEventListener('scroll', throttle(handleScroll, 300, { leading: false }))
+			window.addEventListener('resize', debounce(handleResize, 300, { leading: true }))
 		})
 
 		return {

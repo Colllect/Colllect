@@ -1,4 +1,4 @@
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 
 import ColllectColllection from '@/src/components/colllection/Colllection.vue'
 

@@ -1,4 +1,4 @@
-import {computed, defineComponent, onMounted, ref} from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
 	name: 'ColllectRadioGroup',
@@ -19,7 +19,7 @@ export default defineComponent({
 			type: String as () => string,
 		},
 	},
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const id = ref('')
 
 		const localValue = computed<string>({

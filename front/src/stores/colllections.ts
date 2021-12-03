@@ -1,7 +1,7 @@
-import {acceptHMRUpdate, defineStore} from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 import ColllectionService from '@/src/services/colllectionService'
-import {Colllection} from '@/src/types/api/definitions'
+import { Colllection } from '@/src/types/api/definitions'
 
 export interface ColllectionsState {
   colllections: Colllection[]

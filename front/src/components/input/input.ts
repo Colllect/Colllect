@@ -1,4 +1,4 @@
-import {computed, defineComponent, onMounted, ref} from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
 enum InputTypes {
 	Text = 'text',
@@ -18,7 +18,9 @@ export default defineComponent({
 			type: String as () => InputTypes,
 			default: InputTypes.Text,
 			validator: (value: InputTypes) => {
-				return [InputTypes.Text, InputTypes.Email, InputTypes.Password].includes(value)
+				return [InputTypes.Text,
+					InputTypes.Email,
+					InputTypes.Password].includes(value)
 			},
 		},
 		modelValue: {
@@ -44,14 +46,15 @@ export default defineComponent({
 			type: String as () => InputAutocomplete,
 			default: InputAutocomplete.Off,
 			validator: (value: InputAutocomplete) => {
-				return [InputAutocomplete.Off, InputAutocomplete.NewPassword].includes(value)
+				return [InputAutocomplete.Off,
+					InputAutocomplete.NewPassword].includes(value)
 			},
 		},
 	},
 	emits: [
 		'update:modelValue',
 	],
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const input = ref<HTMLInputElement>()
 		const id = ref('')
 		const focused = ref(false)

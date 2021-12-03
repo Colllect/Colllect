@@ -1,5 +1,5 @@
-import fetchApi, {ApiRequestBody} from '@/src/functions/fetchApi'
-import {Colllection} from '@/src/types/api/definitions'
+import fetchApi, { ApiRequestBody } from '@/src/functions/fetchApi'
+import { Colllection } from '@/src/types/api/definitions'
 
 class ColllectionService {
 	public static getColllections = (): Promise<Colllection[]> => {

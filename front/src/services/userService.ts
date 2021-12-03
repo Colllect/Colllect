@@ -1,5 +1,5 @@
 import fetchApi from '@/src/functions/fetchApi'
-import {CurrentUser} from '@/src/types/api/definitions'
+import { CurrentUser } from '@/src/types/api/definitions'
 
 export class UserService {
 	public static getCurrentUser = (): Promise<CurrentUser> => {

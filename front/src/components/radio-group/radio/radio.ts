@@ -1,4 +1,4 @@
-import {computed, defineComponent, getCurrentInstance, onMounted, ref} from 'vue'
+import { computed, defineComponent, getCurrentInstance, onMounted, ref } from 'vue'
 
 import ColllectRadioGroup from '@/src/components/radio-group/RadioGroup.vue'
 

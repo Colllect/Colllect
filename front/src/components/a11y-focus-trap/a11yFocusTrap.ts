@@ -1,4 +1,4 @@
-import {defineComponent, onMounted, onUnmounted, ref} from 'vue'
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
 
 interface TrapInfo {
 	rootContainer: HTMLElement
@@ -6,18 +6,18 @@ interface TrapInfo {
 }
 
 const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'area[href]',
-  'button',
-  'details',
-  'input',
-  'iframe',
-  'select',
-  'textarea',
-  '[contentEditable=""]',
-  '[contentEditable="true"]',
-  '[contentEditable="TRUE"]',
-  '[tabindex]',
+	'a[href]',
+	'area[href]',
+	'button',
+	'details',
+	'input',
+	'iframe',
+	'select',
+	'textarea',
+	'[contentEditable=""]',
+	'[contentEditable="true"]',
+	'[contentEditable="TRUE"]',
+	'[tabindex]',
 ].map((selector) => selector + ':not([tabindex^="-"]):not([disabled])').join(',')
 
 export default defineComponent({
@@ -35,7 +35,10 @@ export default defineComponent({
 			}
 
 			const prevTarget = document.activeElement as HTMLElement
-			trapStack.push({rootContainer: rootContainer.value, prevTarget})
+			trapStack.push({
+				rootContainer: rootContainer.value,
+				prevTarget,
+			})
 
 			const autofocusElement = rootContainer.value.querySelector('[autofocus]') as HTMLElement
 			if (autofocusElement) {
@@ -50,7 +53,7 @@ export default defineComponent({
 			if (trap === undefined) {
 				return
 			}
-			const {prevTarget} = trap
+			const { prevTarget } = trap
 			if (returnFocus) {
 				prevTarget.focus()
 			}
@@ -82,7 +85,7 @@ export default defineComponent({
 				return
 			}
 
-			const {target} = event
+			const { target } = event
 			if (!rootContainer.value?.contains(target as HTMLElement) || target === endElement.value) {
 				event.preventDefault()
 				goFirst()

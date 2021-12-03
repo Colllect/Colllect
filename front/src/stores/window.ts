@@ -1,4 +1,4 @@
-import {acceptHMRUpdate, defineStore} from 'pinia'
+import { acceptHMRUpdate, defineStore } from 'pinia'
 
 export interface WindowState {
   scrollTop: number
@@ -19,7 +19,7 @@ const useWindowStore = defineStore({
 		windowScroll(scrollTop: number) {
 			this.scrollTop = scrollTop
 		},
-		windowResize({width, height}: { width: number; height: number }) {
+		windowResize({ width, height }: { width: number; height: number }) {
 			this.$patch({
 				width,
 				height,

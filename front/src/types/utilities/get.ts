@@ -4,7 +4,7 @@
  * Deep find value type
  * e.g. Get<obj, ["user", "firstname"]>
  */
-type Get<T extends any, K extends any[], D = never> = K extends []
+type Get<T, K extends any[], D = never> = K extends []
 	? T
 	: K extends [infer A, ...infer B]
 		? A extends keyof T

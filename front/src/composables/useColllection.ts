@@ -1,9 +1,9 @@
-import {ref} from 'vue'
+import { ref } from 'vue'
 
 import base64UriDecode from '@/src/functions/base64Uri'
 import ColllectionElementService from '@/src/services/colllectionElementService'
 import ColllectionService from '@/src/services/colllectionService'
-import {Element} from '@/src/types/api/definitions'
+import { Element } from '@/src/types/api/definitions'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useColllection = () => {

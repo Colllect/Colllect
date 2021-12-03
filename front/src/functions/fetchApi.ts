@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import buildUrl from '@/src/functions/buildUrl'
-import {paths} from '@/src/generated/apiTypes'
+import { paths } from '@/src/generated/apiTypes'
 import Get from '@/src/types/utilities/get'
 import KeysOfUnion from '@/src/types/utilities/keysOfUnion'
 import PickDefined from '@/src/types/utilities/pickDefined'
@@ -53,7 +53,7 @@ function fetchApi<Path extends Paths, Method extends Methods = 'get'>(
 	delete fetchOptions.query
 	delete fetchOptions.params
 
-	fetchOptions.headers['Accept'] = 'application/json'
+	fetchOptions.headers.Accept = 'application/json'
 
 	return fetch(url, fetchOptions).then((r) => {
 		if (r.status === 204) {

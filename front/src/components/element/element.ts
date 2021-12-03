@@ -1,10 +1,10 @@
-import {throttle} from 'lodash-es'
+import { throttle } from 'lodash-es'
 import md5 from 'md5'
-import {computed, defineComponent, inject, nextTick, onMounted, ref, watch} from 'vue'
+import { computed, defineComponent, inject, nextTick, onMounted, ref, watch } from 'vue'
 
 import ElementType from '@/src/enums/elementType'
 import useWindowStore from '@/src/stores/window'
-import {Element} from '@/src/types/api/definitions'
+import { Element } from '@/src/types/api/definitions'
 
 const VERTICAL_DELTA = 200 // In pixels
 
@@ -23,7 +23,7 @@ export default defineComponent({
 	emits: [
 		'load',
 	],
-	setup(props, {emit}) {
+	setup(props, { emit }) {
 		const windowStore = useWindowStore()
 
 		const domElement = ref<HTMLElement>()

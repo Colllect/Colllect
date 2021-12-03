@@ -1,4 +1,4 @@
-import {defineComponent, onBeforeUnmount, onMounted} from 'vue'
+import { defineComponent, onBeforeUnmount, onMounted } from 'vue'
 
 import A11yFocusTrap from '@/src/components/a11y-focus-trap/A11yFocusTrap.vue'
 
@@ -22,7 +22,7 @@ export default defineComponent({
 	emits: [
 		'close',
 	],
-	setup(_props, {emit}) {
+	setup(_props, { emit }) {
 		const close = (e?: KeyboardEvent): void => {
 			if (e && e.type === 'keydown') {
 				if (e.key !== 'Escape') {

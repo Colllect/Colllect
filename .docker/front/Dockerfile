@@ -1,4 +1,4 @@
-FROM node:16.12.0-alpine3.14
+FROM node:16.13.1-alpine3.14
 
 ARG NODE_ENV=development
 ENV NODE_ENV="${NODE_ENV}"
@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     curl
 
 # Install wait-for
-RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for \
+RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.2.1/wait-for \
     && chmod +x /usr/bin/wait-for
 
 USER node

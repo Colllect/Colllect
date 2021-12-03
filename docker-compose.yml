@@ -17,7 +17,7 @@ services:
           - dev.colllect.io
 
   back-database:
-    image: mariadb:10.6.4
+    image: mariadb:10.7.1
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MARIADB_DATABASE}
@@ -44,7 +44,7 @@ services:
       - back-database
 
   back-blackfire:
-    image: blackfire/blackfire:2.4.3
+    image: blackfire/blackfire:2.5.2
     environment:
       BLACKFIRE_DISABLE_LEGACY_PORT: 1
       BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID}

@@ -1,4 +1,4 @@
-FROM nginx:1.21.3-alpine
+FROM nginx:1.21.4-alpine
 
 # nginx
 COPY nginx.conf /etc/nginx/
@@ -9,7 +9,7 @@ RUN mkdir -p /etc/nginx/sites-enabled \
 RUN echo "upstream php-upstream { server back-php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
 # Install wait-for
-RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for \
+RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.2.1/wait-for \
     && chmod +x /usr/bin/wait-for
 
 RUN adduser --uid 1000 --disabled-password --system --ingroup www-data www-data

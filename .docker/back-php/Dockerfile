@@ -1,9 +1,9 @@
-FROM composer:2.1.8 as composer
+FROM composer:2.1.14 as composer
 
-# See https://github.com/docker-library/php/blob/master/8.0/alpine3.14/fpm/Dockerfile
-FROM php:8.0.9-fpm-alpine3.14
+# See https://github.com/docker-library/php/blob/master/8.0/alpine3.15/fpm/Dockerfile
+FROM php:8.0.13-fpm-alpine3.15
 
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 ARG TIMEZONE
 ARG DOCKER_HOST_IP
 ARG IDE_KEY
@@ -48,7 +48,7 @@ RUN apk add --no-cache --virtual .build-deps \
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Install wait-for
-RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for \
+RUN curl -sL -o /usr/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/v2.2.1/wait-for \
     && chmod +x /usr/bin/wait-for
 
 # Set timezone

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ColllectOpenapiDumpCommand extends Command
 {
     protected static $defaultName = 'colllect:openapi:dump';
-    protected static string $defaultDescription = 'Dump OpenAPI definition as JSON';
+    protected static $defaultDescription = 'Dump OpenAPI definition as JSON';
 
     public function __construct(
         private ApiDocGenerator $generator,

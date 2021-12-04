@@ -29,9 +29,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->import(SetList::CODING_STYLE_ADVANCED);
     $containerConfigurator->import(SetList::DEAD_CODE);
     $containerConfigurator->import(SetList::EARLY_RETURN);
-    $containerConfigurator->import(SetList::PHP_74);
+    $containerConfigurator->import(SetList::PHP_80);
     $containerConfigurator->import(SetList::TYPE_DECLARATION_STRICT);
-    $containerConfigurator->import(SymfonySetList::SYMFONY_44);
+    $containerConfigurator->import(SymfonySetList::SYMFONY_52);
     $containerConfigurator->import(SymfonySetList::SYMFONY_CODE_QUALITY);
     $containerConfigurator->import(SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION);
 

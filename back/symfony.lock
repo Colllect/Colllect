@@ -1,4 +1,7 @@
 {
+    "aws/aws-crt-php": {
+        "version": "v1.0.2"
+    },
     "aws/aws-sdk-php": {
         "version": "3.191.1"
     },
@@ -278,6 +281,9 @@
     "psr/container": {
         "version": "1.1.1"
     },
+    "psr/event-dispatcher": {
+        "version": "1.0.0"
+    },
     "psr/http-client": {
         "version": "1.0.1"
     },
@@ -360,9 +366,6 @@
     "symfony/contracts": {
         "version": "v1.0.2"
     },
-    "symfony/debug": {
-        "version": "v4.4.27"
-    },
     "symfony/dependency-injection": {
         "version": "v4.4.27"
     },
@@ -426,20 +429,11 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client-contracts": {
-        "version": "v2.4.0"
-    },
     "symfony/http-foundation": {
         "version": "v4.4.29"
     },
     "symfony/http-kernel": {
         "version": "v4.4.29"
-    },
-    "symfony/inflector": {
-        "version": "v4.4.27"
-    },
-    "symfony/intl": {
-        "version": "v4.4.27"
     },
     "symfony/maker-bundle": {
         "version": "1.0",
@@ -450,22 +444,19 @@
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
     },
-    "symfony/mime": {
-        "version": "v4.4.27"
-    },
     "symfony/options-resolver": {
         "version": "v4.4.27"
     },
-    "symfony/orm-pack": {
-        "version": "v2.1.0"
+    "symfony/password-hasher": {
+        "version": "v5.4.0"
     },
     "symfony/polyfill-ctype": {
         "version": "v1.23.0"
     },
-    "symfony/polyfill-intl-icu": {
-        "version": "v1.23.0"
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.23.1"
     },
-    "symfony/polyfill-intl-idn": {
+    "symfony/polyfill-intl-icu": {
         "version": "v1.23.0"
     },
     "symfony/polyfill-intl-normalizer": {
@@ -488,9 +479,6 @@
     },
     "symfony/process": {
         "version": "v4.4.27"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.6"
     },
     "symfony/property-access": {
         "version": "v4.4.27"
@@ -545,14 +533,14 @@
     "symfony/serializer": {
         "version": "v4.4.27"
     },
-    "symfony/serializer-pack": {
-        "version": "v1.0.4"
-    },
     "symfony/service-contracts": {
         "version": "v2.4.0"
     },
     "symfony/stopwatch": {
         "version": "v4.4.27"
+    },
+    "symfony/string": {
+        "version": "v5.4.0"
     },
     "symfony/translation-contracts": {
         "version": "v2.4.0"

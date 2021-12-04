@@ -187,7 +187,7 @@ class ElementFileHandler
         $mediaContent = file_get_contents($elementUrl);
 
         // As we know the type, adjust some attributes based on content
-        if ($mediaContent !== false && \strlen($mediaContent) > 0) {
+        if ($mediaContent !== false && $mediaContent !== '') {
             switch ($elementFile->getType()) {
                 case LinkElement::getType():
                     $elementFile->setContent($elementUrl);

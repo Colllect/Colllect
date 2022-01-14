@@ -16,6 +16,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
     $services = $containerConfigurator->services();
 
+    $parameters->set(Option::PARALLEL, true);
+
     $parameters->set(
         Option::PATHS,
         [

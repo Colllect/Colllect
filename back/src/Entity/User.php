@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,57 +14,48 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table(name="colllect_user")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- */
 #[UniqueEntity(fields: 'email', message: 'already_used')]
+#[ORM\Table(name: 'colllect_user')]
+#[ORM\Entity(repositoryClass: \App\Repository\UserRepository::class)]
 class User implements UserInterface
 {
     /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
      * @SWG\Property(type="integer", readOnly=true)
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
     /**
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
-     *
-     *
      * @SWG\Property(type="string", format="email")
      */
     #[Assert\Email(message: 'not_a_valid_email')]
     #[Assert\NotBlank(message: 'cannot_be_blank')]
     #[Assert\Length(max: 255, maxMessage: 'too_long')]
+    #[ORM\Column(name: 'email', type: 'string', length: 255, unique: true)]
     private string $email;
 
     /**
-     * @ORM\Column(name="nickname", type="string", length=255)
-     *
-     *
      * @SWG\Property(type="string")
      */
     #[Assert\NotBlank(message: 'cannot_be_blank')]
     #[Assert\Length(max: 255, maxMessage: 'too_long')]
+    #[ORM\Column(name: 'nickname', type: 'string', length: 255)]
     private string $nickname;
 
     /**
      * @var array<string>
-     * @ORM\Column(name="roles", type="json")
      *
      * @SWG\Property(
      *     type="array",
      *     @SWG\Items(type="string")
      * )
      */
+    #[ORM\Column(name: 'roles', type: 'json')]
     private array $roles = [];
 
-    /**
-     * @ORM\Column(name="password", type="string", length=255)
-     */
+    #[ORM\Column(name: 'password', type: 'string', length: 255)]
     private string $password;
 
     #[Assert\Type(type: 'string')]
@@ -72,15 +64,12 @@ class User implements UserInterface
     private ?string $plainPassword = null;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime")
-     *
      * @SWG\Property(type="string", format="date-time")
      */
+    #[ORM\Column(name: 'created_at', type: 'datetime')]
     private DateTimeInterface $createdAt;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserFilesystemCredentials", mappedBy="user", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: UserFilesystemCredentials::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserFilesystemCredentials $filesystemCredentials = null;
 
     public function __construct()
@@ -89,13 +78,13 @@ class User implements UserInterface
     }
 
     #[Serializer\Groups(groups: ['public'])]
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     #[Serializer\Groups(groups: ['current'])]
-    public function getEmail() : ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -116,11 +105,12 @@ class User implements UserInterface
     }
 
     #[Serializer\Groups(groups: ['current'])]
-    public function getRoles() : array
+    public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -160,7 +150,7 @@ class User implements UserInterface
     }
 
     #[Serializer\Groups(groups: ['public'])]
-    public function getNickname() : ?string
+    public function getNickname(): ?string
     {
         return $this->nickname;
     }
@@ -183,7 +173,7 @@ class User implements UserInterface
     }
 
     #[Serializer\Groups(groups: ['public'])]
-    public function getCreatedAt() : ?DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }

@@ -28,16 +28,31 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class LoginFormAuthenticator extends AbstractGuardAuthenticator
 {
+    /**
+     * @var string
+     */
     private const REMEMBER_ME_FIELD_NAME = 'colllect_remember_me';
-    public const LOGIN_ROUTE = 'app_security_login';
-    public const HOME_PATH = '/';
-    public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
+
+    /**
+     * @var string
+     */
+    public final const LOGIN_ROUTE = 'app_security_login';
+
+    /**
+     * @var string
+     */
+    public final const HOME_PATH = '/';
+
+    /**
+     * @var string
+     */
+    public final const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private UrlGeneratorInterface $urlGenerator,
-        private UserPasswordEncoderInterface $passwordEncoder,
-        private CookieAccessTokenProvider $cookieAccessTokenProvider
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UserPasswordEncoderInterface $passwordEncoder,
+        private readonly CookieAccessTokenProvider $cookieAccessTokenProvider
     ) {
     }
 

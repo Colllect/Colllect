@@ -8,6 +8,9 @@ use Swagger\Annotations as SWG;
 
 class NoteElement extends AbstractElement
 {
+    /**
+     * @var string
+     */
     private const TYPE_NAME = 'note';
 
     /**

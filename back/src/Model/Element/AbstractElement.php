@@ -13,13 +13,20 @@ use DateTimeInterface;
 abstract class AbstractElement implements ElementInterface
 {
     private string $name;
+
     /** @var array<string> */
-    private array $tags;
-    private DateTimeInterface $updated;
-    private int $size;
-    private string $extension;
+    private array $tags = [];
+
+    private readonly DateTimeInterface $updated;
+
+    private readonly int $size;
+
+    private readonly string $extension;
+
     private string $encodedColllectionPath;
+
     private string $encodedElementBasename;
+
     private ?string $fileUrl = null;
 
     /**

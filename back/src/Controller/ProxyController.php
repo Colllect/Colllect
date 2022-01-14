@@ -14,19 +14,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProxyController extends AbstractController
 {
     public function __construct(
-        private ColllectionElementService $colllectionElementService,
+        private readonly ColllectionElementService $colllectionElementService,
     ) {
     }
 
     /**
-     * @Route("/{encodedColllectionPath}/{encodedElementBasename}", name="element", methods={"GET"})
-     *
      * @throws NotSupportedElementTypeException
      */
-    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename): Response
+    #[Route(path: '/{encodedColllectionPath}/{encodedElementBasename}', name: 'element', methods: ['GET'])]
+    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename) : Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         // Avoid fetch storage if request is canceled
         if (connection_aborted() !== 0) {
             return new Response('', Response::HTTP_NO_CONTENT);
@@ -37,7 +35,6 @@ class ProxyController extends AbstractController
             $encodedColllectionPath,
             $request->headers
         );
-
         return $response;
     }
 }

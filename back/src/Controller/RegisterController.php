@@ -18,19 +18,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegisterController extends AbstractController
 {
-    public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
+    /**
+     * @var string
+     */
+    public final const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
 
     public function __construct(
-        private CsrfService $csrfService,
+        private readonly CsrfService $csrfService,
     ) {
     }
 
     /**
-     * @Route("/register", name="register", methods={"GET", "POST"})
-     *
      * @throws Exception
      */
-    public function register(Request $request): Response
+    #[Route(path: '/register', name: 'register', methods: ['GET', 'POST'])]
+    public function register(Request $request) : Response
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -38,22 +40,18 @@ class RegisterController extends AbstractController
         }
 
         $csrfToken = $this->csrfService->generateCsrfToken();
-
         $response = $this->csrfService->createResponseWithCsrfCookie(
             self::CSRF_TOKEN_COOKIE_NAME,
             $csrfToken,
             'app_register'
         );
-
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->add('csrfToken', HiddenType::class, [
             'mapped' => false,
             'attr' => ['value' => $csrfToken],
         ]);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $formCsrfToken = $request->request->get('user')['csrfToken'];
             $cookieCsrfToken = $request->cookies->get(self::CSRF_TOKEN_COOKIE_NAME);

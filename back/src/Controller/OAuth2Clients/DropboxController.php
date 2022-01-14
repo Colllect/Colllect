@@ -20,16 +20,28 @@ use Symfony\Component\Routing\RouterInterface;
 
 class DropboxController extends AbstractController
 {
+    /**
+     * @var string
+     */
     private const DROPBOX_AUTHORIZE_BASE_URL = 'https://www.dropbox.com/oauth2/authorize';
+
+    /**
+     * @var string
+     */
     private const DROPBOX_API_OAUTH2_TOKEN_URL = 'https://api.dropboxapi.com/oauth2/token';
+
+    /**
+     * @var string
+     */
     private const STATE_COOKIE_NAME = 'colllect_dropbox_state';
 
-    private string $dropboxKey;
-    private string $dropboxSecret;
+    private readonly string $dropboxKey;
+
+    private readonly string $dropboxSecret;
 
     public function __construct(
-        private RouterInterface $router,
-        private UserFilesystemCredentialsService $userFilesystemCredentialsService,
+        private readonly RouterInterface $router,
+        private readonly UserFilesystemCredentialsService $userFilesystemCredentialsService,
         string $fsDropboxKey,
         string $fsDropboxSecret
     ) {
@@ -38,14 +50,12 @@ class DropboxController extends AbstractController
     }
 
     /**
-     * @Route("", name="redirect", methods={"GET"})
-     *
      * @throws Exception
      */
-    public function redirectToDropbox(): RedirectResponse
+    #[Route(path: '', name: 'redirect', methods: ['GET'])]
+    public function redirectToDropbox() : RedirectResponse
     {
         $state = $this->generateState();
-
         $query = http_build_query(
             [
                 'response_type' => 'code',
@@ -54,7 +64,6 @@ class DropboxController extends AbstractController
                 'redirect_uri' => $this->generateDropboxRedirectUrl(),
             ]
         );
-
         $cookie = new Cookie(
             self::STATE_COOKIE_NAME,
             $state,
@@ -66,19 +75,16 @@ class DropboxController extends AbstractController
             false,
             Cookie::SAMESITE_STRICT
         );
-
         $response = $this->redirect(self::DROPBOX_AUTHORIZE_BASE_URL . '?' . $query);
         $response->headers->setCookie($cookie);
-
         return $response;
     }
 
     /**
-     * @Route("/complete", name="complete", methods={"GET"})
-     *
      * @throws GuzzleException
      */
-    public function complete(Request $request): RedirectResponse
+    #[Route(path: '/complete', name: 'complete', methods: ['GET'])]
+    public function complete(Request $request) : RedirectResponse
     {
         $stateFromRequest = $request->get('state');
         $stateFromCookie = $request->cookies->get(self::STATE_COOKIE_NAME);
@@ -102,9 +108,7 @@ class DropboxController extends AbstractController
         );
         $decodedResponse = \GuzzleHttp\Utils::jsonDecode($response->getBody()->getContents(), true);
         $accessToken = $decodedResponse['access_token'];
-
         $user = $this->getUser();
-
         if (!$user instanceof \App\Entity\User) {
             throw new \LogicException('User must be logged');
         }
@@ -114,7 +118,6 @@ class DropboxController extends AbstractController
             Dropbox::getName(),
             $accessToken
         );
-
         return $this->redirect('/');
     }
 

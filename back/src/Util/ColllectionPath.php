@@ -8,8 +8,19 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ColllectionPath
 {
-    public const COLLLECTIONS_FOLDER = 'Colllections';
+    /**
+     * @var string
+     */
+    public final const COLLLECTIONS_FOLDER = 'Colllections';
+
+    /**
+     * @var string
+     */
     private const INBOX_FOLDER = 'Inbox';
+
+    /**
+     * @var string[]
+     */
     private const VALID_FOLDERS = [self::INBOX_FOLDER, self::COLLLECTIONS_FOLDER];
 
     public static function decode(string $encodedColllectionPath): string

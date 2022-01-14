@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ColllectionElementController extends AbstractController
 {
     public function __construct(
-        private ColllectionElementService $colllectionElementService,
+        private readonly ColllectionElementService $colllectionElementService,
     ) {
     }
 
@@ -35,7 +35,6 @@ final class ColllectionElementController extends AbstractController
      *
      * In any case you can define the name of the element with `basename`
      *
-     * @Route("/", name="create", methods={"POST"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -104,17 +103,16 @@ final class ColllectionElementController extends AbstractController
      * @throws NotSupportedElementTypeException
      * @throws FilesystemException
      */
-    public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/', name: 'create', methods: ['POST'])]
+    public function createColllectionElement(Request $request, string $encodedColllectionPath) : JsonResponse
     {
         $element = $this->colllectionElementService->create($encodedColllectionPath, $request);
-
         return $this->json($element, Response::HTTP_CREATED);
     }
 
     /**
      * List all Colllection elements.
      *
-     * @Route("/", name="list", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -126,24 +124,22 @@ final class ColllectionElementController extends AbstractController
      *     description="Encoded colllection path",
      *     type="string"
      * )
-     *
      * @SWG\Response(
      *     response=200,
      *     description="Returned when colllection files are listed",
      *     @SWG\Schema(ref="#/definitions/ElementList")
      * )
      */
-    public function listColllectionElements(string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/', name: 'list', methods: ['GET'])]
+    public function listColllectionElements(string $encodedColllectionPath) : JsonResponse
     {
         $elements = $this->colllectionElementService->list($encodedColllectionPath);
-
         return $this->json($elements);
     }
 
     /**
      * Get a Colllection element.
      *
-     * @Route("/{encodedElementBasename}", name="get", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -171,21 +167,19 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
      * @throws FilesystemException
      * @throws NotSupportedElementTypeException
      */
-    public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
+    #[Route(path: '/{encodedElementBasename}', name: 'get', methods: ['GET'])]
+    public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename) : JsonResponse
     {
         $element = $this->colllectionElementService->get($encodedElementBasename, $encodedColllectionPath);
-
         return $this->json($element);
     }
 
     /**
      * Update a Colllection element.
      *
-     * @Route("/{encodedElementBasename}", name="update", methods={"PUT"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -233,25 +227,20 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
      * @throws FilesystemCannotRenameException
      * @throws FilesystemException
      * @throws NotSupportedElementTypeException
      */
-    public function updateColllectionElement(
-        Request $request,
-        string $encodedColllectionPath,
-        string $encodedElementBasename
-    ): JsonResponse {
+    #[Route(path: '/{encodedElementBasename}', name: 'update', methods: ['PUT'])]
+    public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename) : JsonResponse
+    {
         $element = $this->colllectionElementService->update($encodedElementBasename, $encodedColllectionPath, $request);
-
         return $this->json($element);
     }
 
     /**
      * Delete a Colllection element.
      *
-     * @Route("/{encodedElementBasename}", name="delete", methods={"DELETE"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -278,13 +267,12 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
-     *
      * @throws NotSupportedElementTypeException
      */
-    public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): Response
+    #[Route(path: '/{encodedElementBasename}', name: 'delete', methods: ['DELETE'])]
+    public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename) : Response
     {
         $this->colllectionElementService->delete($encodedElementBasename, $encodedColllectionPath);
-
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

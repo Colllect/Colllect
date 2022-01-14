@@ -8,6 +8,9 @@ use Swagger\Annotations as SWG;
 
 class LinkElement extends AbstractElement
 {
+    /**
+     * @var string
+     */
     private const TYPE_NAME = 'link';
 
     /**

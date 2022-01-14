@@ -12,8 +12,8 @@ use Trikoder\Bundle\OAuth2Bundle\Event\UserResolveEvent;
 final class UserResolveSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private UserProviderInterface $userProvider,
-        private UserPasswordEncoderInterface $userPasswordEncoder,
+        private readonly UserProviderInterface $userProvider,
+        private readonly UserPasswordEncoderInterface $userPasswordEncoder,
     ) {
     }
 

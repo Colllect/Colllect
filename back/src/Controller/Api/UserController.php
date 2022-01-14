@@ -19,7 +19,6 @@ final class UserController extends AbstractController
     /**
      * Get an user.
      *
-     * @Route("/{userId}", name="read", methods={"GET"}, requirements={"userId"="\d+"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -37,7 +36,6 @@ final class UserController extends AbstractController
      *     description="Returned when user was found",
      *     @SWG\Schema(ref="#/definitions/User")
      * )
-     *
      * @SWG\Response(
      *     response=403,
      *     description="Returned when user is not authorized to get an user"
@@ -47,12 +45,12 @@ final class UserController extends AbstractController
      *     description="Returned when user was not found"
      * )
      */
-    public function readUser(int $userId): JsonResponse
+    #[Route(path: '/{userId}', name: 'read', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    public function readUser(int $userId) : JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
-
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
@@ -63,7 +61,6 @@ final class UserController extends AbstractController
     /**
      * Get current user.
      *
-     * @Route("/current", name="current", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -74,7 +71,6 @@ final class UserController extends AbstractController
      *     description="Returned when user was found",
      *     @SWG\Schema(ref="#/definitions/CurrentUser")
      * )
-     *
      * @SWG\Response(
      *     response=403,
      *     description="Returned when user is not authorized to get an user"
@@ -84,17 +80,16 @@ final class UserController extends AbstractController
      *     description="Returned when user was not found"
      * )
      */
-    public function currentUser(): JsonResponse
+    #[Route(path: '/current', name: 'current', methods: ['GET'])]
+    public function currentUser() : JsonResponse
     {
         $user = $this->getUser();
-
         return $this->json($user, Response::HTTP_OK, [], ['groups' => ['public', 'private']]);
     }
 
     /**
      * Update an user account data.
      *
-     * @Route("/{userId}", name="update", methods={"PUT"})
      *
      * @SWG\Tag(name="Users")
      * @ApiDoc\Operation(
@@ -142,19 +137,18 @@ final class UserController extends AbstractController
      *     description="Returned when user was not found"
      * )
      */
-    public function updateUser(Request $request, int $userId): JsonResponse
+    #[Route(path: '/{userId}', name: 'update', methods: ['PUT'])]
+    public function updateUser(Request $request, int $userId) : JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
-
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
 
         $form = $this->createForm(UserType::class, $user);
         $form->submit($request->request->all(), false);
-
         if (!$form->isValid()) {
             return $this->json($form, Response::HTTP_BAD_REQUEST);
         }
@@ -162,14 +156,12 @@ final class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-
         return $this->json($user);
     }
 
     /**
      * Delete an user account.
      *
-     * @Route("/{userId}", name="delete", methods={"DELETE"})
      *
      * @SWG\Tag(name="Users")
      *
@@ -193,12 +185,12 @@ final class UserController extends AbstractController
      *     description="Returned when user was not found"
      * )
      */
-    public function deleteUser(int $userId): Response
+    #[Route(path: '/{userId}', name: 'delete', methods: ['DELETE'])]
+    public function deleteUser(int $userId) : Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
         ;
-
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found');
         }
@@ -206,7 +198,6 @@ final class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
-
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

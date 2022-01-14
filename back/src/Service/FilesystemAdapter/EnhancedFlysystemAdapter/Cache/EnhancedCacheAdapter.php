@@ -15,8 +15,10 @@ use Psr\Cache\InvalidArgumentException;
 
 class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
 {
-    private EnhancedFlysystemAdapterInterface $adapter;
-    private CacheItemPoolInterface $cachePool;
+    private readonly EnhancedFlysystemAdapterInterface $adapter;
+
+    private readonly CacheItemPoolInterface $cachePool;
+
     /** @var array<FilesystemCacheItem> */
     private array $cacheItems = [];
 
@@ -34,6 +36,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         if ($item->exists()) {
             return true;
         }
+
         $fileExists = $this->adapter->fileExists($path);
         if ($fileExists) {
             $item->initialize()->save();
@@ -70,6 +73,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         if ($visibility = $config->get(Config::OPTION_VISIBILITY)) {
             $metadata->setVisibility($visibility);
         }
+
         $item->save();
     }
 
@@ -83,6 +87,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
         if ($visibility = $config->get(Config::OPTION_VISIBILITY)) {
             $metadata->setVisibility($visibility);
         }
+
         $item->save();
     }
 
@@ -97,12 +102,12 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
             }
 
             return $contents;
-        } catch (UnableToReadFile $exception) {
+        } catch (UnableToReadFile $unableToReadFile) {
             if ($item->exists()) {
                 $item->delete();
             }
 
-            throw $exception;
+            throw $unableToReadFile;
         }
     }
 
@@ -175,6 +180,7 @@ class EnhancedCacheAdapter implements EnhancedFlysystemAdapterInterface
             } else {
                 $item->getMetadata()->setFromDirectoryAttributes($storageAttributes);
             }
+
             $item->save();
 
             $paths[] = $storageAttributes->path();

@@ -47,7 +47,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(
         Option::SYMFONY_CONTAINER_XML_PATH_PARAMETER,
-        __DIR__ . '/var/cache/dev/srcApp_KernelDevDebugContainer.xml'
+        __DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml'
     );
 
     $parameters->set(

@@ -20,9 +20,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ColllectionTagService
 {
     public function __construct(
-        private ColllectionElementService $colllectionElementService,
-        private ColllectionTagFileService $colllectionTagFileService,
-        private FormFactoryInterface $formFactory
+        private readonly ColllectionElementService $colllectionElementService,
+        private readonly ColllectionTagFileService $colllectionTagFileService,
+        private readonly FormFactoryInterface $formFactory
     ) {
     }
 
@@ -78,6 +78,7 @@ class ColllectionTagService
         if (!Base64::isValidBase64($encodedTagName)) {
             throw new BadRequestHttpException('request.badly_encoded_tag_name');
         }
+
         $tagName = Base64::decode($encodedTagName);
 
         $tag = $this->colllectionTagFileService->get($encodedColllectionPath, $tagName);

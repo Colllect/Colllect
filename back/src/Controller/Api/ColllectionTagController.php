@@ -21,14 +21,13 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ColllectionTagController extends AbstractController
 {
     public function __construct(
-        private ColllectionTagService $colllectionTagService,
+        private readonly ColllectionTagService $colllectionTagService,
     ) {
     }
 
     /**
      * Create a Colllection tag.
      *
-     * @Route("/", name="create", methods={"POST"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -66,17 +65,16 @@ final class ColllectionTagController extends AbstractController
      * @throws TagAlreadyExistsException
      * @throws FileNotFoundException
      */
-    public function createColllectionTag(Request $request, string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/', name: 'create', methods: ['POST'])]
+    public function createColllectionTag(Request $request, string $encodedColllectionPath) : JsonResponse
     {
         $response = $this->colllectionTagService->create($encodedColllectionPath, $request);
-
         return $this->json($response, Response::HTTP_CREATED);
     }
 
     /**
      * List all Colllection tags.
      *
-     * @Route("/", name="list", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -97,17 +95,16 @@ final class ColllectionTagController extends AbstractController
      *
      * @throws FileNotFoundException
      */
-    public function listColllectionTags(string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/', name: 'list', methods: ['GET'])]
+    public function listColllectionTags(string $encodedColllectionPath) : JsonResponse
     {
         $tags = $this->colllectionTagService->list($encodedColllectionPath);
-
         return $this->json($tags);
     }
 
     /**
      * Get a Colllection tag.
      *
-     * @Route("/{encodedTagName}", name="get", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -136,17 +133,16 @@ final class ColllectionTagController extends AbstractController
      *     description="Returned when Colllection tag does not exists"
      * )
      */
-    public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName): JsonResponse
+    #[Route(path: '/{encodedTagName}', name: 'get', methods: ['GET'])]
+    public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName) : JsonResponse
     {
         $tag = $this->colllectionTagService->get($encodedColllectionPath, $encodedTagName);
-
         return $this->json($tag);
     }
 
     /**
      * Update a Colllection tag.
      *
-     * @Route("/{encodedTagName}", name="update", methods={"PUT"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -191,20 +187,16 @@ final class ColllectionTagController extends AbstractController
      * @throws FileExistsException
      * @throws FileNotFoundException
      */
-    public function updateColllectionTag(
-        Request $request,
-        string $encodedColllectionPath,
-        string $encodedTagName
-    ): JsonResponse {
+    #[Route(path: '/{encodedTagName}', name: 'update', methods: ['PUT'])]
+    public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName) : JsonResponse
+    {
         $response = $this->colllectionTagService->update($encodedColllectionPath, $encodedTagName, $request);
-
         return $this->json($response);
     }
 
     /**
      * Delete a Colllection tag.
      *
-     * @Route("/{encodedTagName}", name="delete", methods={"DELETE"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -236,10 +228,10 @@ final class ColllectionTagController extends AbstractController
      * @throws FileExistsException
      * @throws FileNotFoundException
      */
-    public function deleteColllection(string $encodedColllectionPath, string $encodedTagName): Response
+    #[Route(path: '/{encodedTagName}', name: 'delete', methods: ['DELETE'])]
+    public function deleteColllection(string $encodedColllectionPath, string $encodedTagName) : Response
     {
         $this->colllectionTagService->delete($encodedColllectionPath, $encodedTagName);
-
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

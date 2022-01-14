@@ -14,10 +14,10 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class CookieAccessTokenProvider
 {
-    private CookieGrant $cookieGrant;
+    private readonly CookieGrant $cookieGrant;
 
     public function __construct(
-        private ClientRepositoryInterface $clientRepository,
+        private readonly ClientRepositoryInterface $clientRepository,
         AccessTokenRepositoryInterface $accessTokenRepository,
         CryptKey $privateKey,
     ) {
@@ -29,8 +29,9 @@ class CookieAccessTokenProvider
 
     /**
      * @throws OAuthServerException
-     * @throws UniqueTokenIdentifierConstraintViolationException
-     */
+		 * @throws UniqueTokenIdentifierConstraintViolationException
+		 * @throws Exception
+		 */
     public function getJwtAccessToken(string $username, DateInterval $accessTokenTTL): string
     {
         $client = $this->clientRepository->getClientEntity('default');
@@ -38,7 +39,7 @@ class CookieAccessTokenProvider
             throw new Exception('default client must be created');
         }
 
-        $accessToken = $this->cookieGrant->issueAccessToken($accessTokenTTL, $client, $username);
+        $accessToken = $this->cookieGrant->issueNewAccessToken($accessTokenTTL, $client, $username);
 
         return (string) $accessToken;
     }

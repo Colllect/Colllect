@@ -13,6 +13,7 @@ use League\Flysystem\PathNormalizer;
 class EnhancedFilesystem extends Filesystem implements EnhancedFilesystemInterface
 {
     protected EnhancedFlysystemAdapterInterface $enhancedAdapter;
+
     protected Config $enhancedConfig;
 
     /**

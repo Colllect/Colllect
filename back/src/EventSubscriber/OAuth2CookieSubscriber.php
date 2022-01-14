@@ -12,7 +12,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class OAuth2CookieSubscriber implements EventSubscriberInterface
 {
-    public const OAUTH2_COOKIE_NAME = 'colllect_oauth2';
+    /**
+     * @var string
+     */
+    public final const OAUTH2_COOKIE_NAME = 'colllect_oauth2';
 
     public static function getSubscribedEvents(): array
     {

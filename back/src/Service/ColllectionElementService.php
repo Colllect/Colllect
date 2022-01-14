@@ -40,7 +40,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionElementService
 {
-    private EnhancedFilesystemInterface $filesystem;
+    private readonly EnhancedFilesystemInterface $filesystem;
 
     /**
      * ColllectionElementService constructor.
@@ -48,9 +48,9 @@ class ColllectionElementService
      * @throws Exception
      */
     public function __construct(
-        private ElementFileHandler $elementFileHandler,
-        private FormFactoryInterface $formFactory,
-        private ?Stopwatch $stopwatch,
+        private readonly ElementFileHandler $elementFileHandler,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly ?Stopwatch $stopwatch,
         FilesystemAdapterManager $flysystemAdapters,
         Security $security,
     ) {
@@ -261,6 +261,7 @@ class ColllectionElementService
 
             throw new NotFoundHttpException('error.element_not_found');
         }
+
         $elementMetadata = [
             'path' => $newPath,
             'type' => 'file',
@@ -315,6 +316,7 @@ class ColllectionElementService
 
                 throw new NotFoundHttpException('error.element_not_found');
             }
+
             $element->setContent($content);
         }
 
@@ -366,6 +368,7 @@ class ColllectionElementService
                     return $response;
                 }
             }
+
             $this->stopwatch?->stop('colllection_element_get_content_meta');
 
             $this->stopwatch?->start('colllection_element_get_content_read', 'colllection_element_service');

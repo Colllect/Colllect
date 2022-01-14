@@ -11,10 +11,15 @@ use League\Flysystem\StorageAttributes;
 class FileMetadataCache
 {
     private ?string $type = null;
+
     private ?int $lastModified = null;
+
     private ?string $mimeType = null;
+
     private ?int $fileSize = null;
+
     private ?string $visibility = null;
+
     /** @var array<string>|null */
     private ?array $listContents = null;
 

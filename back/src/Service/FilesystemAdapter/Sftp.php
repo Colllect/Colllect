@@ -12,13 +12,21 @@ use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
 
 class Sftp extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
+    /**
+     * @var string
+     */
     private const NAME = 'sftp';
 
-    private string $host;
-    private int $port;
-    private string $username;
-    private string $password;
-    private string $rootPath;
+    private readonly string $host;
+
+    private readonly int $port;
+
+    private readonly string $username;
+
+    private readonly string $password;
+
+    private readonly string $rootPath;
+
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(

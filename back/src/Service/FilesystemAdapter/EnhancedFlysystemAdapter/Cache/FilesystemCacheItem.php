@@ -10,10 +10,14 @@ use Psr\Cache\InvalidArgumentException;
 
 class FilesystemCacheItem
 {
-    private CacheItemPoolInterface $cachePool;
-    private CacheItemInterface $item;
-    private string $path;
+    private readonly CacheItemPoolInterface $cachePool;
+
+    private readonly CacheItemInterface $item;
+
+    private readonly string $path;
+
     private FileMetadataCache|null $metadata = null;
+
     private bool $isHit;
 
     public function __construct(

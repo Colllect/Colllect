@@ -15,40 +15,28 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ElementFile
 {
-    /**
-     * @Assert\File()
-     */
+    #[Assert\File]
     protected UploadedFile $file;
 
-    /**
-     * @Assert\Url()
-     */
+    #[Assert\Url]
     protected string $url;
 
-    /**
-     * @Assert\Type("string")
-     */
+    #[Assert\Type(type: 'string')]
     protected string $content;
 
-    /**
-     * @Assert\Type("string")
-     */
+    #[Assert\Type(type: 'string')]
     protected string $name;
 
     /**
      * @var array<string>
-     * @Assert\Type("array")
      */
-    protected array $tags;
+    #[Assert\Type(type: 'array')]
+    protected array $tags = [];
 
-    /**
-     * @Assert\Type("string")
-     */
+    #[Assert\Type(type: 'string')]
     protected string $extension;
 
-    /**
-     * @Assert\Type("string")
-     */
+    #[Assert\Type(type: 'string')]
     protected string $type;
 
     private string $basename;
@@ -114,7 +102,7 @@ class ElementFile
         $this->basename = $basename;
 
         // Remove illegal chars
-        $basename = preg_replace('/[:;\[\]\/?]+/i', '', $basename);
+        $basename = preg_replace('#[:;\[\]\/?]+#i', '', $basename);
 
         if ($basename === null) {
             throw new InvalidArgumentException('Invalid basename');

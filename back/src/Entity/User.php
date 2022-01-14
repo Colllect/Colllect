@@ -16,8 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table(name="colllect_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email", message="already_used")
  */
+#[UniqueEntity(fields: 'email', message: 'already_used')]
 class User implements UserInterface
 {
     /**
@@ -32,22 +32,22 @@ class User implements UserInterface
     /**
      * @ORM\Column(name="email", type="string", length=255, unique=true)
      *
-     * @Assert\Email(message="not_a_valid_email")
-     * @Assert\NotBlank(message="cannot_be_blank")
-     * @Assert\Length(max=255, maxMessage="too_long")
      *
      * @SWG\Property(type="string", format="email")
      */
+    #[Assert\Email(message: 'not_a_valid_email')]
+    #[Assert\NotBlank(message: 'cannot_be_blank')]
+    #[Assert\Length(max: 255, maxMessage: 'too_long')]
     private string $email;
 
     /**
      * @ORM\Column(name="nickname", type="string", length=255)
      *
-     * @Assert\NotBlank(message="cannot_be_blank")
-     * @Assert\Length(max=255, maxMessage="too_long")
      *
      * @SWG\Property(type="string")
      */
+    #[Assert\NotBlank(message: 'cannot_be_blank')]
+    #[Assert\Length(max: 255, maxMessage: 'too_long')]
     private string $nickname;
 
     /**
@@ -66,11 +66,9 @@ class User implements UserInterface
      */
     private string $password;
 
-    /**
-     * @Assert\Type("string")
-     * @Assert\NotBlank(message="cannot_be_blank")
-     * @Assert\Length(min="8", minMessage="too_short")
-     */
+    #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank(message: 'cannot_be_blank')]
+    #[Assert\Length(min: 8, minMessage: 'too_short')]
     private ?string $plainPassword = null;
 
     /**
@@ -90,18 +88,14 @@ class User implements UserInterface
         $this->createdAt = new DateTime();
     }
 
-    /**
-     * @Serializer\Groups({"public"})
-     */
-    public function getId(): ?int
+    #[Serializer\Groups(groups: ['public'])]
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * @Serializer\Groups({"current"})
-     */
-    public function getEmail(): ?string
+    #[Serializer\Groups(groups: ['current'])]
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -121,15 +115,12 @@ class User implements UserInterface
         return $this->email;
     }
 
-    /**
-     * @Serializer\Groups({"current"})
-     */
-    public function getRoles(): array
+    #[Serializer\Groups(groups: ['current'])]
+    public function getRoles() : array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
@@ -168,10 +159,8 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @Serializer\Groups({"public"})
-     */
-    public function getNickname(): ?string
+    #[Serializer\Groups(groups: ['public'])]
+    public function getNickname() : ?string
     {
         return $this->nickname;
     }
@@ -193,10 +182,8 @@ class User implements UserInterface
         $this->plainPassword = null;
     }
 
-    /**
-     * @Serializer\Groups({"public"})
-     */
-    public function getCreatedAt(): ?DateTimeInterface
+    #[Serializer\Groups(groups: ['public'])]
+    public function getCreatedAt() : ?DateTimeInterface
     {
         return $this->createdAt;
     }

@@ -19,18 +19,17 @@ use Symfony\Component\Security\Core\Security;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        private AccessTokenRepositoryInterface $accessTokenRepository,
-        private Security $security,
-        private CsrfService $csrfService,
+        private readonly AccessTokenRepositoryInterface $accessTokenRepository,
+        private readonly Security $security,
+        private readonly CsrfService $csrfService,
     ) {
     }
 
     /**
-     * @Route("/login", name="login", methods={"GET", "POST"})
-     *
      * @throws Exception
      */
-    public function login(Request $request): Response
+    #[Route(path: '/login', name: 'login', methods: ['GET', 'POST'])]
+    public function login(Request $request) : Response
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -38,13 +37,11 @@ class SecurityController extends AbstractController
         }
 
         $csrfToken = $this->csrfService->generateCsrfToken();
-
         $response = $this->csrfService->createResponseWithCsrfCookie(
             LoginFormAuthenticator::CSRF_TOKEN_COOKIE_NAME,
             $csrfToken,
             'app_security_login'
         );
-
         $error = null;
         if ($request->isMethod(Request::METHOD_POST)) {
             $error = [
@@ -64,27 +61,21 @@ class SecurityController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/login/account", name="account", methods={"GET"})
-     */
-    public function account(): Response
+    #[Route(path: '/login/account', name: 'account', methods: ['GET'])]
+    public function account() : Response
     {
         return $this->render('security/account.html.twig');
     }
 
-    /**
-     * @Route("/logout", name="logout", methods={"POST"})
-     */
-    public function logout(): Response
+    #[Route(path: '/logout', name: 'logout', methods: ['POST'])]
+    public function logout() : Response
     {
         /** @var TokenInterface $token */
         $token = $this->security->getToken();
         $tokenId = $token->getAttribute('server_request')->getAttribute('oauth_access_token_id');
         $this->accessTokenRepository->revokeAccessToken($tokenId);
-
         $response = $this->redirectToRoute('app_security_login');
         $response->headers->clearCookie(OAuth2CookieSubscriber::OAUTH2_COOKIE_NAME, '/');
-
         return $response;
     }
 }

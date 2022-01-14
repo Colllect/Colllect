@@ -15,7 +15,7 @@ use Symfony\Component\Cache\Marshaller\DeflateMarshaller;
 abstract class AbstractCachedFilesystemAdapter
 {
     public function __construct(
-        private int $fsCacheDuration,
+        private readonly int $fsCacheDuration,
     ) {
     }
 

@@ -16,14 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 final class OAuthServerController
 {
     public function __construct(
-        private AuthorizationServer $authorizationServer,
+        private readonly AuthorizationServer $authorizationServer,
     ) {
     }
 
     /**
      * Generate or refresh a token.
      *
-     * @Route("/token", name="token", methods={"POST"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -94,14 +93,14 @@ final class OAuthServerController
      *     description="Returned when bad credentials"
      * )
      */
-    public function token(ServerRequestInterface $serverRequest, ResponseFactoryInterface $responseFactory): ResponseInterface
+    #[Route(path: '/token', name: 'token', methods: ['POST'])]
+    public function token(ServerRequestInterface $serverRequest, ResponseFactoryInterface $responseFactory) : ResponseInterface
     {
         $serverResponse = $responseFactory->createResponse();
-
         try {
             return $this->authorizationServer->respondToAccessTokenRequest($serverRequest, $serverResponse);
-        } catch (OAuthServerException $e) {
-            return $e->generateHttpResponse($serverResponse);
+        } catch (OAuthServerException $oAuthServerException) {
+            return $oAuthServerException->generateHttpResponse($serverResponse);
         }
     }
 }

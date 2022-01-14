@@ -6,6 +6,9 @@ namespace App\Model\Element;
 
 class ImageElement extends AbstractElement
 {
+    /**
+     * @var string
+     */
     private const TYPE_NAME = 'image';
 
     /**

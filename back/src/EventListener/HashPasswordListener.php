@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 final class HashPasswordListener implements EventSubscriber
 {
     public function __construct(
-       private UserPasswordEncoderInterface $passwordEncoder
+       private readonly UserPasswordEncoderInterface $passwordEncoder
     ) {
     }
 
@@ -54,9 +54,11 @@ final class HashPasswordListener implements EventSubscriber
         if (!$om instanceof EntityManager) {
             return;
         }
+
         if (!$meta instanceof ClassMetadata) {
             return;
         }
+
         $om->getUnitOfWork()->recomputeSingleEntityChangeSet($meta, $user);
     }
 

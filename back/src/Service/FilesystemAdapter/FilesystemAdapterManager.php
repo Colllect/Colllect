@@ -10,10 +10,10 @@ use App\Service\FilesystemAdapter\EnhancedFilesystem\EnhancedFilesystemInterface
 class FilesystemAdapterManager
 {
     /** @var array<string, FilesystemAdapterInterface> */
-    private array $filesystemAdapters;
+    private array $filesystemAdapters = [];
 
     public function __construct(
-        private string $defaultFilesystemAdapterName
+        private readonly string $defaultFilesystemAdapterName
     ) {
         $this->filesystemAdapters = [];
     }

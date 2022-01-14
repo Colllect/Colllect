@@ -16,7 +16,7 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
     use NormalizerAwareTrait;
 
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -41,6 +41,7 @@ class ElementNormalizer implements NormalizerInterface, NormalizerAwareInterface
         if (!$object instanceof ElementInterface) {
             throw new InvalidArgumentException('The object must implement the "App\Model\Element\ElementInterface".');
         }
+
         $element = $object;
 
         /** @var string $updated */

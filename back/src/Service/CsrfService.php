@@ -11,7 +11,7 @@ use Symfony\Component\Routing\RouterInterface;
 class CsrfService
 {
     public function __construct(
-        private RouterInterface $router,
+        private readonly RouterInterface $router,
     ) {
     }
 

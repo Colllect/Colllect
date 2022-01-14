@@ -19,8 +19,15 @@ use LogicException;
 
 class ElementFileHandler
 {
+    /**
+     * @var string[]
+     */
     private const NOT_ALLOWED_CHARS_IN_FILENAME = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
-    public const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+
+    /**
+     * @var string[]
+     */
+    public final const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
 
     /**
      * Automatic fill some elementFile fields depending on the source.
@@ -120,6 +127,7 @@ class ElementFileHandler
                     if ($extension === false) {
                         throw new LogicException('Content type must contain a slash');
                     }
+
                     $elementFile->setExtension($extension);
                     $elementFile->setType(ImageElement::getType());
 
@@ -191,20 +199,23 @@ class ElementFileHandler
             switch ($elementFile->getType()) {
                 case LinkElement::getType():
                     $elementFile->setContent($elementUrl);
-                    $oneLinedPage = preg_replace('/\s+/', ' ', $mediaContent);
+                    $oneLinedPage = preg_replace('#\s+#', ' ', $mediaContent);
                     if ($oneLinedPage === null) {
                         break;
                     }
-                    preg_match('/<title>(.*)<\/title>/i', trim($oneLinedPage), $titleMatches);
+
+                    preg_match('#<title>(.*)<\/title>#i', trim($oneLinedPage), $titleMatches);
                     if (isset($titleMatches[1])) {
                         $title = $titleMatches[1];
                         $title = str_replace(self::NOT_ALLOWED_CHARS_IN_FILENAME, ' ', $title);
-                        $title = preg_replace('/\s+/', ' ', $title);
+                        $title = preg_replace('#\s+#', ' ', $title);
                         if (!\is_string($title)) {
                             break;
                         }
+
                         $elementFile->setBasename(trim($title));
                     }
+
                     break;
                 case ImageElement::getType():
                 case NoteElement::getType():
@@ -221,6 +232,7 @@ class ElementFileHandler
         if (!$elementFile->getExtension() || !\in_array($elementFile->getExtension(), $typeExtensions, true)) {
             $elementFile->setExtension($typeExtensions[0]);
         }
+
         if ($elementFile->getName() === null || $elementFile->getName() === '') {
             $elementFile->setName(uniqid());
         }

@@ -19,9 +19,12 @@ use Symfony\Component\Security\Core\Security;
 
 class ColllectionTagFileService
 {
+    /**
+     * @var string
+     */
     private const TAGS_FILE = '.tags.colllect';
 
-    private EnhancedFilesystemInterface $filesystem;
+    private readonly EnhancedFilesystemInterface $filesystem;
 
     /** @var array<string, array<Tag>> */
     private array $tagsFilesCache = [];

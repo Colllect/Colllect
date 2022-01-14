@@ -13,7 +13,7 @@ class Base64
     {
         $string = urldecode($string);
 
-        if (!preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $string)) {
+        if (!preg_match('#^[a-zA-Z0-9\/\r\n+]*={0,2}$#', $string)) {
             return false;
         }
 

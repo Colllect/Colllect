@@ -22,7 +22,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class ColllectionService
 {
-    private EnhancedFilesystemInterface $filesystem;
+    private readonly EnhancedFilesystemInterface $filesystem;
 
     /**
      * ColllectionService constructor.
@@ -30,8 +30,8 @@ class ColllectionService
      * @throws Exception
      */
     public function __construct(
-        private FormFactoryInterface $formFactory,
-        private ?Stopwatch $stopwatch,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly ?Stopwatch $stopwatch,
         FilesystemAdapterManager $flysystemAdapters,
         Security $security,
     ) {

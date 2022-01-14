@@ -18,36 +18,33 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ColllectionController extends AbstractController
 {
     public function __construct(
-        private ColllectionService $colllectionService
+        private readonly ColllectionService $colllectionService
     ) {
     }
 
     /**
      * List all Colllections.
      *
-     * @Route("/", name="list", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllections")
-     *
      * @SWG\Response(
      *     response=200,
      *     description="Returned when Colllections are listed",
      *     @SWG\Schema(ref="#/definitions/ColllectionList")
      * )
      */
-    public function listColllections(): JsonResponse
+    #[Route(path: '/', name: 'list', methods: ['GET'])]
+    public function listColllections() : JsonResponse
     {
         $colllections = $this->colllectionService->list();
-
         return $this->json($colllections);
     }
 
     /**
      * Create a Colllection.
      *
-     * @Route("/", name="create", methods={"POST"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -74,10 +71,10 @@ final class ColllectionController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      */
-    public function createColllection(Request $request): JsonResponse
+    #[Route(path: '/', name: 'create', methods: ['POST'])]
+    public function createColllection(Request $request) : JsonResponse
     {
         $response = $this->colllectionService->create($request);
-
         if ($response instanceof FormInterface) {
             return $this->json($response, Response::HTTP_BAD_REQUEST);
         }
@@ -88,7 +85,6 @@ final class ColllectionController extends AbstractController
     /**
      * Get a Colllection.
      *
-     * @Route("/{encodedColllectionPath}", name="get", methods={"GET"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -111,17 +107,16 @@ final class ColllectionController extends AbstractController
      *     description="Returned when Colllection file is not found"
      * )
      */
-    public function getColllection(string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/{encodedColllectionPath}', name: 'get', methods: ['GET'])]
+    public function getColllection(string $encodedColllectionPath) : JsonResponse
     {
         $colllection = $this->colllectionService->get($encodedColllectionPath);
-
         return $this->json($colllection);
     }
 
     /**
      * Update a Colllection.
      *
-     * @Route("/{encodedColllectionPath}", name="update", methods={"PUT"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -148,17 +143,16 @@ final class ColllectionController extends AbstractController
      *     description="Returned when form is invalid"
      * )
      */
-    public function updateColllection(Request $request, string $encodedColllectionPath): JsonResponse
+    #[Route(path: '/{encodedColllectionPath}', name: 'update', methods: ['PUT'])]
+    public function updateColllection(Request $request, string $encodedColllectionPath) : JsonResponse
     {
         $response = $this->colllectionService->update($encodedColllectionPath, $request);
-
         return $this->json($response);
     }
 
     /**
      * Delete a Colllection.
      *
-     * @Route("/{encodedColllectionPath}", name="delete", methods={"DELETE"})
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -170,16 +164,15 @@ final class ColllectionController extends AbstractController
      *     description="Encoded colllection path",
      *     type="string"
      * )
-     *
      * @SWG\Response(
      *     response=204,
      *     description="Returned when Colllection file is deleted"
      * )
      */
-    public function deleteColllection(string $encodedColllectionPath): Response
+    #[Route(path: '/{encodedColllectionPath}', name: 'delete', methods: ['DELETE'])]
+    public function deleteColllection(string $encodedColllectionPath) : Response
     {
         $this->colllectionService->delete($encodedColllectionPath);
-
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

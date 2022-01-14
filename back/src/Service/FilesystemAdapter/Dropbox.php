@@ -13,6 +13,9 @@ use Spatie\Dropbox\Client as DropboxClient;
 
 class Dropbox extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
+    /**
+     * @var string
+     */
     private const NAME = 'dropbox';
 
     private ?EnhancedFilesystemInterface $filesystem = null;

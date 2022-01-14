@@ -6,6 +6,9 @@ namespace App\Model\Element;
 
 class ColorsElement extends AbstractElement
 {
+    /**
+     * @var string
+     */
     private const TYPE_NAME = 'colors';
 
     /**

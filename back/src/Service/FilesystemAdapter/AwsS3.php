@@ -13,12 +13,19 @@ use Exception;
 
 class AwsS3 extends AbstractCachedFilesystemAdapter implements FilesystemAdapterInterface
 {
+    /**
+     * @var string
+     */
     private const NAME = 'aws_s3';
 
-    private string $key;
-    private string $secret;
-    private string $region;
-    private string $bucket;
+    private readonly string $key;
+
+    private readonly string $secret;
+
+    private readonly string $region;
+
+    private readonly string $bucket;
+
     private ?EnhancedFilesystemInterface $filesystem = null;
 
     public function __construct(

@@ -29,9 +29,9 @@ class CookieAccessTokenProvider
 
     /**
      * @throws OAuthServerException
-		 * @throws UniqueTokenIdentifierConstraintViolationException
-		 * @throws Exception
-		 */
+     * @throws UniqueTokenIdentifierConstraintViolationException
+     * @throws Exception
+     */
     public function getJwtAccessToken(string $username, DateInterval $accessTokenTTL): string
     {
         $client = $this->clientRepository->getClientEntity('default');

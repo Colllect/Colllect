@@ -23,7 +23,6 @@ final class OAuthServerController
     /**
      * Generate or refresh a token.
      *
-     *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="OAuth")
@@ -94,7 +93,7 @@ final class OAuthServerController
      * )
      */
     #[Route(path: '/token', name: 'token', methods: ['POST'])]
-    public function token(ServerRequestInterface $serverRequest, ResponseFactoryInterface $responseFactory) : ResponseInterface
+    public function token(ServerRequestInterface $serverRequest, ResponseFactoryInterface $responseFactory): ResponseInterface
     {
         $serverResponse = $responseFactory->createResponse();
         try {

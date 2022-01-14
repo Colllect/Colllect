@@ -25,7 +25,6 @@ final class ColllectionController extends AbstractController
     /**
      * List all Colllections.
      *
-     *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllections")
@@ -36,15 +35,15 @@ final class ColllectionController extends AbstractController
      * )
      */
     #[Route(path: '/', name: 'list', methods: ['GET'])]
-    public function listColllections() : JsonResponse
+    public function listColllections(): JsonResponse
     {
         $colllections = $this->colllectionService->list();
+
         return $this->json($colllections);
     }
 
     /**
      * Create a Colllection.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -72,7 +71,7 @@ final class ColllectionController extends AbstractController
      * )
      */
     #[Route(path: '/', name: 'create', methods: ['POST'])]
-    public function createColllection(Request $request) : JsonResponse
+    public function createColllection(Request $request): JsonResponse
     {
         $response = $this->colllectionService->create($request);
         if ($response instanceof FormInterface) {
@@ -84,7 +83,6 @@ final class ColllectionController extends AbstractController
 
     /**
      * Get a Colllection.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -108,15 +106,15 @@ final class ColllectionController extends AbstractController
      * )
      */
     #[Route(path: '/{encodedColllectionPath}', name: 'get', methods: ['GET'])]
-    public function getColllection(string $encodedColllectionPath) : JsonResponse
+    public function getColllection(string $encodedColllectionPath): JsonResponse
     {
         $colllection = $this->colllectionService->get($encodedColllectionPath);
+
         return $this->json($colllection);
     }
 
     /**
      * Update a Colllection.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -144,15 +142,15 @@ final class ColllectionController extends AbstractController
      * )
      */
     #[Route(path: '/{encodedColllectionPath}', name: 'update', methods: ['PUT'])]
-    public function updateColllection(Request $request, string $encodedColllectionPath) : JsonResponse
+    public function updateColllection(Request $request, string $encodedColllectionPath): JsonResponse
     {
         $response = $this->colllectionService->update($encodedColllectionPath, $request);
+
         return $this->json($response);
     }
 
     /**
      * Delete a Colllection.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -170,9 +168,10 @@ final class ColllectionController extends AbstractController
      * )
      */
     #[Route(path: '/{encodedColllectionPath}', name: 'delete', methods: ['DELETE'])]
-    public function deleteColllection(string $encodedColllectionPath) : Response
+    public function deleteColllection(string $encodedColllectionPath): Response
     {
         $this->colllectionService->delete($encodedColllectionPath);
+
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

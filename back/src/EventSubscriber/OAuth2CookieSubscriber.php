@@ -15,7 +15,7 @@ final class OAuth2CookieSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    public final const OAUTH2_COOKIE_NAME = 'colllect_oauth2';
+    final public const OAUTH2_COOKIE_NAME = 'colllect_oauth2';
 
     public static function getSubscribedEvents(): array
     {

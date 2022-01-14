@@ -21,7 +21,7 @@ class RegisterController extends AbstractController
     /**
      * @var string
      */
-    public final const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
+    final public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_register';
 
     public function __construct(
         private readonly CsrfService $csrfService,
@@ -32,7 +32,7 @@ class RegisterController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/register', name: 'register', methods: ['GET', 'POST'])]
-    public function register(Request $request) : Response
+    public function register(Request $request): Response
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {

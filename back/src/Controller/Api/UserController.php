@@ -19,7 +19,6 @@ final class UserController extends AbstractController
     /**
      * Get an user.
      *
-     *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Users")
@@ -46,7 +45,7 @@ final class UserController extends AbstractController
      * )
      */
     #[Route(path: '/{userId}', name: 'read', methods: ['GET'], requirements: ['userId' => '\d+'])]
-    public function readUser(int $userId) : JsonResponse
+    public function readUser(int $userId): JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
@@ -60,7 +59,6 @@ final class UserController extends AbstractController
 
     /**
      * Get current user.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -81,15 +79,15 @@ final class UserController extends AbstractController
      * )
      */
     #[Route(path: '/current', name: 'current', methods: ['GET'])]
-    public function currentUser() : JsonResponse
+    public function currentUser(): JsonResponse
     {
         $user = $this->getUser();
+
         return $this->json($user, Response::HTTP_OK, [], ['groups' => ['public', 'private']]);
     }
 
     /**
      * Update an user account data.
-     *
      *
      * @SWG\Tag(name="Users")
      * @ApiDoc\Operation(
@@ -138,7 +136,7 @@ final class UserController extends AbstractController
      * )
      */
     #[Route(path: '/{userId}', name: 'update', methods: ['PUT'])]
-    public function updateUser(Request $request, int $userId) : JsonResponse
+    public function updateUser(Request $request, int $userId): JsonResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
@@ -156,12 +154,12 @@ final class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
+
         return $this->json($user);
     }
 
     /**
      * Delete an user account.
-     *
      *
      * @SWG\Tag(name="Users")
      *
@@ -186,7 +184,7 @@ final class UserController extends AbstractController
      * )
      */
     #[Route(path: '/{userId}', name: 'delete', methods: ['DELETE'])]
-    public function deleteUser(int $userId) : Response
+    public function deleteUser(int $userId): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($userId)
@@ -198,6 +196,7 @@ final class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
+
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

@@ -29,7 +29,7 @@ class SecurityController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '/login', name: 'login', methods: ['GET', 'POST'])]
-    public function login(Request $request) : Response
+    public function login(Request $request): Response
     {
         // Redirect already logged in users
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -62,13 +62,13 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login/account', name: 'account', methods: ['GET'])]
-    public function account() : Response
+    public function account(): Response
     {
         return $this->render('security/account.html.twig');
     }
 
     #[Route(path: '/logout', name: 'logout', methods: ['POST'])]
-    public function logout() : Response
+    public function logout(): Response
     {
         /** @var TokenInterface $token */
         $token = $this->security->getToken();
@@ -76,6 +76,7 @@ class SecurityController extends AbstractController
         $this->accessTokenRepository->revokeAccessToken($tokenId);
         $response = $this->redirectToRoute('app_security_login');
         $response->headers->clearCookie(OAuth2CookieSubscriber::OAUTH2_COOKIE_NAME, '/');
+
         return $response;
     }
 }

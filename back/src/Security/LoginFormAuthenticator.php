@@ -36,17 +36,17 @@ class LoginFormAuthenticator extends AbstractGuardAuthenticator
     /**
      * @var string
      */
-    public final const LOGIN_ROUTE = 'app_security_login';
+    final public const LOGIN_ROUTE = 'app_security_login';
 
     /**
      * @var string
      */
-    public final const HOME_PATH = '/';
+    final public const HOME_PATH = '/';
 
     /**
      * @var string
      */
-    public final const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
+    final public const CSRF_TOKEN_COOKIE_NAME = 'colllect_csrf_token_authenticate';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

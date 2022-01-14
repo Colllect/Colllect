@@ -28,7 +28,6 @@ final class ColllectionTagController extends AbstractController
     /**
      * Create a Colllection tag.
      *
-     *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Tags")
@@ -66,15 +65,15 @@ final class ColllectionTagController extends AbstractController
      * @throws FileNotFoundException
      */
     #[Route(path: '/', name: 'create', methods: ['POST'])]
-    public function createColllectionTag(Request $request, string $encodedColllectionPath) : JsonResponse
+    public function createColllectionTag(Request $request, string $encodedColllectionPath): JsonResponse
     {
         $response = $this->colllectionTagService->create($encodedColllectionPath, $request);
+
         return $this->json($response, Response::HTTP_CREATED);
     }
 
     /**
      * List all Colllection tags.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -96,15 +95,15 @@ final class ColllectionTagController extends AbstractController
      * @throws FileNotFoundException
      */
     #[Route(path: '/', name: 'list', methods: ['GET'])]
-    public function listColllectionTags(string $encodedColllectionPath) : JsonResponse
+    public function listColllectionTags(string $encodedColllectionPath): JsonResponse
     {
         $tags = $this->colllectionTagService->list($encodedColllectionPath);
+
         return $this->json($tags);
     }
 
     /**
      * Get a Colllection tag.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -134,15 +133,15 @@ final class ColllectionTagController extends AbstractController
      * )
      */
     #[Route(path: '/{encodedTagName}', name: 'get', methods: ['GET'])]
-    public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName) : JsonResponse
+    public function getColllectionTag(string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
         $tag = $this->colllectionTagService->get($encodedColllectionPath, $encodedTagName);
+
         return $this->json($tag);
     }
 
     /**
      * Update a Colllection tag.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -188,15 +187,15 @@ final class ColllectionTagController extends AbstractController
      * @throws FileNotFoundException
      */
     #[Route(path: '/{encodedTagName}', name: 'update', methods: ['PUT'])]
-    public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName) : JsonResponse
+    public function updateColllectionTag(Request $request, string $encodedColllectionPath, string $encodedTagName): JsonResponse
     {
         $response = $this->colllectionTagService->update($encodedColllectionPath, $encodedTagName, $request);
+
         return $this->json($response);
     }
 
     /**
      * Delete a Colllection tag.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -229,9 +228,10 @@ final class ColllectionTagController extends AbstractController
      * @throws FileNotFoundException
      */
     #[Route(path: '/{encodedTagName}', name: 'delete', methods: ['DELETE'])]
-    public function deleteColllection(string $encodedColllectionPath, string $encodedTagName) : Response
+    public function deleteColllection(string $encodedColllectionPath, string $encodedTagName): Response
     {
         $this->colllectionTagService->delete($encodedColllectionPath, $encodedTagName);
+
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

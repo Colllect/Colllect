@@ -11,7 +11,7 @@ class ColllectionPath
     /**
      * @var string
      */
-    public final const COLLLECTIONS_FOLDER = 'Colllections';
+    final public const COLLLECTIONS_FOLDER = 'Colllections';
 
     /**
      * @var string

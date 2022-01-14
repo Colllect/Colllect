@@ -50,7 +50,7 @@ final class HashPasswordListener implements EventSubscriber
         $this->encodePassword($user);
 
         $om = $args->getObjectManager();
-        $meta = $om->getClassMetadata(\get_class($user));
+        $meta = $om->getClassMetadata($user::class);
         if (!$om instanceof EntityManager) {
             return;
         }

@@ -53,7 +53,7 @@ class DropboxController extends AbstractController
      * @throws Exception
      */
     #[Route(path: '', name: 'redirect', methods: ['GET'])]
-    public function redirectToDropbox() : RedirectResponse
+    public function redirectToDropbox(): RedirectResponse
     {
         $state = $this->generateState();
         $query = http_build_query(
@@ -77,6 +77,7 @@ class DropboxController extends AbstractController
         );
         $response = $this->redirect(self::DROPBOX_AUTHORIZE_BASE_URL . '?' . $query);
         $response->headers->setCookie($cookie);
+
         return $response;
     }
 
@@ -84,7 +85,7 @@ class DropboxController extends AbstractController
      * @throws GuzzleException
      */
     #[Route(path: '/complete', name: 'complete', methods: ['GET'])]
-    public function complete(Request $request) : RedirectResponse
+    public function complete(Request $request): RedirectResponse
     {
         $stateFromRequest = $request->get('state');
         $stateFromCookie = $request->cookies->get(self::STATE_COOKIE_NAME);
@@ -118,6 +119,7 @@ class DropboxController extends AbstractController
             Dropbox::getName(),
             $accessToken
         );
+
         return $this->redirect('/');
     }
 

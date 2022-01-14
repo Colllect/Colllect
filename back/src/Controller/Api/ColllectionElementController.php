@@ -35,7 +35,6 @@ final class ColllectionElementController extends AbstractController
      *
      * In any case you can define the name of the element with `basename`
      *
-     *
      * @ApiDoc\Areas({"default"})
      *
      * @SWG\Tag(name="Colllection Elements")
@@ -104,15 +103,15 @@ final class ColllectionElementController extends AbstractController
      * @throws FilesystemException
      */
     #[Route(path: '/', name: 'create', methods: ['POST'])]
-    public function createColllectionElement(Request $request, string $encodedColllectionPath) : JsonResponse
+    public function createColllectionElement(Request $request, string $encodedColllectionPath): JsonResponse
     {
         $element = $this->colllectionElementService->create($encodedColllectionPath, $request);
+
         return $this->json($element, Response::HTTP_CREATED);
     }
 
     /**
      * List all Colllection elements.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -131,15 +130,15 @@ final class ColllectionElementController extends AbstractController
      * )
      */
     #[Route(path: '/', name: 'list', methods: ['GET'])]
-    public function listColllectionElements(string $encodedColllectionPath) : JsonResponse
+    public function listColllectionElements(string $encodedColllectionPath): JsonResponse
     {
         $elements = $this->colllectionElementService->list($encodedColllectionPath);
+
         return $this->json($elements);
     }
 
     /**
      * Get a Colllection element.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -167,19 +166,20 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
+     *
      * @throws FilesystemException
      * @throws NotSupportedElementTypeException
      */
     #[Route(path: '/{encodedElementBasename}', name: 'get', methods: ['GET'])]
-    public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename) : JsonResponse
+    public function getColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
         $element = $this->colllectionElementService->get($encodedElementBasename, $encodedColllectionPath);
+
         return $this->json($element);
     }
 
     /**
      * Update a Colllection element.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -227,20 +227,21 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
+     *
      * @throws FilesystemCannotRenameException
      * @throws FilesystemException
      * @throws NotSupportedElementTypeException
      */
     #[Route(path: '/{encodedElementBasename}', name: 'update', methods: ['PUT'])]
-    public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename) : JsonResponse
+    public function updateColllectionElement(Request $request, string $encodedColllectionPath, string $encodedElementBasename): JsonResponse
     {
         $element = $this->colllectionElementService->update($encodedElementBasename, $encodedColllectionPath, $request);
+
         return $this->json($element);
     }
 
     /**
      * Delete a Colllection element.
-     *
      *
      * @ApiDoc\Areas({"default"})
      *
@@ -267,12 +268,14 @@ final class ColllectionElementController extends AbstractController
      *     response=404,
      *     description="Returned when Colllection file is not found"
      * )
+     *
      * @throws NotSupportedElementTypeException
      */
     #[Route(path: '/{encodedElementBasename}', name: 'delete', methods: ['DELETE'])]
-    public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename) : Response
+    public function deleteColllectionElement(string $encodedColllectionPath, string $encodedElementBasename): Response
     {
         $this->colllectionElementService->delete($encodedElementBasename, $encodedColllectionPath);
+
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

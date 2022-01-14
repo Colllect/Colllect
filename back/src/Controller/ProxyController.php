@@ -22,7 +22,7 @@ class ProxyController extends AbstractController
      * @throws NotSupportedElementTypeException
      */
     #[Route(path: '/{encodedColllectionPath}/{encodedElementBasename}', name: 'element', methods: ['GET'])]
-    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename) : Response
+    public function element(Request $request, string $encodedColllectionPath, string $encodedElementBasename): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         // Avoid fetch storage if request is canceled
@@ -35,6 +35,7 @@ class ProxyController extends AbstractController
             $encodedColllectionPath,
             $request->headers
         );
+
         return $response;
     }
 }

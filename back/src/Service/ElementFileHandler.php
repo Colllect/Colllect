@@ -27,7 +27,7 @@ class ElementFileHandler
     /**
      * @var string[]
      */
-    public final const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+    final public const ALLOWED_IMAGE_CONTENT_TYPE = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
 
     /**
      * Automatic fill some elementFile fields depending on the source.

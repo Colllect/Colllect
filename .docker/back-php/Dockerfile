@@ -1,7 +1,7 @@
 FROM composer:2.1.14 as composer
 
 # See https://github.com/docker-library/php/blob/master/8.0/alpine3.15/fpm/Dockerfile
-FROM php:8.0.13-fpm-alpine3.15
+FROM php:8.1.1-fpm-alpine3.15
 
 ARG APCU_VERSION=5.1.21
 ARG TIMEZONE

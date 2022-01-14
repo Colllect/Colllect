@@ -8,6 +8,9 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
+    "composer/pcre": {
+        "version": "1.0.0"
+    },
     "composer/semver": {
         "version": "3.2.5"
     },
